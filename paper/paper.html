@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dominique Makowski">
+<meta name="keywords" content="active inference, free energy principle, personality, individual differences, predictive processing, cybernetics, hyperpriors">
+<meta name="description" content="CORE PRIOR CASCADE MODEL">
+
+<title>Towards an Active Inference Personality Framework: The Core Prior Cascade (CPC) Model of the Self</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="paper_files/libs/clipboard/clipboard.min.js"></script>
+<script src="paper_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="paper_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="paper_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="paper_files/libs/quarto-html/popper.min.js"></script>
+<script src="paper_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="paper_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="paper_files/libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="paper_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="paper_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="paper_files/libs/bootstrap/bootstrap-15f85eb00547d308b9628b46447080fb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+<link rel="stylesheet" href="_extensions/apaquarto/apa.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#firstheader" id="toc-firstheader" class="nav-link active" data-scroll-target="#firstheader">Towards an Active Inference Personality Framework: The Core Prior Cascade (CPC) Model of the Self</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#the-core-prior-cascade-model" id="toc-the-core-prior-cascade-model" class="nav-link" data-scroll-target="#the-core-prior-cascade-model">The Core Prior Cascade Model</a>
+  <ul class="collapse">
+  <li><a href="#tier-1-existential-hyperpriors" id="toc-tier-1-existential-hyperpriors" class="nav-link" data-scroll-target="#tier-1-existential-hyperpriors">Tier 1: Existential Hyperpriors</a>
+  <ul class="collapse">
+  <li><a href="#volatility-prior" id="toc-volatility-prior" class="nav-link" data-scroll-target="#volatility-prior">Volatility Prior</a></li>
+  <li><a href="#tractability-prior" id="toc-tractability-prior" class="nav-link" data-scroll-target="#tractability-prior">Tractability Prior</a></li>
+  <li><a href="#irreducible-uncertainty-tolerance" id="toc-irreducible-uncertainty-tolerance" class="nav-link" data-scroll-target="#irreducible-uncertainty-tolerance">Irreducible Uncertainty Tolerance</a></li>
+  <li><a href="#affective-valence" id="toc-affective-valence" class="nav-link" data-scroll-target="#affective-valence">Affective Valence</a></li>
+  <li><a href="#terminal-prior" id="toc-terminal-prior" class="nav-link" data-scroll-target="#terminal-prior">Terminal Prior</a></li>
+  </ul></li>
+  <li><a href="#tier-2-boundary-and-relational-priors" id="toc-tier-2-boundary-and-relational-priors" class="nav-link" data-scroll-target="#tier-2-boundary-and-relational-priors">Tier 2: Boundary and Relational Priors</a>
+  <ul class="collapse">
+  <li><a href="#permeability-prior" id="toc-permeability-prior" class="nav-link" data-scroll-target="#permeability-prior">Permeability Prior</a></li>
+  <li><a href="#social-inference-prior" id="toc-social-inference-prior" class="nav-link" data-scroll-target="#social-inference-prior">Social Inference Prior</a></li>
+  <li><a href="#sensory-anchoring-prior" id="toc-sensory-anchoring-prior" class="nav-link" data-scroll-target="#sensory-anchoring-prior">Sensory Anchoring Prior</a></li>
+  </ul></li>
+  <li><a href="#tier-3-epistemic-meta-priors" id="toc-tier-3-epistemic-meta-priors" class="nav-link" data-scroll-target="#tier-3-epistemic-meta-priors">Tier 3: Epistemic Meta-Priors</a>
+  <ul class="collapse">
+  <li><a href="#precision-bias" id="toc-precision-bias" class="nav-link" data-scroll-target="#precision-bias">Precision Bias</a></li>
+  <li><a href="#action-perception-precision" id="toc-action-perception-precision" class="nav-link" data-scroll-target="#action-perception-precision">Action-Perception Precision</a></li>
+  <li><a href="#epistemic-foraging-drive" id="toc-epistemic-foraging-drive" class="nav-link" data-scroll-target="#epistemic-foraging-drive">Epistemic Foraging Drive</a></li>
+  <li><a href="#temporal-depth" id="toc-temporal-depth" class="nav-link" data-scroll-target="#temporal-depth">Temporal Depth</a></li>
+  <li><a href="#self-model-coherence" id="toc-self-model-coherence" class="nav-link" data-scroll-target="#self-model-coherence">Self-Model Coherence</a></li>
+  </ul></li>
+  <li><a href="#illustrative-example-the-neuroticism-cascade" id="toc-illustrative-example-the-neuroticism-cascade" class="nav-link" data-scroll-target="#illustrative-example-the-neuroticism-cascade">Illustrative Example: The Neuroticism Cascade</a></li>
+  </ul></li>
+  <li><a href="#hypothesized-factor-structure" id="toc-hypothesized-factor-structure" class="nav-link" data-scroll-target="#hypothesized-factor-structure">Hypothesized Factor Structure</a></li>
+  <li><a href="#relationship-to-existing-models" id="toc-relationship-to-existing-models" class="nav-link" data-scroll-target="#relationship-to-existing-models">Relationship to Existing Models</a>
+  <ul class="collapse">
+  <li><a href="#big-five-personality-theory" id="toc-big-five-personality-theory" class="nav-link" data-scroll-target="#big-five-personality-theory">Big Five Personality Theory</a></li>
+  <li><a href="#bisbas-theory" id="toc-bisbas-theory" class="nav-link" data-scroll-target="#bisbas-theory">BIS/BAS Theory</a></li>
+  <li><a href="#attachment-theory" id="toc-attachment-theory" class="nav-link" data-scroll-target="#attachment-theory">Attachment Theory</a></li>
+  <li><a href="#sensation-seeking" id="toc-sensation-seeking" class="nav-link" data-scroll-target="#sensation-seeking">Sensation Seeking</a></li>
+  <li><a href="#cybernetic-big-five-theory" id="toc-cybernetic-big-five-theory" class="nav-link" data-scroll-target="#cybernetic-big-five-theory">Cybernetic Big Five Theory</a></li>
+  <li><a href="#jungian-archetypes" id="toc-jungian-archetypes" class="nav-link" data-scroll-target="#jungian-archetypes">Jungian Archetypes</a></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="paper.docx"><i class="bi bi-file-word"></i>MS Word (apaquarto)</a></li><li><a href="paper.pdf"><i class="bi bi-file-pdf"></i>Typst (apaquarto)</a></li><li><a href="paper.pdf"><i class="bi bi-file-pdf"></i>PDF (apaquarto)</a></li></ul></div></nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content" id="quarto-document-content">
+
+<!-- This file is intentionally empty. The APA title page for HTML output
+     is generated by frontmatter.lua. Do not add content here — it would
+     override the Lua-generated title block. -->
+
+
+<br>
+
+<br>
+
+<section id="title" class="level1 title unnumbered unlisted">
+<h1 class="title unnumbered unlisted">Towards an Active Inference Personality Framework: The Core Prior Cascade (CPC) Model of the Self</h1>
+<div class="Author">
+<br>
+
+<p>Dominique Makowski</p>
+<p>School of Psychology, University of Sussex</p>
+<p>Sussex Centre for Consciousness Science, University of Sussex</p>
+</div>
+<br>
+
+<br>
+
+</section>
+<section id="author-note" class="level1 unnumbered unlisted AuthorNote">
+<h1 class="unnumbered unlisted AuthorNote">Author Note</h1>
+<p>Dominique Makowski <img src="_extensions/apaquarto/ORCID-iD_icon-vector.svg" id="orcid" class="img-fluid" style="width:4.23mm" alt="Orcid ID Logo: A green circle with white letters ID"> <a href="https://orcid.org/0000-0001-5375-9967">https://orcid.org/0000-0001-5375-9967</a></p>
+<p>The authors have no conflicts of interest to disclose.</p>
+<p>Author roles were classified using the Contributor Role Taxonomy (CRediT; <a href="https://credit.niso.org">credit.niso.org</a>) as follows: <em>Dominique Makowski</em><strong>: </strong>project administration, data curation, formal analysis, investigation, visualization, writing – original draft, and writing – review &amp; editing</p>
+<p>Correspondence concerning this article should be addressed to Dominique Makowski, School of Psychology, University of Sussex, Brighton BN1 9RH, UK, Email: <a href="mailto:D.Makowski@sussex.ac.uk">D.Makowski@sussex.ac.uk</a></p>
+<br>
+</section>
+<section id="abstract" class="level1 unnumbered unlisted AuthorNote">
+<h1 class="unnumbered unlisted AuthorNote">Abstract</h1>
+<div class="AbstractFirstParagraph">
+<p>The Core Prior Cascade (CPC) Model is a hierarchical generative account of personality and individual differences grounded in the Free Energy Principle and active inference. In contrast to descriptive psychometric frameworks that identify behavioural phenotypes, the CPC Model proposes that observable personality traits represent the downstream expressions of deeply entrenched probabilistic priors: hierarchically organised beliefs governing an agent’s expectations about environmental volatility, action tractability, and self–world boundary structure. Three tiers of prior structure are identified — Existential Hyperpriors, encoding global parameters of volatility, agency, and temporal self-extension; Boundary and Relational Priors, governing Markov blanket permeability and sensory grounding; and Epistemic Meta-Priors, regulating error-resolution strategies and self-model coherence. From this hierarchical structure, five latent factors are hypothesised — Epistemic Plasticity, Cybernetic Stability, Blanket Permeability, Temporal Extension, and Self-Model Stability — which are argued to constitute the generative mechanisms underlying the phenotypic variance captured by existing descriptive models including the Big Five, behavioural inhibition and activation systems, attachment theory, and sensation seeking. The CPC Model is presented as a principled, mechanistic complement to existing descriptive frameworks, offering testable predictions regarding the hierarchical structure of individual differences and differential psychopathological vulnerability.</p>
+</div>
+</section>
+<section id="impact" class="level1 unnumbered unlisted AuthorNote">
+<h1 class="unnumbered unlisted AuthorNote">Impact Statement</h1>
+<div class="AbstractFirstParagraph">
+<p>The Core Prior Cascade Model provides a mechanistic, mathematically grounded account of how hierarchical prior structure generates the full range of observable personality phenotypes, offering a principled bridge between the Free Energy Principle and the scientific study of individual differences.</p>
+</div>
+<p><em>Keywords</em>: active inference, free energy principle, personality, individual differences, predictive processing, cybernetics, hyperpriors</p>
+<br>
+</section>
+<section id="firstheader" class="level1 title unnumbered">
+<h1 class="title unnumbered">Towards an Active Inference Personality Framework: The Core Prior Cascade (CPC) Model of the Self</h1>
+</section>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Personality psychology faces a persistent explanatory gap. Descriptive frameworks — most prominently the Big Five model of personality traits <span class="citation" data-cites="mccrae1992introduction goldberg1990alternative">(<a href="#ref-mccrae1992introduction" role="doc-biblioref"><strong>mccrae1992introduction?</strong></a>; <a href="#ref-goldberg1990alternative" role="doc-biblioref"><strong>goldberg1990alternative?</strong></a>)</span> — have proven remarkably successful at organising individual differences in behaviour, affect, and cognition. Yet their structural parsimony comes at a theoretical cost: these models describe <em>what</em> varies across individuals but offer limited purchase on <em>why</em> such variation exists or <em>how</em> it is generated and maintained. A mechanistic account has remained elusive — one capable of specifying the processes that produce, in one individual, the characteristic pattern we label Neuroticism, and in another, the contrasting configuration associated with Openness or Conscientiousness.</p>
+<p>The Free Energy Principle [FEP; <span class="citation" data-cites="friston2010free">(<a href="#ref-friston2010free" role="doc-biblioref"><strong>friston2010free?</strong></a>)</span>] and its process theory, active inference, offer a principled candidate for such a generative account. Under the FEP, all self-organising biological systems minimise the upper bound on their own surprise — formally expressed as variational free energy — by maintaining and continuously updating probabilistic generative models of their sensory environment. Crucially, this minimisation operates both through perceptual inference (revising internal models to fit sensory signals) and through active inference (acting on the world to bring sensory signals into conformity with predictions). Applied to the domain of personality, this framework implies that characteristic individual differences do not reflect fixed trait properties of the organism but rather the downstream consequences of deeply entrenched probabilistic priors: beliefs the agent’s predictive architecture treats as near-inviolable constraints on all subsequent inference and action. Personality, on this account, is not a static label but a characteristic cybernetic strategy.</p>
+<p>The present paper proposes the Core Prior Cascade (CPC) Model, a hierarchical framework that organises these foundational priors across three tiers of abstraction and influence. At the apex sit <em>Existential Hyperpriors</em> — the most fundamental assumptions the agent holds about the volatility of its environment, the tractability of prediction error through action, and the ultimate temporal horizon of the self. These global parameters cascade downward to constrain a second tier of <em>Boundary and Relational Priors</em>, governing the permeability and sensory grounding of the agent’s Markov blanket — the statistical boundary demarcating self from environment <span class="citation" data-cites="friston2019markov">(<a href="#ref-friston2019markov" role="doc-biblioref"><strong>friston2019markov?</strong></a>)</span>. These in turn constrain a third tier of <em>Epistemic Meta-Priors</em>, governing the agent’s characteristic strategies for minimising free energy across the perception–action cycle.</p>
+<p>The CPC Model is explicitly positioned not as a replacement for existing descriptive frameworks but as a generative account of the mechanisms underlying the phenotypes those frameworks identify. What the Big Five describe at the level of behavioural output — and what the Cybernetic Big Five Theory [CB5T; <span class="citation" data-cites="deyoung2015cybernetic">(<a href="#ref-deyoung2015cybernetic" role="doc-biblioref"><strong>deyoung2015cybernetic?</strong></a>)</span>] begins to explain at the level of cybernetic function — the CPC Model proposes to account for at the level of the hierarchical prior structure from which such function emerges. In doing so, it offers testable structural predictions and a principled basis for understanding individual differences in psychopathological vulnerability.</p>
+</section>
+<section id="the-core-prior-cascade-model" class="level1">
+<h1>The Core Prior Cascade Model</h1>
+<p>The central architectural claim of the CPC Model is that the cascade is not merely correlational. Higher-tier priors do not merely co-vary with lower-tier ones; they constrain the solution space available to them. A Tier 1 configuration of extreme volatility and low tractability does not merely predict certain Tier 3 epistemic strategies — it forecloses others. This hierarchical determination is what differentiates the CPC Model from multivariate trait models in which dimensions are statistically correlated but conceptually orthogonal. The following sections specify the dimensions at each tier, moving from the most global and abstract to the most proximal and context-sensitive.</p>
+<section id="tier-1-existential-hyperpriors" class="level2">
+<h2 data-anchor-id="tier-1-existential-hyperpriors">Tier 1: Existential Hyperpriors</h2>
+<p>Existential hyperpriors occupy the apex of the cascade hierarchy. They encode the agent’s most fundamental assumptions about the nature of its environment and the ultimate tractability of its predictive project. Because they operate at the highest level of abstraction, perturbations at this tier propagate throughout the entire system. They are described here as “existential” because they concern not merely strategic preferences for error minimisation but the agent’s basic orientation to its own existence in time — questions of agency, safety, and finitude.</p>
+<section id="volatility-prior" class="level3">
+<h3 data-anchor-id="volatility-prior">Volatility Prior</h3>
+<p>The volatility prior encodes the agent’s baseline expectation regarding the rate of change in the environment’s hidden states — the underlying generative structure the agent’s model attempts to track. An agent with a <em>high volatility prior</em> expects the environment’s generative rules to shift rapidly, which forces a systematic discounting of historical learning and a near-continuous anticipation of prediction error. Past model updates are rapidly deprecated because the agent expects the underlying structure they tracked has already changed. Conversely, an agent with a <em>low volatility prior</em> expects the environment to be highly structurally stable over time, affording the accumulation of high-precision long-term models and a characteristic orientation toward order and environmental mastery. The volatility prior constitutes one of the primary Tier 1 parameters because it sets the time horizon over which all downstream inference is meaningful: an agent cannot maintain stable Tier 2 and Tier 3 strategies in an environment it expects to be fundamentally unpredictable.</p>
+</section>
+<section id="tractability-prior" class="level3">
+<h3 data-anchor-id="tractability-prior">Tractability Prior</h3>
+<p>The tractability prior encodes the agent’s baseline expectation of whether prediction errors, once encountered, can be resolved through the agent’s own active inference. A <em>high tractability prior</em> reflects the belief that action reliably reduces error — that the gap between the agent’s internal model and the sensory world is bridgeable through purposive agency. This prior disposition produces approach behaviour, behavioural activation, and sustained engagement with uncertainty, because the agent expects that exploration will ultimately yield resolvable error. A <em>low tractability prior</em> reflects the expectation that action generates unresolvable error or that the system lacks the capacity to shift external states into alignment with its internal model — a formal analogue of learned helplessness <span class="citation" data-cites="seligman1972learned">(<a href="#ref-seligman1972learned" role="doc-biblioref"><strong>seligman1972learned?</strong></a>)</span>. Low tractability drives epistemic shielding (the suppression of precise sensory signals to avoid errors that cannot be remedied) and behavioural inhibition as the energetically efficient response to expected futility. The tractability prior is explicitly distinguished from the volatility prior, though the two may correlate: an agent in a genuinely volatile environment may rationally develop low tractability expectations, while an agent with a constitutional low tractability prior may perceive even stable environments as intractably uncertain.</p>
+</section>
+<section id="irreducible-uncertainty-tolerance" class="level3">
+<h3 data-anchor-id="irreducible-uncertainty-tolerance">Irreducible Uncertainty Tolerance</h3>
+<p>Irreducible uncertainty tolerance is a reactive parameter governing the agent’s response when epistemic foraging has failed — when active sampling of informative sensory states has not resolved a prediction error. It is formally distinct from the tractability prior: where tractability concerns the agent’s <em>prior belief</em> about whether action can resolve error, uncertainty tolerance concerns the agent’s capacity to sustain functioning when a prediction error proves genuinely unresolvable <em>post hoc</em>. Crucially, these parameters can dissociate: an agent with a high tractability prior may be surprisingly brittle upon encountering genuine irreducibility, having rarely needed to develop tolerance for unresolvable error; an agent with chronically low tractability may develop high baseline tolerance, having habituated to the persistent presence of residual uncertainty. <em>High uncertainty tolerance</em> reflects the capacity to accept irreducible error — an epistemic humility that permits adequate functioning without forcing premature model updates or false closure. <em>Low uncertainty tolerance</em> drives premature cognitive closure, distress in the face of ambiguity, and a tendency to force lower-level models to accommodate incomplete or contradictory data at the cost of model accuracy.</p>
+</section>
+<section id="affective-valence" class="level3">
+<h3 data-anchor-id="affective-valence">Affective Valence</h3>
+<p>Affective valence is defined as the characteristic phenomenological tone of the agent’s expected free energy signal. Within the FEP, persistent negative affect is interpretable as the felt correlate of chronically elevated expected free energy: the agent continuously anticipates unresolvable prediction errors, and this anticipation is experienced as anxiety, dysphoria, or anhedonia. Affective valence is treated as an explicit Tier 1 dimension — rather than as a mere correlate of the preceding parameters — because it carries independent predictive value and constitutes the primary experiential interface through which the higher-tier prior structure is registered by the agent itself. <em>Positive valence</em> reflects low baseline expected free energy: an affective tone of approach, safety, and reward anticipation associated with a belief that the world is broadly navigable. <em>Negative valence</em> reflects chronically elevated expected free energy: persistent threat anticipation, vigilance, or hedonic blunting. This dimension maps directly onto the construct of Neuroticism in descriptive models <span class="citation" data-cites="eysenck1967biological mccrae1992introduction">(<a href="#ref-eysenck1967biological" role="doc-biblioref"><strong>eysenck1967biological?</strong></a>; <a href="#ref-mccrae1992introduction" role="doc-biblioref"><strong>mccrae1992introduction?</strong></a>)</span> and provides the felt experiential counterpart to the tractability prior. The CPC framework’s key claim is that Neuroticism is not a primary trait but the downstream phenomenological consequence of Tier 1 hyperprior configuration — specifically, the experienced signature of low tractability combined with high volatility expectations.</p>
+</section>
+<section id="terminal-prior" class="level3">
+<h3 data-anchor-id="terminal-prior">Terminal Prior</h3>
+<p>The terminal prior governs how the agent models its own ultimate structural dissolution. Within the FEP, mortality salience functions as a hyperprior precision-weighting problem: confrontation with finitude forces the agent to resolve or suppress the prediction error of anticipated self-model cessation <span class="citation" data-cites="greenberg1986terror becker1973denial">(<a href="#ref-greenberg1986terror" role="doc-biblioref"><strong>greenberg1986terror?</strong></a>; <a href="#ref-becker1973denial" role="doc-biblioref"><strong>becker1973denial?</strong></a>)</span>. The temporal distance over which the agent’s self-model projects itself before anticipating dissolution — the <em>temporal horizon of the self</em> — constitutes one of the primary axes of Tier 1 variation.</p>
+<p>Three configurations are identified. <em>Disengagement</em> reflects an attenuation of the temporal self-model and takes two functionally distinct forms. <em>Passive disengagement</em> involves a diffuse failure of deep temporal planning characterised by generalised low precision on future-directed inference and a fatalistic or anhedonic orientation: the agent drifts rather than actively converging on future states. <em>Active cessation-seeking</em> represents a catastrophically precise prior converging on systemic shutdown as the optimal policy: the expected free energy of all future states is evaluated as unresolvably high, rendering structural cessation the lowest-free-energy attractor. This latter configuration constitutes the formal active inference analogue of Thanatos and maps onto clinical suicidal ideation at its extreme. <em>Integration</em> reflects authentic acceptance of finitude: expected free energy is balanced across temporal horizons without needing to suppress mortality salience, and the agent optimises for present-horizon goals without either withdrawing from the future or frantically extending the self into it. <em>Transcendence</em> involves extending the Markov blanket across time through legacy — cultural, symbolic, or biological — such that the agent’s self-model is projected to outlive the physical substrate. Transcendence and Integration may represent two configurations along a continuous dimension of temporal self-extension, while disengagement constitutes a qualitatively distinct attractor state.</p>
+</section>
+</section>
+<section id="tier-2-boundary-and-relational-priors" class="level2">
+<h2 data-anchor-id="tier-2-boundary-and-relational-priors">Tier 2: Boundary and Relational Priors</h2>
+<p>Boundary and relational priors govern the expected state of the interface between the agent’s internal model and the external world — the functional properties of the Markov blanket as a dynamic, inference-regulating boundary. These priors are constrained by Tier 1 parameters: an agent whose Tier 1 configuration imposes conditions of extreme volatility and low tractability has correspondingly fewer viable configurations available at Tier 2. The three dimensions at this tier concern the gradient of coupling between self and world, the precision allocated to social inference, and the sensory modality that serves as the agent’s fundamental ground truth.</p>
+<section id="permeability-prior" class="level3">
+<h3 data-anchor-id="permeability-prior">Permeability Prior</h3>
+<p>The permeability prior governs the relative precision weighting the agent assigns to self-referential priors versus exteroceptive and social signals. Formally, this is not a question of the Markov blanket becoming literally permeable — a dissolved blanket takes the subject with it — but rather an adjustment of the <em>gradient of influence</em> across the blanket: how strongly external states are permitted to update internal ones, and vice versa. This maps onto Bakan’s <span class="citation" data-cites="bakan1966duality">(<a href="#ref-bakan1966duality" role="doc-biblioref"><strong>bakan1966duality?</strong></a>)</span> foundational distinction between agency and communion, and onto the attachment styles described by Bowlby <span class="citation" data-cites="bowlby1969attachment">(<a href="#ref-bowlby1969attachment" role="doc-biblioref"><strong>bowlby1969attachment?</strong></a>)</span> and Ainsworth: avoidant (high differentiation, low coupling), anxiously-preoccupied (high dissolution, high coupling with low tractability), and secure (calibrated coupling, high tractability).</p>
+<p>The <em>differentiation drive</em> reflects the expectation that internal states must remain structurally distinct from external states — a low-coupling, rigid-blanket configuration associated with drives for autonomy, individuation, and status maintenance. At its extreme, the differentiation drive motivates dominance-seeking as an active inference strategy: forcing the social environment to synchronise with the agent’s internal model achieves error minimisation through environmental subjugation rather than internal revision. The <em>dissolution drive</em> reflects the expectation that internal states should synchronise with external states — a high-coupling, permeable-blanket configuration associated with drives for affiliation, merging, and collective regulation. Agents with a strong dissolution drive are oriented toward cooperative rather than competitive modes of free energy minimisation and are characterised by heightened sensitivity to social prediction errors.</p>
+</section>
+<section id="social-inference-prior" class="level3">
+<h3 data-anchor-id="social-inference-prior">Social Inference Prior</h3>
+<p>The social inference prior concerns the precision the agent assigns to modelling the hidden states of other agents — the computational resources allocated to mentalising. An agent with <em>high social inference precision</em> deeply invests in simulating others’ internal models, generating rich predictive representations of social others’ beliefs, intentions, and affective states. This manifests as heightened empathy and vigilance to social cues, but also as elevated susceptibility to social prediction errors: the more precise the model of another agent, the more costly any violation of that model. An agent with <em>low social inference precision</em> treats other agents more as physical environmental variables than as nested cognitive systems, producing lower susceptibility to social prediction errors but reduced capacity for the cooperative inference that high social precision affords.</p>
+</section>
+<section id="sensory-anchoring-prior" class="level3">
+<h3 data-anchor-id="sensory-anchoring-prior">Sensory Anchoring Prior</h3>
+<p>The sensory anchoring prior governs the relative precision weighting assigned to the foundational sensory channels the agent uses as its ultimate evidential ground truth — the informational basis to which the generative model appeals when resolving higher-tier prediction errors. This defines the informational <em>thickness</em> of the Markov blanket. <em>Exteroceptive anchoring</em> reflects a baseline trust directed outward: the system prioritises environmental states — visual, auditory, spatial — to validate its internal models. The self is constituted in relation to external spatial coordinates and exteroceptive feedback, such that environmental regularities serve as the primary scaffolding for self-model stability. <em>Interoceptive anchoring</em> reflects a baseline trust directed inward: the continuous monitoring of cardiac, respiratory, and visceral signals forms the bedrock of reality-testing for the self-model. The minimal self is tightly bound to internal homeostatic and physiological rhythms, and selfhood is primarily grounded in the body’s internal milieu. This dimension bears directly on individual differences in interoceptive sensitivity and their documented relationship to affective and somatic psychopathology <span class="citation" data-cites="craig2002feel seth2013interoceptive">(<a href="#ref-craig2002feel" role="doc-biblioref"><strong>craig2002feel?</strong></a>; <a href="#ref-seth2013interoceptive" role="doc-biblioref"><strong>seth2013interoceptive?</strong></a>)</span>.</p>
+</section>
+</section>
+<section id="tier-3-epistemic-meta-priors" class="level2">
+<h2 data-anchor-id="tier-3-epistemic-meta-priors">Tier 3: Epistemic Meta-Priors</h2>
+<p>Epistemic meta-priors govern how the agent prefers to minimise free energy within the constraints established by Tiers 1 and 2. Where the upper tiers set the parameters of the agent’s fundamental orientations, Tier 3 concerns the characteristic strategies deployed in navigating prediction errors across the perception–action cycle. They are “meta-priors” in the sense that they constitute beliefs about the optimal policy for updating beliefs — second-order priors about how the generative model itself should be managed.</p>
+<section id="precision-bias" class="level3">
+<h3 data-anchor-id="precision-bias">Precision Bias</h3>
+<p>Precision bias concerns the relative weighting assigned to internal beliefs versus incoming prediction errors. A <em>prior-heavy, top-down bias</em> reflects high precision on internal beliefs relative to sensory evidence: the agent minimises free energy by assimilating incoming signals into existing models, filtering out contradictory data, or acting to bring the world into alignment with its predictions. This configuration favours model stability and coherence at the cost of sensitivity to genuine environmental change. A <em>sensory-heavy, bottom-up bias</em> reflects high precision on incoming prediction errors relative to prior beliefs: the agent minimises free energy by rapidly revising internal models to accommodate new evidence. This configuration favours environmental tracking at the cost of stability, and may render the agent vulnerable to destabilising belief updates in conditions of high sensory noise.</p>
+</section>
+<section id="action-perception-precision" class="level3">
+<h3 data-anchor-id="action-perception-precision">Action-Perception Precision</h3>
+<p>The agent cannot explicitly select between active and perceptual inference — both occur continuously — but individuals differ systematically in the relative precision assigned to each modality when confronted with free energy. An <em>action-heavy</em> configuration places high precision on the agent’s capacity to alter external states: the primary mode of free energy minimisation is active environmental transformation — exerting control, manipulating circumstances, forcing external reality into conformity with the internal model. This maps onto external locus of control and behavioural dominance, and intersects with the differentiation drive at Tier 2. A <em>perception-heavy</em> configuration places lower precision on action efficacy relative to sensory updating: the agent minimises free energy primarily through belief revision, attentional reorientation, and accommodation of the environment rather than action upon it. This maps onto internal locus of control and accommodative cognitive styles, and in its extreme form may contribute to behavioural inhibition when the tractability prior is insufficient to sustain action-oriented strategies.</p>
+</section>
+<section id="epistemic-foraging-drive" class="level3">
+<h3 data-anchor-id="epistemic-foraging-drive">Epistemic Foraging Drive</h3>
+<p>The epistemic foraging drive governs the expected information gain the agent assigns to sampling high-variance, boundary-testing states. An agent with <em>high foraging drive</em> actively seeks environments — somatic or semantic — that inject prediction errors into the system, because the agent expects that such errors, once processed, will reduce long-term uncertainty and prevent overfitting of the generative model. This is the active inference analogue of sensation-seeking <span class="citation" data-cites="zuckerman1994behavioral">(<a href="#ref-zuckerman1994behavioral" role="doc-biblioref"><strong>zuckerman1994behavioral?</strong></a>)</span>. An agent with <em>low foraging drive</em> prefers highly predictable, low-variance environments and minimises voluntary exposure to uncertainty.</p>
+<p>The CPC Model distinguishes two functionally separable subtypes of foraging, hypothesised to be partially orthogonal rather than a single continuum. <em>Somatic foraging</em> involves testing the physical Markov blanket through biological edge-seeking — injecting prediction errors into the physiological system to prove the existence and resilience of the minimal, bodily self. At its mild end, somatic foraging characterises voluntary perturbations of bodily sensing through exercise, breathwork, or interoceptive practice; at its extreme, it encompasses visceral threat-seeking that uses the unambiguous certainty of intense somatic sensation to ground and confirm the self-model. <em>Semantic foraging</em> involves testing the conceptual and cultural architecture of the agent’s generative model by probing the coherence of its worldview under pressure. Mild semantic foraging is characteristic of engagement with transgressive art, complex symbolic systems, or radical philosophy; extreme semantic foraging may involve deliberate phenomenological destabilisation through altered states of consciousness — functioning as a directed attempt to observe the underlying structure of the generative model by collapsing its surface representations.</p>
+</section>
+<section id="temporal-depth" class="level3">
+<h3 data-anchor-id="temporal-depth">Temporal Depth</h3>
+<p>Temporal depth concerns the functional time horizon over which the agent’s active inference operates. An agent with <em>shallow temporal depth</em> optimises primarily for immediate sensory feedback and homeostatic regulation — a reactive mode in which the generative model is evaluated against near-term outcomes. An agent with <em>deep temporal depth</em> simulates cascading future states and optimises for allostasis — a proactive mode in which action selection is governed by anticipated long-term model accuracy rather than immediate error reduction. Temporal depth is structurally constrained by the terminal prior at Tier 1: an agent with active cessation-seeking or passive disengagement has, by definition, a truncated effective temporal horizon, and deep temporal inference becomes structurally unavailable as a strategy.</p>
+</section>
+<section id="self-model-coherence" class="level3">
+<h3 data-anchor-id="self-model-coherence">Self-Model Coherence</h3>
+<p>Self-model coherence concerns the temporal stability and narrative integration of the agent’s highest-level self-referential priors — the precision and temporal consistency of the beliefs the agent holds about itself across successive inference cycles. <em>Low coherence</em> reflects a self-model that is revised rapidly and discontinuously in response to local prediction errors: the agent’s identity shifts to accommodate each new context, social input, or affective state without integration into a stable narrative structure. At the extreme, low self-model coherence maps onto identity diffusion, emotional dysregulation, and borderline-spectrum presentations — the phenomenological and clinical correlates of a self-model that cannot withstand local perturbation without fragmentation <span class="citation" data-cites="mcadams1996personality erikson1968identity">(<a href="#ref-mcadams1996personality" role="doc-biblioref"><strong>mcadams1996personality?</strong></a>; <a href="#ref-erikson1968identity" role="doc-biblioref"><strong>erikson1968identity?</strong></a>)</span>. <em>High coherence</em> reflects a temporally integrated self-model resistant to local perturbation: the agent’s identity functions as a high-precision prior that absorbs and contextualises prediction errors without wholesale revision, constituting a key protective factor against psychopathological vulnerability under chronic stress.</p>
+</section>
+</section>
+<section id="illustrative-example-the-neuroticism-cascade" class="level2">
+<h2 data-anchor-id="illustrative-example-the-neuroticism-cascade">Illustrative Example: The Neuroticism Cascade</h2>
+<p><a href="#fig-cascade" class="quarto-xref" aria-expanded="false">Figure&nbsp;1</a> illustrates how a specific phenotypic outcome — high Trait Neuroticism — can be traced upward through the CPC hierarchy to its prior-level origins. In the depicted profile, high expected volatility and low expected tractability at Tier 1 combine with low uncertainty tolerance to produce chronically elevated expected free energy. This propagates downward to a perception-heavy action-perception ratio at Tier 3 (the agent cannot expect action to resolve error and thus defaults to internal belief revision under threat) and ultimately generates the characteristic negative affective valence associated with Neuroticism at the observable phenotypic level. The figure thus demonstrates the CPC Model’s core architectural claim: observable personality phenotypes are the phenomenological surface of a prior configuration extending across multiple hierarchical levels.</p>
+<div class="cell FigureWithoutNote" data-custom-style="FigureWithoutNote">
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.0     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.2     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-cascade" class="quarto-float quarto-figure quarto-figure-center" data-fignum="1" prefix="">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-cascade-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Figure&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Generative architecture of Trait Neuroticism as an illustrative Core Prior Cascade. Cybernetic states are represented as parameter distributions positioned on dimensional axes across the prior hierarchy. The depicted profile illustrates a characteristic Neuroticism-associated configuration: high expected volatility, low tractability, and low uncertainty tolerance cascading through elevated expected free energy and a perception-heavy action-perception ratio to produce negative affective valence and high trait Neuroticism at the observable phenotypic level.</p>
+</div>
+</figcaption>
+<div aria-describedby="fig-cascade-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="paper_files/figure-html/fig-cascade-1.svg" class="img-fluid figure-img" width="624">
+</div>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="hypothesized-factor-structure" class="level1">
+<h1>Hypothesized Factor Structure</h1>
+<p>The fifteen dimensions of the CPC Model are not hypothesised to be orthogonal. Rather, the cascade architecture implies systematic patterns of co-variation: characteristic configurations at higher tiers constrain, and therefore predict, characteristic configurations across the lower-tier dimensions. Five latent factors are hypothesised, each representing a theoretically coherent syndrome of co-varying dimensions expected to load together on factor-analytic assessment. These factors are summarised in <a href="#tbl-factors" class="quarto-xref" aria-expanded="false">Table&nbsp;1</a>.</p>
+<div id="tbl-factors" class="quarto-float quarto-figure quarto-figure-center FigureWithoutNote" data-tblnum="1" prefix="" data-custom-style="FigureWithoutNote">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-factors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="FigureTitle" data-custom-style="FigureTitle">
+<p>Table&nbsp;1</p>
+</div>
+<div class="Caption" data-custom-style="Caption">
+<p>Hypothesised five-factor structure of the Core Prior Cascade Model. Each factor represents a theoretically coherent syndrome of co-varying prior dimensions.</p>
+</div>
+</figcaption>
+<div aria-describedby="tbl-factors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table id="tbl-factors" class="caption-top table" prefix="" data-tblnum="1">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 36%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Factor</th>
+<th>Primary Construct</th>
+<th>Correlated Dimensions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Factor 1: Epistemic Plasticity</td>
+<td>How the agent handles new information</td>
+<td>Sensory-heavy precision bias; high epistemic foraging drive; high uncertainty tolerance</td>
+</tr>
+<tr class="even">
+<td>Factor 2: Cybernetic Stability</td>
+<td>Baseline expectation of safety versus threat</td>
+<td>High tractability prior; positive affective valence; low volatility prior (<em>negative correlate</em>: epistemic shielding)</td>
+</tr>
+<tr class="odd">
+<td>Factor 3: Blanket Permeability</td>
+<td>How the self relates to the group</td>
+<td>High dissolution drive; high social inference precision</td>
+</tr>
+<tr class="even">
+<td>Factor 4: Temporal Extension</td>
+<td>The timescale of the agent’s generative model</td>
+<td>Deep temporal depth; terminal transcendence; high differentiation drive</td>
+</tr>
+<tr class="odd">
+<td>Factor 5: Self-Model Stability</td>
+<td>Temporal integration and coherence of the self-model</td>
+<td>High self-model coherence; high tractability prior; deep temporal depth (<em>negative correlates</em>: low uncertainty tolerance; active cessation-seeking)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="AfterWithoutNote" data-custom-style="AfterWithoutNote">
+<p>These five factors carry clear functional correspondences to existing descriptive models. Epistemic Plasticity maps broadly onto Openness to Experience; Cybernetic Stability maps onto the inverse of Neuroticism, with affective valence as its phenomenological felt correlate; Blanket Permeability maps onto the affiliative pole of Agreeableness and related communion constructs; and Temporal Extension maps onto Conscientiousness. Self-Model Stability constitutes a theoretically novel factor not cleanly captured by any single Big Five dimension, intersecting with both Neuroticism and Conscientiousness while carrying distinct clinical implications. The CPC Model’s claim is not that these five factors <em>replace</em> the Big Five but that they identify the generative prior architecture from which Big Five phenotypes emerge as behavioural expressions.</p>
+</div>
+</section>
+<section id="relationship-to-existing-models" class="level1">
+<h1>Relationship to Existing Models</h1>
+<p>The CPC Model is positioned as a generative complement to the primary existing frameworks in personality science, rather than a competitor to them. Its relationship to each is considered in turn.</p>
+<section id="big-five-personality-theory" class="level2">
+<h2 data-anchor-id="big-five-personality-theory">Big Five Personality Theory</h2>
+<p>The Big Five traits <span class="citation" data-cites="mccrae1992introduction goldberg1990alternative">(<a href="#ref-mccrae1992introduction" role="doc-biblioref"><strong>mccrae1992introduction?</strong></a>; <a href="#ref-goldberg1990alternative" role="doc-biblioref"><strong>goldberg1990alternative?</strong></a>)</span> represent the most extensively validated descriptive taxonomy of personality. The CPC Model proposes to explain the mechanisms generating the variance those dimensions capture. As noted above, Epistemic Plasticity corresponds broadly to Openness to Experience; Cybernetic Stability to the inverse of Neuroticism, with affective valence as the phenomenological felt correlate of tractability-prior configuration; Blanket Permeability to Agreeableness-related constructs; and Temporal Extension to Conscientiousness. Extraversion, however, does not map cleanly onto any single CPC dimension: it likely emerges from an interaction of the tractability prior (which drives approach motivation) and the dissolution drive (which motivates social engagement and affiliation). This non-correspondence is itself a prediction of the CPC Model — if Extraversion reflects a specific combination of prior parameters rather than a single prior dimension, it should not map onto a single CPC factor, and the model correctly predicts its distinctive pattern of cross-factor loadings.</p>
+</section>
+<section id="bisbas-theory" class="level2">
+<h2 data-anchor-id="bisbas-theory">BIS/BAS Theory</h2>
+<p>Gray’s <span class="citation" data-cites="gray1982neuropsychology">(<a href="#ref-gray1982neuropsychology" role="doc-biblioref"><strong>gray1982neuropsychology?</strong></a>)</span> Behavioural Inhibition and Activation Systems provide a neurobiological account of approach and avoidance motivation. The tractability prior directly formalises the BIS/BAS distinction within a generative modelling framework. An agent with a high tractability prior exhibits the hallmarks of dominant BAS functioning — sustained approach, reward sensitivity, and behavioural activation. An agent with a low tractability prior exhibits dominant BIS functioning — behavioural inhibition, hypervigilance to potential prediction errors, and an anxiety-prone response to uncertainty. The added theoretical value is mechanistic: BIS/BAS describes the behavioural output; the CPC Model proposes the hierarchical prior structure that produces it, grounding the distinction in the mathematics of expected free energy minimisation and extending it with the upstream Tier 1 parameters (volatility prior, uncertainty tolerance) that modulate BIS/BAS expression.</p>
+</section>
+<section id="attachment-theory" class="level2">
+<h2 data-anchor-id="attachment-theory">Attachment Theory</h2>
+<p>The permeability prior and its associated Tier 2 dimensions map directly onto the attachment styles identified by Bowlby <span class="citation" data-cites="bowlby1969attachment">(<a href="#ref-bowlby1969attachment" role="doc-biblioref"><strong>bowlby1969attachment?</strong></a>)</span> and Ainsworth. Avoidant attachment corresponds to a high differentiation drive with low social inference precision — the agent minimises expected free energy by maintaining rigid blanket boundaries and discounting social prediction errors. Anxious-preoccupied attachment corresponds to a high dissolution drive combined with high social inference precision and low tractability — the agent urgently seeks high coupling with attachment figures but cannot trust the tractability of that coupling to resolve relational uncertainty. Secure attachment corresponds to a calibrated permeability prior and high tractability — the agent can engage in flexible coupling because it believes the resulting prediction errors will be resolvable. The CPC formulation offers a mechanistic account of why insecure attachment styles persist: they are self-consistent configurations of interacting priors that are self-reinforcing across development, because the prior structure shapes the environments sampled and the interpretations assigned to those environments.</p>
+</section>
+<section id="sensation-seeking" class="level2">
+<h2 data-anchor-id="sensation-seeking">Sensation Seeking</h2>
+<p>Zuckerman’s <span class="citation" data-cites="zuckerman1994behavioral">(<a href="#ref-zuckerman1994behavioral" role="doc-biblioref"><strong>zuckerman1994behavioral?</strong></a>)</span> sensation-seeking construct overlaps directly with the epistemic foraging drive. The novel contribution of the CPC framework is the proposed distinction between somatic and semantic foraging as two potentially orthogonal subtypes. Existing sensation-seeking scales conflate physical risk-taking (somatic foraging) with intellectual novelty-seeking (semantic foraging) within a single dimension. The CPC Model hypothesises these to be partially separable, predicting that the two subtypes will show discriminant validity — a hypothesis that constitutes a direct, testable empirical contribution requiring dedicated scale development and factor-analytic verification.</p>
+</section>
+<section id="cybernetic-big-five-theory" class="level2">
+<h2 data-anchor-id="cybernetic-big-five-theory">Cybernetic Big Five Theory</h2>
+<p>DeYoung’s <span class="citation" data-cites="deyoung2015cybernetic">(<a href="#ref-deyoung2015cybernetic" role="doc-biblioref"><strong>deyoung2015cybernetic?</strong></a>)</span> Cybernetic Big Five Theory (CB5T) represents the most direct theoretical antecedent of the CPC Model. CB5T conceptualises the Big Five in cybernetic terms, organising traits around two meta-traits — Plasticity (exploration and flexibility) and Stability (goal-maintenance and threat response) — grounded in generic reward and threat parameters. The CPC Model builds on this framework by operationalising the underlying parameters within the formal mathematics of the FEP rather than the more informal vocabulary of cybernetics. Where CB5T describes an organism that “reacts to threat,” the CPC Model specifies that the organism experiences a chronically elevated expected free energy signal (negative affective valence) arising from a low tractability prior within a high-volatility environment. DeYoung’s Plasticity meta-trait corresponds to the behavioural output of CPC Factor 1, and his Stability meta-trait to CPC Factor 2. The CPC Model thus offers CB5T a formal mathematical grounding while extending it with dimensions — particularly the terminal prior, sensory anchoring prior, and the somatic/semantic foraging distinction — that fall outside CB5T’s current scope.</p>
+</section>
+<section id="jungian-archetypes" class="level2">
+<h2 data-anchor-id="jungian-archetypes">Jungian Archetypes</h2>
+<p>Jungian archetypes can be formalised within the CPC framework as deeply entrenched, phylogenetically conserved hyperpriors — low-dimensional structural attractors in the human generative model that are inherited rather than individually acquired <span class="citation" data-cites="jung1968archetypes">(<a href="#ref-jung1968archetypes" role="doc-biblioref"><strong>jung1968archetypes?</strong></a>)</span>. As high-precision priors embedded at the apex of the hierarchy, archetypes function as strange attractors: they normally operate in the background, shaping the solution space for higher-level inference without themselves becoming objects of explicit awareness. During episodes of extreme semantic foraging — when the agent deliberately injects prediction errors into its conceptual architecture — the surface-level generative model destabilises. As superficial models collapse, the system falls back on these deeper phylogenetic attractors to prevent catastrophic free energy increase. An archetypal encounter, on this account, constitutes the agent’s experience of reaching the bedrock of the human generative model: the ancient, conserved structural constraints that represent the species’ collective prior.</p>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>Discussion</h1>
+<p>The Core Prior Cascade Model offers several contributions to the theoretical landscape of personality science. First, by grounding individual differences in the mathematics of the Free Energy Principle, it provides a principled mechanistic account of why personality configurations are stable, why they co-vary in the patterns observed by descriptive models, and why certain configurations confer differential psychopathological vulnerability. The cascade architecture implies that interventions targeting Tier 3 parameters — as in most cognitive and behavioural therapies — will have limited durability unless Tier 1 and Tier 2 priors are also addressed, since deep stability and chronic suffering are maintained by the prior configuration at the highest levels of the hierarchy, not by surface-level epistemic strategies.</p>
+<p>Second, the distinction between somatic and semantic epistemic foraging constitutes a theoretically motivated prediction not generated by existing models. If confirmed by discriminant validity evidence, this distinction would have implications for understanding heterogeneity within sensation-seeking, risk tolerance, and creative openness, and for the differential phenomenology of body-anchored versus concept-anchored approaches to self-exploration.</p>
+<p>Third, the terminal prior provides a formal active inference account of temporal self-extension and its pathological extremes. The active cessation-seeking pole of the disengagement configuration, in particular, offers a mechanistic reframing of suicidal ideation as a specific prior configuration — the agent’s rational minimisation of expected free energy given a prior structure that assigns unresolvably high expected free energy to all available future states — rather than merely a symptom category.</p>
+<p>Several limitations and open questions remain. The CPC Model is currently a theoretical framework without direct empirical operationalisation. The construction of a valid measurement instrument capable of assessing the proposed prior parameters — rather than their behavioural phenotypes — constitutes the primary empirical challenge ahead. Self-report measures of prior structure are inherently indirect: priors are not accessible to introspection in the way that behaviours and explicit attitudes are, and introspective reports may primarily reflect the phenomenological output of the prior structure rather than the structure itself. Computational modelling approaches, in which parameter estimates are inferred from performance on paradigms designed to stress specific inference processes, may offer more direct operationalisation.</p>
+<p>Additionally, the proposed five-factor structure is hypothetical and awaits empirical validation. Factor-analytic assessment will be necessary to determine the actual latent structure of co-variation across CPC dimensions, and it is plausible that the factor structure will vary across populations and developmental periods. Future work should prioritise the development of a compact self-report or behavioural instrument capable of indexing the key CPC dimensions, the design of computational modelling paradigms for prior parameter estimation, and longitudinal investigation of how prior structure evolves across development and in response to therapeutic intervention.</p>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<!-- References will auto-populate in the refs div below -->
+<div id="refs" role="list">
+
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
