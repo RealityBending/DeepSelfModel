@@ -98,13 +98,180 @@ The Free Energy Principle [FEP, @friston2010free] and its process theory, active
 
 Applied to the domain of personality, this framework implies that characteristic individual differences do not reflect fixed trait properties of the organism but rather the downstream consequences of deeply entrenched probabilistic parameters. To ground these parameters in the formal mathematics of the FEP, the framework explicitly distinguishes between *expectations* (the locations or means of an internal distribution, $\mu$) and *biases* (the precisions, gains, or relative inverse-variance ratios assigned to different processing channels, $\pi$). What are colloquially called "prior preferences" or "drives" are recast under this architecture as state expectations equipped with exceptionally high precision constraints. These foundational parameters scaffold the agent's predictive architecture and act as strong constraints on all subsequent inference and action.
 
-The present paper proposes the Core Priors Cascade (CPC) Model of Personality, a hierarchical framework that defines and organises these foundational expectations and biases across tiers of abstraction and influence. At the apex sit *Existential Expectations*, representing the most fundamental assumptions the agent holds about the volatility of its environment, the tractability of prediction error through action, and the ultimate temporal horizon of the self. These global location parameters cascade downward to constrain a second tier of *Boundary and Relational Biases*. This middle tier governs the precision weighting, permeability, and sensory grounding of the agent's Markov blanket, the statistical boundary demarcating self from environment [@friston2019markov]. These in turn constrain a third tier of *Operational Expectations and Biases*, which dictate the agent's characteristic strategies for minimizing free energy across the perception-action cycle.
+The present paper proposes the Core Priors Cascade (CPC) Model of Personality, a hierarchical framework that defines and organises these foundational expectations and biases across levels of abstraction and influence. At the apex sit *Existential Expectations*, representing the most fundamental assumptions the agent holds about the volatility of its environment, the tractability of prediction error through action, and the ultimate temporal horizon of the self. These global location parameters cascade downward to constrain a second group of *Boundary and Relational Biases*. This category governs the precision weighting, permeability, and sensory grounding of the agent's Markov blanket, the statistical boundary demarcating self from environment [@friston2019markov]. These in turn constrain a third level of *Operational Expectations and Biases*, which dictate the agent's characteristic strategies for minimizing free energy across the perception-action cycle.
 
 The CPC Model is explicitly positioned not as a replacement for existing descriptive frameworks but as a generative account of the mechanisms underlying the phenotypes those frameworks identify. The Big Five describe individual differences at the level of behavioural output, and the Cybernetic Big Five Theory begins to explain them at the level of cybernetic function. The CPC Model proposes to account for both at the level of the hierarchical expectation and precision structure from which such function emerges. It thereby offers testable structural predictions and a principled basis for understanding individual differences in general temperament as well as psychopathological vulnerability.
 
+
+```{r}
+#| message: false
+#| warning: false
+#| apa-twocolumn: true
+#| label: fig-model
+#| fig-height: 12
+#| fig-width: 12
+#| fig-cap: "TODO"
+
+
+library(tidyverse)
+library(tidygraph)
+library(ggraph)
+
+# 1. Scaled Distribution Generator Function (For Levels 1-3 Only)
+generate_dist <- function(id, cx, cy, shift, profile) {
+  x_seq <- seq(cx - 1.5, cx + 1.5, length.out = 100)
+  mu <- cx + (shift * 0.5)
+  sigma <- 0.25
+  y_dens <- dnorm(x_seq, mean = mu, sd = sigma)
+  y_scaled <- cy + (y_dens / max(y_dens)) * 0.8
+  tibble(
+    id = id,
+    profile = profile,
+    x = c(min(x_seq), x_seq, max(x_seq)),
+    y = c(cy, y_scaled, cy)
+  )
+}
+
+# 2. Define Node Data (4 Levels, Perfectly Spaced to Avoid Crossed Edges)
+nodes_df <- tibble(
+  id = 1:15,
+  title = c(
+    # Level 1: Ultra-Priors
+    "Noise\nExpectation", "Volatility\nExpectation", "Tractability\nExpectation", "Terminal\nExpectation",
+    # Level 2: Hyper-Priors
+    "Ambiguity\nExpectation", "Free Energy\nExpectation", "Efficacy\nHorizon",
+    # Level 3: Biases / Meta-Priors
+    "Sensory-Anchoring\nBias", "Coupling\nBias", "Epistemic-Gain\nExpectation", "Action-Perception\nBias", "Self-Coherence\nExpectation",
+    # Level 4: Observables
+    "Openness", "Neuroticism", "Conscientiousness"
+  ),
+  tier = c(rep("Level 1", 4), rep("Level 2", 3), rep("Level 3", 5), rep("Level 4", 3)),
+  left_lbl = c("Low", "Static", "Helpless", "Uncertain", "Low", "Low", "Immediate", "Intero", "Differen.", "Low", "Percept.", "Fragile", "Low", "Low", "Low"),
+  right_lbl = c("High", "Chaotic", "Agency", "Certain", "High", "High", "Extended", "Extero", "Dissol.", "High", "Action", "Integ.", "High", "High", "High"),
+  x = c(
+    -5.4, -1.8, 1.8, 5.4,         # L1
+    -3.6, 0, 3.6,                 # L2
+    -5.4, -2.7, 0, 2.7, 5.4,      # L3
+    -3.6, 0, 3.6                  # L4
+  ), 
+  y = c(rep(7, 4), rep(5, 3), rep(3, 5), rep(1, 3))
+)
+
+# 3. Define Profile Shifts & Separate Latent Polygons from Phenotypic Lollipops
+shifts <- tibble(
+  id = 1:15,
+  profile = c(rep("Level 1", 4), rep("Level 2", 3), rep("Level 3", 5), rep("Level 4", 3)),
+  shift = c(-1, 1, -1, 1, 1, 1, -1, 1, -1, 1, -1, -1, 0.7, 0.8, -0.6) # Shift handles position
+)
+
+# Render distributions only for sub-personal levels (IDs 1-12)
+poly_data <- left_join(shifts, nodes_df, by = "id") %>%
+  filter(id <= 12) %>%
+  pmap_dfr(function(id, x, y, shift, profile, ...) {
+    generate_dist(id, x, y, shift, profile)
+  })
+
+# Isolate Level 4 for Lollipop geometry
+lollipop_data <- left_join(shifts, nodes_df, by = "id") %>%
+  filter(id > 12)
+
+# 4. Construct the Graph with Clean Hierarchical Parameter Routing
+edges_df <- tibble(
+  from = c(
+    # L1 -> L2
+    2, 3, 1, 3, 2, 1, 4,
+    # L2 -> L3
+    5, 5, 5, 6, 6, 7, 7, 6,
+    # L3 -> L4
+    10, 8, 6, 11, 12, 11
+  ), 
+  to = c(
+    # L1 -> L2
+    6, 6, 6, 5, 5, 5, 7,
+    # L2 -> L3
+    8, 10, 9, 9, 11, 11, 12, 12,
+    # L3 -> L4
+    13, 13, 14, 14, 15, 15
+  ),
+  type = c(
+    rep(c("Location", "Precision"), 3), "Location", # L1 -> L2
+    "Location", "Location", "Location", "Precision", "Location", "Precision", "Location", "Precision", # L2 -> L3
+    "Location", "Precision", "Location", "Precision", "Location", "Precision" # L3 -> L4
+  )
+)
+
+graph <- tbl_graph(nodes = nodes_df, edges = edges_df)
+
+# 5. Render the System Dynamics Diagram
+profile_colors <- c("Level 1" = "#0D47A1", "Level 2" = "#2196F3", "Level 3" = "#009688")
+edge_colors <- c("Location" = "red", "Precision" = "purple")
+
+ggraph(graph, layout = "manual", x = x, y = y) +
+  # Parametric Routing System
+  geom_edge_link(
+    aes(color = type, linetype = type),
+    arrow = arrow(length = unit(0.22, "cm"), type = "closed"),
+    linewidth = 0.8,
+    alpha = 0.75, 
+    start_cap = circle(0.15, "cm"),  
+    end_cap = circle(1.6, "cm") 
+  ) +
+  scale_edge_color_manual(values = edge_colors, name = "Parameter Influence:") +
+  scale_edge_linetype_manual(values = c("Location" = "solid", "Precision" = "dashed"), name = "Parameter Influence:") +
+  
+  # Latent Sub-personal Probability Densities (Levels 1-3)
+  geom_polygon(
+    data = poly_data, 
+    aes(x = x, y = y, group = interaction(id, profile), fill = profile),
+    color = "#2d3748", linewidth = 0.5, alpha = 0.8
+  ) +
+  
+  # Node Scale Baselines (Serving as the axes/Likert scales)
+  geom_segment(
+    aes(x = x - 1.2, xend = x + 1.2, y = y, yend = y),
+    color = "#2d3748", linewidth = 0.8
+  ) +
+  
+  # Sleek Observable Phenotype Lollipops (Level 4 Metric Isolation)
+  geom_segment(
+    data = lollipop_data,
+    aes(x = x + (shift * 1.0), xend = x + (shift * 1.0), y = y, yend = y + 0.6),
+    color = "#FF9800", linewidth = 1.2
+  ) +
+  geom_point(
+    data = lollipop_data,
+    aes(x = x + (shift * 1.0), y = y + 0.6),
+    color = "#FF9800", size = 3.5
+  ) +
+  
+  # Structural Metadata & Dynamic Labels
+  geom_node_text(aes(label = title), fontface = "bold", size = 3.6, vjust = 0, color = "#2d3748", nudge_y = 0.95) +
+  geom_node_text(aes(label = left_lbl), size = 3.0, color = "#4a5568", hjust = 0.5, nudge_x = -1.1, nudge_y = -0.25) +
+  geom_node_text(aes(label = right_lbl), size = 3.0, color = "#4a5568", hjust = 0.5, nudge_x = 1.1, nudge_y = -0.25) +
+  
+  # Functional Stratigraphy Annotations
+  annotate("text", x = -8.0, y = 7, label = "ULTRA-PRIORS", angle = 90, fontface = "bold", size = 4.2, color = "#4a5568") +
+  annotate("text", x = -8.0, y = 5, label = "HYPER-PRIORS", angle = 90, fontface = "bold", size = 4.2, color = "#4a5568") +
+  annotate("text", x = -8.0, y = 3, label = "BIASES / META", angle = 90, fontface = "bold", size = 4.2, color = "#4a5568") +
+  annotate("text", x = -8.0, y = 1, label = "OBSERVABLES", angle = 90, fontface = "bold", size = 4.2, color = "#FF9800") +
+  
+  # Graph Formatting
+  scale_fill_manual(values = profile_colors) +
+  coord_cartesian(xlim = c(-8.5, 7.5), ylim = c(0.2, 8.2), clip = "off") +
+  guides(fill = "none") + 
+  theme_void() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_text(face = "bold", size = 11),
+    legend.text = element_text(size = 10),
+    plot.margin = margin(1, 1, 1, 1, "cm")
+  )
+```
+
+
 # The Core Priors Cascade Model
 
-The central architectural claim of the CPC Model is that the cascade is not merely correlational. Higher-tier parameters do not just co-vary with lower-tier ones; they constrain the solution space available to them. A Tier 1 configuration of extreme expected volatility and low expected tractability forecloses certain Tier 3 operational strategies. This hierarchical determination is what differentiates the CPC Model from multivariate trait models in which dimensions are statistically correlated but conceptually orthogonal.
+The central architectural claim of the CPC Model is that the cascade is not merely correlational. Higher-level parameters do not just co-vary with lower-level ones; they constrain the solution space available to them. An existential-level configuration of extreme expected volatility and low expected tractability forecloses certain operational-level strategies. This hierarchical determination is what differentiates the CPC Model from multivariate trait models in which dimensions are statistically correlated but conceptually orthogonal.
 
 A productive conceptual frame for this cascade architecture is that of a *free energy landscape*. This is a topographic surface on which the agent's achievable parameter configurations are mapped against their associated expected free energy. Stable personality configurations correspond to local minima acting as *attractor basins* into which the system settles and from which it resists displacement. 
 
@@ -114,25 +281,27 @@ The binary distinction between expectations and biases clarifies this topology:
 
 Deeply entrenched existential expectations carve deep attractors with steep precision walls that demand substantial perturbation to escape. Mild challenges to the generative model produce only local oscillations within the basin. However, more substantial perturbations, such as developmental transitions, significant relational experiences, or sustained therapeutic intervention, may shift the system to an adjacent attractor. Catastrophic destabilisation may temporarily flatten the landscape entirely, transiently liberating the system from habitual precision constraints. 
 
-The *valleys* of this landscape are the expectations themselves. Characteristic personality configurations represent the stable dynamical states of an agent's free energy landscape. Psychopathological trajectories can be understood as transitions between basins, as trapping within anomalously deep basins, or as the fragmentation of a landscape too shallow to sustain coherent stable states. This framing also accommodates the bidirectional dynamics of the cascade. While higher-tier parameters constrain the solution space for lower-tier configurations, bottom-up neuroplasticity continuously reshapes the landscape through experience and development, gradually deepening or shallowing the attractor basins themselves.
+The *valleys* of this landscape are the expectations themselves. Characteristic personality configurations represent the stable dynamical states of an agent's free energy landscape. Psychopathological trajectories can be understood as transitions between basins, as trapping within anomalously deep basins, or as the fragmentation of a landscape too shallow to sustain coherent stable states. This framing also accommodates the bidirectional dynamics of the cascade. While higher-level parameters constrain the solution space for lower-level configurations, bottom-up neuroplasticity continuously reshapes the landscape through experience and development, gradually deepening or shallowing the attractor basins themselves.
 
 The landscape also has an overall topology that shapes all local dynamics. Death, defined as systemic cessation or the dissolution of the agent's self-organising boundary, is not merely one attractor basin among many but the global minimum. It is the deepest point toward which any finite system will eventually tend. All other personality configurations are metastable states on a landscape that tilts, over sufficiently long timescales, toward this terminus. The terminal expectation, described below, governs how consciously and at what distance the agent orients to this underlying structure.
 
-The following sections specify the dimensions at each tier, moving from the most global and abstract to the most proximal and context-sensitive.
+The following sections specify the dimensions at each level, moving from the most global and abstract to the most proximal and context-sensitive.
 
-## Existential Hyperpriors
 
-Existential expectations occupy the apex of the cascade hierarchy. They encode the agent's most fundamental assumptions about the nature of its environment and the ultimate tractability of its predictive project. Because they operate as location parameters ($\mu$) at the highest level of abstraction, perturbations at this tier propagate throughout the entire system. They are described here as "existential" because they concern not merely strategic preferences for error minimisation but the agent's basic orientation to its own existence in time, addressing questions of agency, safety, and finitude.
+
+## Ultra-Priors
+
+These existential expectations occupy the absolute apex of the cascade hierarchy, acting as "ultra-priors" that are unconstrained by higher psychological structures. These foundational location parameters ($\mu$) represent the ultimate cognitive translations of the organism’s neurobiological hardware, deeply rooted in phylogenetic inheritance, genetic dispositions, and early developmental epigenetic programming. They encode the agent's most fundamental assumptions about the nature of its environment and the ultimate tractability of its predictive project. Because they operate at this foundational level of abstraction, perturbations or hardwired variations here propagate throughout the entire generative system. They are described here as "existential" because they concern not merely strategic preferences for error minimisation but the agent's basic orientation to its own existence in time, addressing questions of agency, safety, and finitude.
 
 ### Volatility Expectation
 
-The volatility expectation encodes the agent's baseline assumption regarding the rate of change in the environment's hidden states, which is the underlying generative structure the agent's model attempts to track. An agent with a *high volatility expectation* assumes the environment's generative rules shift rapidly. This forces a systematic discounting of historical learning and a near-continuous anticipation of prediction error. Past model updates are rapidly deprecated because the agent expects the underlying structure they tracked has already changed. Conversely, an agent with a *low volatility expectation* assumes the environment is highly structurally stable over time, affording the accumulation of high-precision long-term models and a characteristic orientation toward order and environmental mastery. The volatility expectation constitutes one of the primary Tier 1 parameters because it sets the time horizon over which all downstream inference is meaningful: an agent cannot maintain stable Tier 2 and Tier 3 strategies in an environment it expects to be fundamentally unpredictable.
+The volatility expectation encodes the agent's baseline assumption regarding the rate of change in the environment's hidden states, which is the underlying generative structure the agent's model attempts to track. An agent with a *high volatility expectation* assumes the environment's generative rules shift rapidly. This forces a systematic discounting of historical learning and a near-continuous anticipation of prediction error. Past model updates are rapidly deprecated because the agent expects the underlying structure they tracked has already changed. Conversely, an agent with a *low volatility expectation* assumes the environment is highly structurally stable over time, affording the accumulation of high-precision long-term models and a characteristic orientation toward order and environmental mastery. The volatility expectation constitutes one of the primary apex-level parameters because it sets the time horizon over which all downstream inference is meaningful: an agent cannot maintain stable boundary and operational strategies in an environment it expects to be fundamentally unpredictable.
 
 ### Tractability Expectation
 
 The tractability expectation encodes the agent's baseline assumption of whether prediction errors, once encountered, can be resolved through the agent's own active inference. A *high tractability expectation* reflects the belief that action reliably reduces error, meaning the gap between the agent's internal model and the sensory world is bridgeable through purposive agency. This disposition produces approach behaviour, behavioural activation, and sustained engagement with uncertainty, because the agent expects that exploration will ultimately yield resolvable error. 
 
-A *low tractability expectation* reflects the expectation that action generates unresolvable error, or that the system simply lacks the capacity to shift external states into alignment with its internal model. This configuration shares close parallels with learned helplessness [@seligman1972learned]. Low tractability drives epistemic shielding (the suppression of precise sensory signals to avoid errors that cannot be remedied) and behavioural inhibition as the energetically efficient response to expected futility. The tractability expectation is explicitly distinguished from the volatility expectation, though the two may correlate. An agent in a genuinely volatile environment may rationally develop low tractability expectations, while an agent with a constitutional low tractability expectation may perceive even stable environments as intractably uncertain.
+A *low tractability expectation* reflects the expectation that action generates unresolvable error, or that the system simply lacks the capacity to shift external states into alignment with its internal model. This configuration shares close parallels with learned helplessness [@seligman1972learned]. Low tractability drives epistemic shielding (the suppression of precise sensory signals to avoid errors that cannot be remedied) and behavioural inhibition as the energetically efficient response to expected futility. The tractability expectation is explicitly distinguished from the volatility expectation, though the two may correlate. An agent who models its environment as highly volatile may learn a low tractability expectation as active inference repeatedly fails to establish stable homeostatic bounds, while an agent with an entrenched low tractability expectation may continue to perceive even structurally predictable sequences of sensory inputs as intractably uncertain.
 
 ### Noise Expectation
 
@@ -140,25 +309,27 @@ The noise expectation is a reactive parameter governing the agent's baseline ass
 
 These parameters can dissociate in important ways. An agent with a high tractability expectation may be surprisingly brittle upon encountering genuine irreducibility, having rarely needed to develop a high noise expectation. Alternatively, an agent with chronically low tractability may develop a high baseline noise expectation, having habituated to the persistent presence of residual uncertainty. A *high noise expectation* reflects the capacity to accept irreducible error, representing an epistemic humility that permits adequate functioning without forcing premature model updates or false closure. A *low noise expectation* drives premature cognitive closure, distress in the face of ambiguity, and a tendency to force lower-level models to accommodate incomplete or contradictory data at the cost of model accuracy.
 
-### Free Energy Expectation
-
-The baseline Expected Free Energy (EFE) expectation represents the characteristic phenomenological tone of the agent's global predictive health, experienced as affective valence. Within the FEP, persistent negative affect is interpretable as the felt correlate of a chronically elevated expected free energy signal. The agent continuously anticipates unresolvable prediction errors, and this anticipation is experienced as anxiety, dysphoria, or anhedonia. This baseline EFE parameter is treated here as an explicit dimension, not merely a correlate or consequence of other parameters, because it carries independent predictive value and constitutes the primary experiential interface through which the prior structure is registered.
-
-A *low baseline Expected Free Energy expectation* reflects an affective tone of approach, safety, and reward anticipation associated with a belief that the world is broadly navigable (positive valence). A *high baseline Expected Free Energy expectation* reflects chronically elevated expected free energy, leading to persistent threat anticipation, vigilance, or hedonic blunting (negative valence). This dimension maps directly onto the construct of Neuroticism in descriptive models [@eysenck1967biological; @mccrae1992introduction]. On this account, Neuroticism is not a primary trait but the phenomenological consequence of Tier 1 hyperparameter configuration, reflecting the experienced signature of low tractability combined with high volatility expectations.
-
-This formulation converges with Barrett's [-@barrett2017tce] Theory of Constructed Emotion, which frames affect as a low-dimensional readout of the body's allostatic budget, functioning as a continuous barometer of the anticipated cost of maintaining homeostatic and predictive integrity. The CPC Model situates this readout at the apex of the hierarchy. The baseline EFE expectation acts as the phenomenological signature of the agent's net expected free energy and is therefore amongst the most conservative and change-resistant dimensions in the framework.
 
 ### Terminal Expectation
 
-The terminal expectation governs how the agent models its own ultimate structural dissolution. Within the FEP, mortality salience functions as a precision-weighting problem: confrontation with finitude forces the agent to resolve or suppress the prediction error of anticipated self-model cessation [@greenberg1986terror; @becker1973denial]. The temporal distance over which the agent's self-model projects itself before anticipating dissolution, here termed the *temporal horizon of the self*, constitutes one of the primary axes of Tier 1 variation.
+The terminal expectation governs how the agent models its own ultimate structural dissolution. Within the FEP, mortality salience functions as a precision-weighting problem: confrontation with finitude forces the agent to resolve or suppress the prediction error of anticipated self-model cessation [@greenberg1986terror; @becker1973denial]. The temporal distance over which the agent's self-model projects itself before anticipating dissolution, here termed the *temporal horizon of the self*, constitutes one of the primary axes of existential-level variation.
 
 Three configurations are identified. *Disengagement* reflects an attenuation of the temporal self-model and takes two functionally distinct forms. Passive disengagement involves a diffuse failure of deep temporal planning characterised by generalised low precision on future-directed inference and a fatalistic or anhedonic orientation; the agent drifts rather than actively converging on future states. Active cessation-seeking represents a catastrophically precise expectation converging on systemic shutdown as the optimal policy. Here, the expected free energy of all future states is evaluated as unresolvably high, rendering structural cessation the lowest-free-energy attractor. This configuration is the formal active inference analogue of Thanatos, mapping onto clinical suicidal ideation at its extreme.
 
 *Integration* reflects authentic acceptance of finitude. Expected free energy is balanced across temporal horizons without needing to suppress mortality salience, and the agent optimises for present-horizon goals without either withdrawing from the future or frantically extending the self into it. *Transcendence* involves extending the Markov blanket across time through legacy, whether cultural, symbolic, or biological, such that the agent's self-model is projected to outlive the physical substrate. Transcendence and Integration may represent two configurations along a continuous dimension of temporal self-extension, while disengagement constitutes a qualitatively distinct attractor state.
 
+### Free Energy Expectation
+
+The baseline Expected Free Energy (EFE) expectation represents the characteristic phenomenological tone of the agent's global predictive health, experienced as affective valence. Within the FEP, persistent negative affect is interpretable as the felt correlate of a chronically elevated expected free energy signal. The agent continuously anticipates unresolvable prediction errors, and this anticipation is experienced as anxiety, dysphoria, or anhedonia. This baseline EFE parameter is treated here as an explicit dimension, not merely a correlate or consequence of other parameters, because it carries independent predictive value and constitutes the primary experiential interface through which the prior structure is registered.
+
+A *low baseline Expected Free Energy expectation* reflects an affective tone of approach, safety, and reward anticipation associated with a belief that the world is broadly navigable (positive valence). A *high baseline Expected Free Energy expectation* reflects chronically elevated expected free energy, leading to persistent threat anticipation, vigilance, or hedonic blunting (negative valence). This dimension maps directly onto the construct of Neuroticism in descriptive models [@eysenck1967biological; @mccrae1992introduction]. On this account, Neuroticism is not a primary trait but the phenomenological consequence of the highest-level hyperparameter configuration, reflecting the experienced signature of low tractability combined with high volatility expectations.
+
+This formulation converges with Barrett's [-@barrett2017tce] Theory of Constructed Emotion, which frames affect as a low-dimensional readout of the body's allostatic budget, functioning as a continuous barometer of the anticipated cost of maintaining homeostatic and predictive integrity. The CPC Model situates this readout at the apex of the hierarchy. The baseline EFE expectation acts as the phenomenological signature of the agent's net expected free energy and is therefore amongst the most conservative and change-resistant dimensions in the framework.
+
+
 ## Boundary Biases
 
-Boundary and relational biases govern the expected state of the interface between the agent's internal model and the external world, establishing the functional properties of the Markov blanket as a dynamic boundary through which inference flows. Because a boundary is defined by statistical gradients, these dimensions operate as precision ratios ($\pi$), dictating how attention and statistical weight are distributed across competing channels. These biases are constrained by Tier 1: an agent whose existential expectations impose extreme volatility and low tractability has correspondingly fewer viable configurations available at Tier 2. The three dimensions at this tier concern the gradient of coupling between self and world, the precision allocated to social inference, and the sensory modality that serves as the agent's fundamental ground truth.
+Boundary and relational biases govern the expected state of the interface between the agent's internal model and the external world, establishing the functional properties of the Markov blanket as a dynamic boundary through which inference flows. Because a boundary is defined by statistical gradients, these dimensions operate as precision ratios ($\pi$), dictating how attention and statistical weight are distributed across competing channels. These biases are constrained by the existential level: an agent whose existential expectations impose extreme volatility and low tractability has correspondingly fewer viable configurations available at the boundary level. The three dimensions in this category concern the gradient of coupling between self and world, the precision allocated to social inference, and the sensory modality that serves as the agent's fundamental ground truth.
 
 ### Coupling Bias
 
@@ -174,7 +345,7 @@ The mentalizing bias concerns the precision ratio allocated to modeling the hidd
 
 ### Sensory-Anchoring Bias
 
-The sensory-anchoring bias governs the relative precision ratio assigned to the foundational sensory channels the agent uses as its ultimate evidential ground truth. This is the informational basis to which the generative model appeals when resolving higher-tier prediction errors, ultimately defining the informational thickness of the Markov blanket. 
+The sensory-anchoring bias governs the relative precision ratio assigned to the foundational sensory channels the agent uses as its ultimate evidential ground truth. This is the informational basis to which the generative model appeals when resolving higher-level prediction errors, ultimately defining the informational thickness of the Markov blanket. 
 
 *Exteroceptive anchoring* reflects a precision bias directed outward. The system prioritises environmental states like visual, auditory, and spatial cues to validate its internal models. The self is constituted in relation to external spatial coordinates and exteroceptive feedback, such that environmental regularities serve as the primary scaffolding for self-model stability.
 
@@ -182,7 +353,7 @@ The sensory-anchoring bias governs the relative precision ratio assigned to the 
 
 ## Epistemic Meta-Priors
 
-The epistemic meta-priors act as operational expectations and biases that govern how the agent minimizes free energy within the structural constraints established by Tiers 1 and 2. Where the upper tiers set the parameters of the agent's fundamental orientations, Tier 3 concerns the operational policies deployed in navigating prediction errors across the perception-action cycle. They act as meta-parameters governing how the generative model itself should be updated and managed.
+The epistemic meta-priors act as operational expectations and biases that govern how the agent minimizes free energy within the structural constraints established by the first two levels. Where the upper levels set the parameters of the agent's fundamental orientations, the operational level concerns the operational policies deployed in navigating prediction errors across the perception-action cycle. They act as meta-parameters governing how the generative model itself should be updated and managed.
 
 ### Sensory-Prior Bias
 
@@ -192,7 +363,7 @@ A *sensory-heavy, bottom-up bias* reflects high precision on incoming prediction
 
 ### Action-Perception Bias
 
-Active and perceptual inference occur simultaneously; individuals nonetheless differ systematically in the relative precision assigned to each channel when confronted with free energy. An *action-heavy bias* places high precision on the agent's capacity to alter external states via motor policies. The primary mode of free energy minimisation is active environmental transformation, such as exerting control, manipulating circumstances, or forcing external reality into conformity with the internal model. This maps onto an external locus of control and behavioural dominance, intersecting with the differentiation pole of the coupling bias at Tier 2. 
+Active and perceptual inference occur simultaneously; individuals nonetheless differ systematically in the relative precision assigned to each channel when confronted with free energy. An *action-heavy bias* places high precision on the agent's capacity to alter external states via motor policies. The primary mode of free energy minimisation is active environmental transformation, such as exerting control, manipulating circumstances, or forcing external reality into conformity with the internal model. This maps onto an external locus of control and behavioural dominance, intersecting with the differentiation pole of the coupling bias. 
 
 A *perception-heavy bias* places lower precision on active motor policies relative to sensory belief updating. The agent minimises free energy primarily through internal belief revision, attentional reorientation, and accommodation of the environment rather than action upon it. This maps onto an internal locus of control and accommodative cognitive styles, and in its extreme form may contribute to behavioural inhibition when the tractability expectation is insufficient to sustain action-oriented strategies.
 
@@ -208,11 +379,11 @@ The **Somatic-Semantic Bias** is the precision-allocation parameter dictating th
 
 *Semantic foraging* involves testing the conceptual and cultural architecture of the agent's generative model by probing the coherence of its worldview under pressure. Mild semantic foraging is characteristic of engagement with transgressive art, radical philosophy, or complex esoteric and symbolic systems. Extreme semantic foraging may involve deliberate phenomenological destabilisation through psychedelics or other profound altered states of consciousness. This functions as a directed attempt to observe the underlying structure of the generative model by shattering the conceptual ego and collapsing its surface representations.
 
-This mechanism is formalised by the REBUS (Relaxed Beliefs Under Psychedelics) model [@carhart2019rebus], which proposes that classical serotonergic psychedelics reduce the precision weighting of high-level priors. Within the CPC framework, the therapeutic and transformative potential attributed to psychedelic experience resides in this landscape-flattening. By temporarily reducing attractor depth at the level of Tier 1 and Tier 2 expectations, these agents open pathways for structural reorganisation that would otherwise remain energetically inaccessible. Importantly, the depth of the agent's characteristic attractor, which is a direct function of prior precision accumulated across development, is expected to modulate the response. An agent with a very deep attractor basin may require greater perturbation to achieve meaningful reorganisation than one whose prior landscape is comparatively shallow.
+This mechanism is formalised by the REBUS (Relaxed Beliefs Under Psychedelics) model [@carhart2019rebus], which proposes that classical serotonergic psychedelics reduce the precision weighting of high-level priors. Within the CPC framework, the therapeutic and transformative potential attributed to psychedelic experience resides in this landscape-flattening. By temporarily reducing attractor depth at the level of existential and boundary expectations, these agents open pathways for structural reorganisation that would otherwise remain energetically inaccessible. Importantly, the depth of the agent's characteristic attractor, which is a direct function of prior precision accumulated across development, is expected to modulate the response. An agent with a very deep attractor basin may require greater perturbation to achieve meaningful reorganisation than one whose prior landscape is comparatively shallow.
 
 ### Temporal-Depth Expectation
 
-The temporal-depth expectation concerns the functional time horizon over which the agent's active inference operates. An agent with a *shallow temporal-depth expectation* optimises primarily for immediate sensory feedback and homeostatic regulation. This is a reactive mode in which policies are evaluated against near-term outcomes. An agent with a *deep temporal-depth expectation* simulates cascading future states and optimises for allostasis, entering a proactive mode in which action selection is governed by anticipated long-term model accuracy rather than immediate error reduction. The temporal-depth expectation is structurally constrained by the terminal expectation at Tier 1: an agent with active cessation-seeking or passive disengagement has, by definition, a truncated effective temporal horizon, rendering deep temporal inference structurally unavailable as a strategy.
+The temporal-depth expectation concerns the functional time horizon over which the agent's active inference operates. An agent with a *shallow temporal-depth expectation* optimises primarily for immediate sensory feedback and homeostatic regulation. This is a reactive mode in which policies are evaluated against near-term outcomes. An agent with a *deep temporal-depth expectation* simulates cascading future states and optimises for allostasis, entering a proactive mode in which action selection is governed by anticipated long-term model accuracy rather than immediate error reduction. The temporal-depth expectation is structurally constrained by the terminal expectation hyperprior: an agent with active cessation-seeking or passive disengagement has, by definition, a truncated effective temporal horizon, rendering deep temporal inference structurally unavailable as a strategy.
 
 ### Self-Coherence Expectation
 
@@ -224,111 +395,127 @@ A *high self-coherence expectation* reflects a temporally integrated self-model 
 
 # Illustrative Example: The Neuroticism Cascade
 
-@fig-cascade illustrates how a specific phenotypic outcome, high Trait Neuroticism, can be traced upward through the CPC hierarchy to its operational and existential origins. In the depicted profile, high volatility expectation and low tractability expectation at Tier 1 combine with a rigid noise expectation to produce a chronically elevated baseline EFE expectation. This propagates downward to a perception-heavy action-perception bias at Tier 3 (the agent cannot expect action to resolve error and thus defaults to internal belief revision under threat) and ultimately generates the characteristic negative affective valence associated with Neuroticism at the observable phenotypic level. The figure thus demonstrates the CPC Model's core architectural claim: observable personality phenotypes are the phenomenological surface of an expectation and bias configuration extending across multiple hierarchical levels.
+@fig-cascade illustrates how a specific phenotypic outcome, high Trait Neuroticism, can be traced upward through the CPC hierarchy to its operational and existential origins. In the depicted profile, high volatility expectation and low tractability expectation at the existential level combine with a rigid noise expectation to produce a chronically elevated baseline EFE expectation. This propagates downward to a perception-heavy action-perception bias at the operational level (the agent cannot expect action to resolve error and thus defaults to internal belief revision under threat) and ultimately generates the characteristic negative affective valence associated with Neuroticism at the observable phenotypic level. The figure thus demonstrates the CPC Model's core architectural claim: observable personality phenotypes are the phenomenological surface of an expectation and bias configuration extending across multiple hierarchical levels.
 
 ```{r}
 #| message: false
 #| warning: false
 #| apa-twocolumn: true
 #| label: fig-cascade
-#| fig-cap: "Generative architecture of Trait Neuroticism as an illustrative Core Priors Cascade. Cybernetic states are represented as parameter distributions positioned on dimensional axes across the hierarchy. The depicted profile illustrates a characteristic Neuroticism-associated configuration: high volatility expectation, low tractability expectation, and low noise expectation cascading through an elevated baseline EFE expectation and a perception-heavy action-perception bias to produce negative affective valence and high trait Neuroticism at the observable phenotypic level. Colours indicate functional tiers."
+#| fig-cap: "Generative architecture contrasting Trait Neuroticism with Emotional Stability. Cybernetic states are represented as overlapping parameter distributions positioned on dimensional axes. The red profile illustrates a characteristic Neuroticism-associated configuration: high volatility expectation, low tractability expectation, and low noise expectation cascading through an elevated baseline EFE expectation to produce negative affective valence. The blue profile illustrates a resilient configuration, where inverse parameters generate an action-oriented bias and emotional stability."
+#| fig-height: 12
+#| fig-width: 12
 
 library(tidyverse)
+library(tidygraph)
+library(ggraph)
 
-# Generates the density distributions for the plot
-generate_dist <- function(id, cx, cy, shift, title, left_lbl = "Low", right_lbl = "High", tier = "State") {
-  x_seq <- seq(cx - 1.5, cx + 1.5, length.out = 100)
+# 1. Distribution Generator Function
+generate_dist <- function(id, cx, cy, shift, profile) {
+  x_seq <- seq(cx - 1.75, cx + 1.75, length.out = 100)
   mu <- cx + (shift * 0.8)
   sigma <- 0.35
   y_dens <- dnorm(x_seq, mean = mu, sd = sigma)
   y_scaled <- cy + (y_dens / max(y_dens)) * 1.2
   tibble(
     id = id,
-    tier = tier,
+    profile = profile,
     x = c(min(x_seq), x_seq, max(x_seq)),
     y = c(cy, y_scaled, cy)
   )
 }
 
-nodes <- tribble(
-  ~id, ~cx,   ~cy,  ~shift, ~title,                     ~left_lbl,    ~right_lbl, ~tier,
-  1,  -5.5,   9,     1,     "Volatility Expectation",      "Static",     "Chaotic",  "Tier 1",
-  2,   0,     9,    -1,     "Tractability Expectation",    "Helpless",   "Agency",   "Tier 1",
-  3,   5.5,   9,    -1,     "Noise Expectation",           "Low",        "High",     "Tier 1",
-  4,  -2.75,  4.5,   1,     "Baseline EFE Expectation",    "Low",        "High",     "State",
-  5,   2.75,  4.5,  -1,     "Action-Perception Bias",  "Perception", "Action",    "Tier 3",
-  6,   0,     0,    -1,     "Affective Valence",        "Negative",   "Positive", "State",
-  7,   0,    -4.5,   1,     "Trait Neuroticism",        "Low",        "High",     "Phenotype"
+# 2. Define Node Properties
+nodes_df <- tribble(
+  ~id, ~cx,   ~cy,  ~title,                     ~level_lbl,            ~left_lbl,    ~right_lbl,
+  1,  -5.5,   9,    "Volatility Expectation",   "(Existential Level)", "Static",     "Chaotic",
+  2,   0,     9,    "Tractability Expectation", "(Existential Level)", "Helpless",   "Agency",
+  3,   5.5,   9,    "Noise Expectation",        "(Existential Level)", "Low",        "High",
+  4,  -2.75,  4.5,  "Free Energy Expectation",  "(Existential Level)", "Low",        "High",
+  5,   2.75,  4.5,  "Action-Perception Bias",   "(Operational Level)", "Perception", "Action",
+  6,   0,     0,    "Affective Valence",        "(Emergent State)",    "Negative",   "Positive",
+  7,   0,    -4.5,  "Neuroticism",              "(Observable Phenotype)", "Low",        "High"
 )
 
-poly_data <- map_dfr(1:nrow(nodes), function(i) {
-  r <- nodes[i, ]
-  generate_dist(r$id, r$cx, r$cy, r$shift, r$title, r$left_lbl, r$right_lbl, r$tier)
-})
-
-# Base un-padded coordinates connecting the conceptual centers of the nodes
-edges <- tribble(
-  ~from, ~to, ~x1,   ~y1,   ~x2,    ~y2,
-  1,     4,  -5.5,   8.5,  -2.75,   5.8,
-  2,     4,   0,     8.5,  -2.75,   5.8,
-  2,     5,   0,     8.5,   2.75,   5.8,
-  3,     4,   5.5,   8.5,  -2.75,   5.8,
-  4,     6,  -2.75,  4.0,   0,       1.5,
-  5,     6,   2.75,  4.0,   0,       1.5,
-  6,     7,   0,    -0.5,   0,      -3.0
+shifts <- tribble(
+  ~id, ~profile,              ~shift,
+  1,   "High Neuroticism",     1,
+  2,   "High Neuroticism",    -1,
+  3,   "High Neuroticism",    -1,
+  4,   "High Neuroticism",     1,
+  5,   "High Neuroticism",    -1,
+  6,   "High Neuroticism",    -1,
+  7,   "High Neuroticism",     1
 )
 
-# Custom logic to geometrically pad the segment ends
-apply_caps <- function(df, start_cap = 0, end_cap = 0) {
-  df %>%
-    mutate(
-      dx = x2 - x1,
-      dy = y2 - y1,
-      len = sqrt(dx^2 + dy^2),
-      x1 = x1 + (dx / len) * start_cap,
-      y1 = y1 + (dy / len) * start_cap,
-      x2 = x2 - (dx / len) * end_cap,
-      y2 = y2 - (dy / len) * end_cap
-    ) %>%
-    select(-dx, -dy, -len)
-}
+# Pre-calculate polygon data for the distributions
+poly_data <- left_join(shifts, nodes_df, by = "id") %>%
+  pmap_dfr(function(id, cx, cy, shift, profile, ...) {
+    generate_dist(id, cx, cy, shift, profile)
+  })
 
-edges_capped <- apply_caps(edges, start_cap = 0.3, end_cap = 0.5)
+# 3. Construct the Tidygraph Object
+graph <- tbl_graph(
+  nodes = nodes_df,
+  edges = tribble(
+    ~from, ~to,
+    1,     4,
+    2,     4,
+    2,     5,
+    3,     4,
+    4,     6,
+    5,     6,
+    6,     7
+  )
+)
 
-# Define a clean aesthetic palette mapping to hierarchical tiers
-tier_colors <- c("Tier 1" = "#E69F00", "Tier 3" = "#56B4E9", "State" = "#999999", "Phenotype" = "#009E73")
+# 4. Render the Unified Graph Layout
+profile_colors <- c("High Neuroticism" = "#d90429")
 
-ggplot() +
-  geom_segment(data = edges_capped, aes(x = x1, y = y1, xend = x2, yend = y2),
-               arrow = arrow(length = unit(0.25, "cm"), type = "closed"),
-               color = "#adb5bd", linewidth = 0.8) +
-  geom_polygon(data = poly_data, aes(x = x, y = y, group = id, fill = tier),
-               color = "#343a40", linewidth = 0.6, alpha = 0.8) +
-  scale_fill_manual(values = tier_colors, guide = "none") +
-  geom_segment(data = nodes, aes(x = cx - 1.6, y = cy, xend = cx + 1.6, yend = cy),
-               color = "#212529", linewidth = 0.8) +
-  geom_text(data = nodes, aes(x = cx, y = cy + 1.6, label = title),
-            fontface = "bold", size = 4.5, vjust = 0, color = "#212529") +
-  geom_text(data = nodes, aes(x = cx - 1.5, y = cy - 0.5, label = left_lbl),
-            size = 3.5, color = "#6c757d", hjust = 0.5) +
-  geom_text(data = nodes, aes(x = cx + 1.5, y = cy - 0.5, label = right_lbl),
-            size = 3.5, color = "#6c757d", hjust = 0.5) +
+ggraph(graph, layout = "manual", x = cx, y = cy) +
+  # Draw connecting arrows with automatic absolute physical padding
+  geom_edge_link(
+    arrow = arrow(length = unit(0.25, "cm"), type = "closed"),
+    color = "#adb5bd", 
+    linewidth = 0.8,
+    start_cap = circle(0.1, "cm"),  # Clears the source node's axis baseline
+    end_cap = circle(1.6, "cm")     # Stops short of the target node's title text
+  ) +
+  
+  # Draw the density distributions (overlays perfectly since coordinates match)
+  geom_polygon(
+    data = poly_data, 
+    aes(x = x, y = y, group = interaction(id, profile), fill = profile),
+    color = "#212529", linewidth = 0.4, alpha = 0.75
+  ) +
+  
+  # FIXED: Standard geom_segment safely draws the individual node axis baselines
+  geom_segment(
+    aes(x = x - 1.6, xend = x + 1.6, y = y, yend = y),
+    color = "#212529", linewidth = 0.8
+  ) +
+  
+  # Text elements positioned directly relative to node center anchors
+  geom_node_text(aes(label = title), fontface = "bold", size = 4.2, vjust = 0, color = "#212529", nudge_y = 1.7) +
+  geom_node_text(aes(label = level_lbl), fontface = "italic", size = 3.5, vjust = 0, color = "#6c757d", nudge_y = 1.25) +
+  geom_node_text(aes(label = left_lbl), size = 3.5, color = "#6c757d", hjust = 0.5, nudge_x = -1.5, nudge_y = -0.4) +
+  geom_node_text(aes(label = right_lbl), size = 3.5, color = "#6c757d", hjust = 0.5, nudge_x = 1.5, nudge_y = -0.4) +
+  
+  # Formatting & Themes
+  scale_fill_manual(values = profile_colors, name = "Generative Profile:") +
   coord_cartesian(clip = "off") +
   theme_void() +
   theme(
     plot.margin = margin(1, 1, 1, 1, "cm"),
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 18, margin = margin(b = 10)),
-    plot.subtitle = element_text(hjust = 0.5, color = "#495057", size = 14, margin = margin(b = 30))
-  ) +
-  labs(
-    title = "Generative Architecture of Trait Neuroticism",
-    subtitle = "Cybernetic states represented as parameter distributions across the hierarchy"
+    legend.position = "bottom",
+    legend.title = element_text(face = "bold", size = 12),
+    legend.text = element_text(size = 11)
   )
 ```
 
 # Hypothesized Factor Structure
 
-The fifteen dimensions of the CPC Model are not hypothesised to be orthogonal. Rather, the cascade architecture implies systematic patterns of co-variation. Characteristic configurations at higher tiers constrain, and therefore predict, characteristic configurations across the lower-tier dimensions. Five latent factors are hypothesised, each representing a theoretically coherent syndrome of co-varying dimensions expected to load together on factor-analytic assessment. These factors are summarised in @tbl-factors.
+The fifteen dimensions of the CPC Model are not hypothesised to be orthogonal. Rather, the cascade architecture implies systematic patterns of co-variation. Characteristic configurations at higher levels constrain, and therefore predict, characteristic configurations across the lower-level dimensions. Five latent factors are hypothesised, each representing a theoretically coherent syndrome of co-varying dimensions expected to load together on factor-analytic assessment. These factors are summarised in @tbl-factors.
 
 ```{r}
 #| message: false
@@ -365,6 +552,7 @@ These five factors carry clear functional correspondences to existing descriptiv
 
 # Relationship to Existing Models
 
+
 The CPC Model is positioned as a generative complement to the primary existing frameworks in personality science, rather than a competitor to them. Its relationship to each is considered in turn.
 
 ## Big Five Personality Theory
@@ -383,11 +571,11 @@ For instance, the Internalizing spectrum aligns with the downstream consequences
 
 Gray's [-@gray1982neuropsychology] Behavioural Inhibition and Activation Systems provide a neurobiological account of approach and avoidance motivation. The tractability expectation directly formalises the BIS/BAS distinction within a generative modelling framework. A high tractability expectation maps onto dominant BAS functioning, characterised by sustained approach, reward sensitivity, and behavioural activation. A low tractability expectation maps onto dominant BIS functioning, characterised by behavioural inhibition, hypervigilance to potential prediction errors, and an anxiety-prone response to uncertainty. 
 
-The added theoretical value is mechanistic. BIS/BAS describes the behavioural output; the CPC Model proposes the hierarchical expectation structure that produces it, grounding the distinction in the mathematics of expected free energy minimisation and extending it with the upstream Tier 1 parameters (volatility expectation, noise expectation) that modulate BIS/BAS expression.
+The added theoretical value is mechanistic. BIS/BAS describes the behavioural output; the CPC Model proposes the hierarchical expectation structure that produces it, grounding the distinction in the mathematics of expected free energy minimisation and extending it with the upstream existential-level parameters (volatility expectation, noise expectation) that modulate BIS/BAS expression.
 
 ## Attachment Theory
 
-The coupling bias and its associated Tier 2 dimensions map directly onto the attachment styles identified by Bowlby [-@bowlby1969attachment] and Ainsworth. Avoidant attachment corresponds to a coupling bias heavily skewed toward the differentiation pole, combined with a low mentalizing bias. The agent minimises expected free energy by maintaining rigid blanket boundaries and discounting social prediction errors. Anxious-preoccupied attachment corresponds to a coupling bias skewed toward the dissolution pole, combined with a high mentalizing bias and a low tractability expectation. The agent urgently seeks high coupling with attachment figures but cannot trust the tractability of that coupling to resolve relational uncertainty. Secure attachment corresponds to a calibrated, flexible coupling bias and a high tractability expectation. The agent can engage in adaptive coupling because it expects the resulting prediction errors will be resolvable. The CPC formulation offers a mechanistic account of why insecure attachment styles persist: they are self-consistent configurations of interacting expectations and precision allocations that are self-reinforcing across development.
+The coupling bias and its associated boundary-level dimensions map directly onto the attachment styles identified by Bowlby [-@bowlby1969attachment] and Ainsworth. Avoidant attachment corresponds to a coupling bias heavily skewed toward the differentiation pole, combined with a low mentalizing bias. The agent minimises expected free energy by maintaining rigid blanket boundaries and discounting social prediction errors. Anxious-preoccupied attachment corresponds to a coupling bias skewed toward the dissolution pole, combined with a high mentalizing bias and a low tractability expectation. The agent urgently seeks high coupling with attachment figures but cannot trust the tractability of that coupling to resolve relational uncertainty. Secure attachment corresponds to a calibrated, flexible coupling bias and a high tractability expectation. The agent can engage in adaptive coupling because it expects the resulting prediction errors will be resolvable. The CPC formulation offers a mechanistic account of why insecure attachment styles persist: they are self-consistent configurations of interacting expectations and precision allocations that are self-reinforcing across development.
 
 ## Sensation Seeking
 
@@ -415,9 +603,13 @@ Within the CPC architecture, this equates to flattening the free energy landscap
 
 The therapeutic benefits reported in psychedelic-assisted treatment may thus be understood as the functional consequence of transient attractor-wall shallowing. The agent is temporarily liberated from deeply entrenched, pathologically stable configurations and afforded the opportunity to settle into adjacent basins with lower expected free energy. The CPC Model generates specific predictions here: individuals with highly entrenched precision walls (e.g., exceptionally high Cybernetic Stability) may require greater perturbation to achieve reorganisation, whereas those with shallower prior landscapes (e.g., high Epistemic Plasticity, low self-coherence expectations) may be highly susceptible to destabilisation.
 
+## Primal World Beliefs
+
+The CPC Model also provides a mechanistic foundation for descriptive cognitive architectures such as Primal World Beliefs [@clifton2019primal]. Clifton and colleagues conceptualise "primals" as core, implicit assumptions about the general character of the world as a whole (e.g., that the world is inherently *Safe* vs. *Dangerous*, *Enticing* vs. *Dull*, or *Alive* vs. *Mechanistic*). Within the cascade framework, primals can be formalised as high-level semantic meta-priors or conceptual observables that reflect the state of an agent's deepest cybernetic parameters. For example, a generalized declarative belief that the world is "Dangerous" functions as the conscious narrative readout of a high volatility expectation combined with an elevated baseline free energy expectation. Rather than acting as primary causes of behavior, Primal World Beliefs represent the phenomenological and cognitive surface layer of sub-personal, mathematically defined existential hyperpriors, illustrating how deeply entrenched attractor basins manifest in introspective declarative thought.
+
 # Limitations and Open Questions
 
-The Core Priors Cascade Model offers several contributions to the theoretical landscape of personality science. First, by grounding individual differences in the mathematics of the Free Energy Principle, it provides a principled mechanistic account of why personality configurations are stable, why they co-vary in the patterns observed by descriptive models, and why certain configurations confer differential psychopathological vulnerability. The cascade architecture implies that interventions targeting Tier 3 operational parameters (as in most cognitive and behavioural therapies) will have limited durability unless Tier 1 and Tier 2 expectations are also addressed, since deep stability and chronic suffering are maintained by the structural configuration at the highest levels of the hierarchy, not merely by surface-level epistemic strategies.
+The Core Priors Cascade Model offers several contributions to the theoretical landscape of personality science. First, by grounding individual differences in the mathematics of the Free Energy Principle, it provides a principled mechanistic account of why personality configurations are stable, why they co-vary in the patterns observed by descriptive models, and why certain configurations confer differential psychopathological vulnerability. The cascade architecture implies that interventions targeting operational-level parameters (as in most cognitive and behavioural therapies) will have limited durability unless existential and boundary-level expectations are also addressed, since deep stability and chronic suffering are maintained by the structural configuration at the highest levels of the hierarchy, not merely by surface-level epistemic strategies.
 
 Second, splitting the epistemic foraging drive into a generalized epistemic-gain expectation and a domain-specific somatic-semantic bias constitutes a theoretically motivated prediction not generated by existing models. If confirmed by discriminant validity evidence, this distinction would have implications for understanding heterogeneity within sensation-seeking, risk tolerance, and creative openness.
 
@@ -427,9 +619,9 @@ Despite these contributions, several limitations and open questions remain. The 
 
 However, this measurement gap is not insurmountable. By reliably measuring these observables and rigorously analysing their covariance, researchers can make robust inferences about the higher-order structural expectations generating them. The latent variables modeled from dense, high-quality psychometric data can serve as proxies for the deeper prior landscape.
 
-Furthermore, implicit behavioural tasks offer a promising alternative to self-report. Because explicit questionnaires are vulnerable to introspective limits, tasks that probe inference processes directly may be better suited for assessing CPC dimensions. As demonstrated by Makowski [-@makowski2023illusion], who found systematic links between personality traits and illusion sensitivity in a perceptual decision task, implicit measures can bypass declarative awareness to probe the underlying predictive architecture directly. A battery of perceptual, somatic, and cognitive tasks could eventually serve as direct assays of the CPC Model's latent dimensions. Computational psychiatry provides relevant methodological precedents here [@huys2016computational], where parameters analogous to the CPC's Tier 3 operational dimensions (learning rates, sensory weightings, temporal discounting) have been successfully back-estimated from task performance using hierarchical Bayesian models. 
+Furthermore, implicit behavioural tasks offer a promising alternative to self-report. Because explicit questionnaires are vulnerable to introspective limits, tasks that probe inference processes directly may be better suited for assessing CPC dimensions. As demonstrated by Makowski [-@makowski2023illusion], who found systematic links between personality traits and illusion sensitivity in a perceptual decision task, implicit measures can bypass declarative awareness to probe the underlying predictive architecture directly. A battery of perceptual, somatic, and cognitive tasks could eventually serve as direct assays of the CPC Model's latent dimensions. Computational psychiatry provides relevant methodological precedents here [@huys2016computational], where parameters analogous to the CPC's operational-level dimensions (learning rates, sensory weightings, temporal discounting) have been successfully back-estimated from task performance using hierarchical Bayesian models. 
 
-The CPC framework extends this tradition by situating these parameters within an explicit expectation-bias hierarchy, generating the prediction that different computational task designs will probe different tiers. Paradigms involving estimation of environmental volatility will tax Tier 1 expectations; tasks involving social inference and boundary detection will probe Tier 2 biases; and tasks requiring rapid strategy-switching under conflicting evidence will engage Tier 3 operational biases. Paradoxically, the most informative tier, Tier 1 existential expectations, will be the hardest to access directly. Their influence operates precisely by suppressing the prediction errors that would otherwise reveal them. Paradigms that systematically manipulate volatility, tractability, and uncertainty across extended task sequences may be best positioned to back-out these deep structural parameters.
+The CPC framework extends this tradition by situating these parameters within an explicit expectation-bias hierarchy, generating the prediction that different computational task designs will probe different levels. Paradigms involving estimation of environmental volatility will tax existential-level expectations; tasks involving social inference and boundary detection will probe boundary-level biases; and tasks requiring rapid strategy-switching under conflicting evidence will ngage operational-level biases. Paradoxically, the most informative category, existential-level expectations, will be the hardest to access directly. Their influence operates precisely by suppressing the prediction errors that would otherwise reveal them. Paradigms that systematically manipulate volatility, tractability, and uncertainty across extended task sequences may be best positioned to back-out these deep structural parameters.
 
 Additionally, the proposed five-factor structure is hypothetical and awaits empirical validation. Factor-analytic assessment will be necessary to determine the actual latent structure of co-variation across CPC dimensions, and it is plausible that the factor structure will vary across populations and developmental periods. Future work should prioritise the development of psychometric and computational modelling paradigms for parameter estimation, and longitudinal investigation of how expectation and bias structures evolve across development and in response to therapeutic intervention.
 
