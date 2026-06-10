@@ -73,13 +73,51 @@ body {
     line-height: 1.05;
 }
 
-.details-value {
-    min-height: 1em;
-    margin: 0;
-    color: #2563eb;
-    font-size: 44px;
-    line-height: 1;
+/* --- Slider UI Styles --- */
+.details-sliders {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 16px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.24);
+}
+
+.slider-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
     font-weight: 700;
+    color: var(--soft-ink);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.slider-val {
+    color: #2563eb;
+    font-size: 20px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: normal;
+}
+
+input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+    accent-color: #2563eb;
+}
+
+input[type="range"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+    filter: grayscale(100%);
 }
 
 .details-description {
@@ -226,4 +264,124 @@ body {
     .overview-title {
         font-size: 24px;
     }
+}
+
+/* --- Related Frameworks Side-Menu Styles --- */
+.frameworks-layout {
+    display: flex;
+    gap: 32px;
+    margin-top: 24px;
+}
+
+.frameworks-menu {
+    flex: 0 0 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.framework-menu-item {
+    padding: 14px 18px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--surface-border);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--soft-ink);
+    transition: all 0.2s ease;
+    text-align: left;
+    font-family: inherit;
+}
+
+.framework-menu-item:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #cbd5e1;
+    color: var(--ink);
+}
+
+.framework-menu-item.is-active {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.frameworks-content-panel {
+    flex: 1;
+    padding: 32px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--surface-border);
+    border-radius: 16px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.framework-detail-title {
+    margin: 0 0 20px 0;
+    font-size: 24px;
+    color: var(--ink);
+    line-height: 1.2;
+}
+
+.framework-detail-text {
+    color: var(--soft-ink);
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+/* Allow standard HTML styling inside the detail text */
+.framework-detail-text p {
+    margin-top: 0;
+    margin-bottom: 1.2em;
+}
+
+.framework-detail-text p:last-child {
+    margin-bottom: 0;
+}
+
+.framework-detail-text strong,
+.framework-detail-text b {
+    color: var(--ink);
+    font-weight: 700;
+}
+
+.framework-detail-text ul {
+    margin-top: 0;
+    margin-bottom: 1.2em;
+    padding-left: 24px;
+}
+
+.framework-detail-text li {
+    margin-bottom: 8px;
+}
+
+@media (max-width: 850px) {
+    .frameworks-layout {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .frameworks-menu {
+        flex: auto;
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 12px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .framework-menu-item {
+        white-space: nowrap;
+        flex: 0 0 auto;
+    }
+}
+
+.link.connected {
+    stroke: #2563eb; /* Highlight color */
+    stroke-width: 4px;
+    opacity: 1;
+}
+
+/* Dim non-connected links when something is active */
+.link:not(.connected) {
+    opacity: 0.2;
 }

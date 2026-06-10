@@ -5,16 +5,117 @@ if (!d3 || !coreSelfModel) {
     throw new Error("The simulator dependencies did not load correctly.")
 }
 
+// 1. Inject Textual Overview
+const overviewContainer = document.getElementById("overview-panel")
+if (coreSelfModel.overview) {
+    overviewContainer.innerHTML = `
+        <p class="overview-kicker">${coreSelfModel.overview.kicker}</p>
+        <h2 id="overview-title" class="overview-title">${coreSelfModel.overview.title}</h2>
+        ${coreSelfModel.overview.text.map((p) => `<p class="overview-text">${p}</p>`).join("")}
+    `
+}
+
+// 2. Inject Related Frameworks Panel
+const frameworksContainer = document.getElementById("frameworks-panel")
+if (coreSelfModel.relatedFrameworks && coreSelfModel.relatedFrameworks.items.length > 0) {
+    // Generate the raw HTML structure
+    let frameworksHtml = `
+        <p class="overview-kicker">${coreSelfModel.relatedFrameworks.kicker}</p>
+        <h2 id="frameworks-title" class="overview-title">${coreSelfModel.relatedFrameworks.title}</h2>
+        <div class="frameworks-layout">
+            <div class="frameworks-menu" id="frameworks-menu" role="tablist">
+                ${coreSelfModel.relatedFrameworks.items
+                    .map(
+                        (item, index) => `
+                    <button class="framework-menu-item ${index === 0 ? "is-active" : ""}" 
+                            data-index="${index}" 
+                            role="tab" 
+                            aria-selected="${index === 0}">
+                        ${item.title}
+                    </button>
+                `,
+                    )
+                    .join("")}
+            </div>
+            <div class="frameworks-content-panel" role="tabpanel">
+                <h3 class="framework-detail-title" id="framework-detail-title">${coreSelfModel.relatedFrameworks.items[0].title}</h3>
+                <div class="framework-detail-text" id="framework-detail-text">
+                    ${coreSelfModel.relatedFrameworks.items[0].description}
+                </div>
+            </div>
+        </div>
+    `
+    frameworksContainer.innerHTML = frameworksHtml
+
+    // Wire up the click events
+    const menuItems = frameworksContainer.querySelectorAll(".framework-menu-item")
+    const detailTitle = document.getElementById("framework-detail-title")
+    const detailText = document.getElementById("framework-detail-text")
+
+    menuItems.forEach((item) => {
+        item.addEventListener("click", (e) => {
+            // Reset active states
+            menuItems.forEach((btn) => {
+                btn.classList.remove("is-active")
+                btn.setAttribute("aria-selected", "false")
+            })
+
+            // Set newly clicked state
+            const clickedBtn = e.target
+            clickedBtn.classList.add("is-active")
+            clickedBtn.setAttribute("aria-selected", "true")
+
+            // Update content panel
+            const index = clickedBtn.getAttribute("data-index")
+            const selectedData = coreSelfModel.relatedFrameworks.items[index]
+
+            detailTitle.textContent = selectedData.title
+            // Using innerHTML here allows your data.js to contain <p>, <b>, <ul>, etc.
+            detailText.innerHTML = selectedData.description
+        })
+    })
+}
+
+// --- Global Interaction State ---
+let isDragging = false
+let isSliderDragging = false
+let activeNodeId = null
+let lockedNodeId = null
+
+const formatMu = (val) => {
+    if (val <= 0) return "0"
+    if (val >= 1) return "1"
+    return val.toFixed(2).replace(/^0\./, ".")
+}
+
 const width = 960
 const height = 650
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max)
 
-const xPos = { 1: 140, 2: 390, 3: 640, 4: 850 }
+const xPos = { 1: 100, 2: 330, 3: 560, 4: 800 }
 const nodeFillByLevel = { 1: "#3b82f6", 2: "#8b5cf6", 3: "#10b981" }
 
-const nodes = coreSelfModel.nodes.map((node) => ({ ...node, val: node.value ?? 0 }))
+const nodes = coreSelfModel.nodes.map((node) => ({
+    ...node,
+    val: node.value ?? 0.5,
+    sigma: 0.15,
+    variance: 0.15 * 0.15,
+}))
 const observables = coreSelfModel.observables.map((obs) => ({ ...obs, val: 0 }))
-const edges = coreSelfModel.edges.map((edge) => ({ ...edge }))
+
+const edges = []
+nodes.forEach((node) => {
+    if (node.projectsTo) {
+        node.projectsTo.forEach((proj) => {
+            edges.push({
+                source: node.id,
+                target: proj.target,
+                weight: proj.weight,
+                transform: proj.transform || "direct",
+            })
+        })
+    }
+})
 
 const nodesById = new Map(nodes.map((node) => [node.id, node]))
 const obsById = new Map(observables.map((obs) => [obs.id, obs]))
@@ -32,21 +133,26 @@ nodes.forEach((node) => {
 })
 
 // --- Radar Chart Geometry ---
-const radarCx = xPos[4] + 10
+const radarCx = xPos[4]
 const radarCy = height / 2
 const radarR = 95
 
-const getRadarPoint = (angle, radius) => ({
+const getAbsoluteRadarPoint = (angle, radius) => ({
     x: radarCx + Math.cos(angle) * radius,
     y: radarCy + Math.sin(angle) * radius,
 })
 
 const obsCorners = {}
 observables.forEach((obs) => {
-    obsCorners[obs.id] = getRadarPoint(obs.angle, radarR)
+    obsCorners[obs.id] = getAbsoluteRadarPoint(obs.angle, radarR)
 })
 
 const svg = d3.select("#graph").append("svg").attr("viewBox", `0 0 ${width} ${height}`).attr("width", width).attr("height", height)
+
+svg.on("click", () => {
+    lockedNodeId = null
+    setActiveNode(null)
+})
 
 const linkGen = d3
     .linkHorizontal()
@@ -62,7 +168,7 @@ const buildLinkPath = (edge) => {
         const targetNode = nodesById.get(edge.target)
         targetCoords = { x: targetNode.x - 40, y: targetNode.y }
     } else if (obsCorners[edge.target]) {
-        targetCoords = obsCorners[edge.target] // Route exactly to the radar corners
+        targetCoords = obsCorners[edge.target]
     } else {
         targetCoords = { x: radarCx, y: radarCy }
     }
@@ -92,20 +198,21 @@ nodeGroups
     .attr("stroke-width", 2)
     .attr("rx", 6)
 
-// --- Filled Distribution Generator ---
 const areaGen = d3
     .area()
     .x((d) => d[0])
-    .y0(15) // Baseline Y
+    .y0(15)
     .y1((d) => d[1])
     .curve(d3.curveBasis)
 
-const drawDistribution = (value) => {
-    const mu = -20 + value * 40
-    const sigma = 6
+const drawDistribution = (node) => {
+    const mu = -20 + node.val * 40
+    const pxSigma = Math.max(2, node.sigma * 40)
+    const amplitude = Math.min(42, 32 * (6 / pxSigma))
+
     const points = d3.range(-35, 36, 2).map((x) => {
-        const y = Math.exp(-Math.pow(x - mu, 2) / (2 * Math.pow(sigma, 2)))
-        return [x, 15 - y * 32]
+        const y = Math.exp(-Math.pow(x - mu, 2) / (2 * Math.pow(pxSigma, 2)))
+        return [x, 15 - y * amplitude]
     })
     return areaGen(points)
 }
@@ -130,94 +237,95 @@ nodeGroups
     .append("text")
     .attr("class", "node-value")
     .attr("y", 38)
-    .text((node) => `${Math.round(node.val * 100)}%`)
+    .style("fill", "var(--muted)")
+    .style("font-size", "10px")
+    .style("text-anchor", "middle")
+    .style("pointer-events", "none")
 
 coreSelfModel.levelHeaders.forEach((header) => {
     svg.append("text").attr("class", "axis-label").attr("x", xPos[header.level]).attr("y", 40).text(header.label)
 })
 
-// --- Radar Chart Implementation ---
-const radarGroup = svg.append("g").attr("class", "radar-group")
+// --- Radar Container ---
+const radarContainer = svg.append("g").attr("class", "radar-group").attr("transform", `translate(${radarCx}, ${radarCy})`)
 
-// Background Grid (100% capacity)
-radarGroup
+radarContainer
     .append("polygon")
-    .attr("class", "radar-bg")
-    .attr("points", observables.map((o) => `${obsCorners[o.id].x},${obsCorners[o.id].y}`).join(" "))
+    .attr("points", observables.map((o) => `${Math.cos(o.angle) * radarR},${Math.sin(o.angle) * radarR}`).join(" "))
     .attr("fill", "#f8fafc")
     .attr("stroke", "#cbd5e1")
     .attr("stroke-width", 2)
     .attr("stroke-linejoin", "round")
 
-// Inner Grid (50% mark)
-radarGroup
+radarContainer
     .append("polygon")
-    .attr(
-        "points",
-        observables
-            .map((o) => {
-                const p = getRadarPoint(o.angle, radarR * 0.5)
-                return `${p.x},${p.y}`
-            })
-            .join(" "),
-    )
+    .attr("points", observables.map((o) => `${Math.cos(o.angle) * (radarR * 0.5)},${Math.sin(o.angle) * (radarR * 0.5)}`).join(" "))
     .attr("fill", "none")
     .attr("stroke", "#e2e8f0")
     .attr("stroke-width", 1.5)
     .attr("stroke-dasharray", "4,4")
     .attr("stroke-linejoin", "round")
 
-// Dynamic Output Polygon
-const radarPoly = radarGroup
+const radarPoly = radarContainer
     .append("polygon")
     .attr("class", "radar-fill")
-    .attr("fill", "rgba(59, 130, 246, 0.25)")
-    .attr("stroke", "#3b82f6")
+    .attr("fill", "rgba(59, 130, 246, 0.15)")
+    .attr("stroke", "none")
+
+const lollipops = radarContainer.selectAll(".lollipop").data(observables).enter().append("g").attr("class", "lollipop")
+
+lollipops
+    .append("line")
+    .attr("class", "lollipop-stem")
+    .attr("x1", 0)
+    .attr("y1", 0)
+    .attr("stroke", (d) => d.color)
     .attr("stroke-width", 2.5)
-    .attr("stroke-linejoin", "round")
 
-const obsNodes = radarGroup
-    .selectAll(".obs-node")
-    .data(observables)
-    .enter()
-    .append("g")
-    .attr("transform", (d) => `translate(${obsCorners[d.id].x}, ${obsCorners[d.id].y})`)
-
-obsNodes
+lollipops
     .append("circle")
+    .attr("class", "lollipop-head")
     .attr("r", 5)
     .attr("fill", (d) => d.color)
     .attr("stroke", "#fff")
     .attr("stroke-width", 1.5)
 
+const obsNodes = radarContainer
+    .selectAll(".obs-node")
+    .data(observables)
+    .enter()
+    .append("g")
+    .attr("class", "node obs-node")
+    .style("cursor", "pointer")
+
+obsNodes
+    .append("circle")
+    .attr("cx", (d) => Math.cos(d.angle) * radarR)
+    .attr("cy", (d) => Math.sin(d.angle) * radarR)
+    .attr("r", 25)
+    .attr("fill", "transparent")
+
+obsNodes
+    .append("circle")
+    .attr("class", "corner-dot")
+    .attr("cx", (d) => Math.cos(d.angle) * radarR)
+    .attr("cy", (d) => Math.sin(d.angle) * radarR)
+    .attr("r", 6)
+    .attr("fill", "#f8fafc")
+    .attr("stroke", (d) => d.color)
+    .attr("stroke-width", 2)
+    .style("transition", "r 0.15s ease, fill 0.15s ease, stroke-width 0.15s ease")
+
 obsNodes
     .append("text")
     .attr("class", "node-label")
-    .attr("x", (d) => Math.cos(d.angle) * 20)
-    .attr("y", (d) => (Math.sin(d.angle) > 0 ? 20 : -15))
-    .style("text-anchor", (d) => {
-        if (Math.abs(Math.cos(d.angle)) < 0.1) return "middle"
-        return Math.cos(d.angle) > 0 ? "start" : "end"
-    })
+    .attr("x", (d) => Math.cos(d.angle) * (radarR + 42))
+    .attr("y", (d) => Math.sin(d.angle) * (radarR + 42))
+    .style("text-anchor", "middle")
+    .style("dominant-baseline", "middle")
     .text((d) => d.label)
 
-const obsValuesTexts = obsNodes
-    .append("text")
-    .attr("class", "node-value")
-    .attr("x", (d) => Math.cos(d.angle) * 20)
-    .attr("y", (d) => (Math.sin(d.angle) > 0 ? 34 : -1))
-    .style("text-anchor", (d) => {
-        if (Math.abs(Math.cos(d.angle)) < 0.1) return "middle"
-        return Math.cos(d.angle) > 0 ? "start" : "end"
-    })
-    .text("0%")
-
-// --- Interaction Logic ---
-const detailsTitle = document.getElementById("details-title")
-const detailsValue = document.getElementById("details-value")
-const detailsDescription = document.getElementById("details-description")
-
-let activeNodeId = null
+// --- Logic & Data Updates ---
 
 const getSourceValue = (sourceId) => {
     if (nodesById.has(sourceId)) return nodesById.get(sourceId).val
@@ -225,32 +333,88 @@ const getSourceValue = (sourceId) => {
     return 0
 }
 
-const getEdgeContribution = (edge) => {
-    const sourceValue = getSourceValue(edge.source)
-    return edge.transform === "inverse" ? 1 - sourceValue : sourceValue
-}
-
-const computeTargetValue = (targetId) => {
+const computeTargetState = (targetId) => {
     const incomingEdges = incomingEdgesByTarget.get(targetId) || []
-    const weightedSum = incomingEdges.reduce((sum, edge) => sum + getEdgeContribution(edge) * edge.weight, 0)
-    return clamp(weightedSum, 0, 1)
+    let sumMu = 0
+    let sumVar = 0
+
+    incomingEdges.forEach((edge) => {
+        const sourceNode = nodesById.get(edge.source) || obsById.get(edge.source)
+        const sourceVal = sourceNode ? sourceNode.val : 0
+        const sourceVar = sourceNode && sourceNode.variance !== undefined ? sourceNode.variance : 0.0225
+        const edgeContribution = edge.transform === "inverse" ? 1 - sourceVal : sourceVal
+
+        sumMu += edgeContribution * edge.weight
+        sumVar += sourceVar * (edge.weight * edge.weight)
+    })
+
+    return {
+        val: clamp(sumMu, 0, 1),
+        variance: clamp(sumVar, 0.001, 1),
+    }
 }
 
 const updateDetails = (node) => {
+    const detailsSliders = document.getElementById("details-sliders")
+    const detailsTitle = document.getElementById("details-title")
+    const detailsDescription = document.getElementById("details-description")
+
     if (!node) {
-        detailsTitle.textContent = "Hover over a node"
-        detailsValue.textContent = ""
+        detailsTitle.textContent = "Select or hover over a node"
         detailsDescription.textContent =
-            "Drag the four Level 1 distributions left or right to change the cascade, then hover over any node to inspect how the current CPC revision defines it."
+            "Click a node to lock it, or drag the Level 1 distributions left/right and up/down to change the cascade."
+        detailsSliders.style.display = "none"
         return
     }
-    detailsValue.textContent = `${Math.round(node.val * 100)}%`
+
+    detailsSliders.style.display = "flex"
+
+    const labelMu = document.getElementById("label-mu")
+    const sliderMuInput = document.getElementById("slider-mu")
+
+    if (node.level === 4) {
+        labelMu.textContent = "Trait Expression"
+        document.getElementById("val-mu").textContent = `${Math.round(node.val * 100)}%`
+        sliderMuInput.style.display = "none"
+        document.getElementById("row-pi").style.display = "none"
+    } else {
+        labelMu.textContent = "Location (μ)"
+        document.getElementById("val-mu").textContent = formatMu(node.val)
+        sliderMuInput.style.display = "block"
+        if (!isSliderDragging) sliderMuInput.value = node.val
+
+        if (node.variance !== undefined) {
+            document.getElementById("row-pi").style.display = "flex"
+            const pi = Math.round(1 / node.variance)
+            document.getElementById("val-pi").textContent = pi
+            if (!isSliderDragging) document.getElementById("slider-pi").value = pi
+        } else {
+            document.getElementById("row-pi").style.display = "none"
+        }
+    }
+
+    sliderMuInput.disabled = node.level !== 1
+    document.getElementById("slider-pi").disabled = node.level !== 1
+
     detailsTitle.textContent = node.title || node.label
     detailsDescription.textContent = node.description
 }
 
 const renderActiveState = () => {
     nodeGroups.classed("is-active", (node) => node.id === activeNodeId)
+    obsNodes.classed("is-active", (node) => node.id === activeNodeId)
+
+    // Highlight links connected to the active node
+    linkPaths.classed("connected", (edge) => {
+        if (!activeNodeId) return false
+        return edge.source === activeNodeId || edge.target === activeNodeId
+    })
+
+    obsNodes
+        .selectAll(".corner-dot")
+        .attr("r", (node) => (node.id === activeNodeId ? 9 : 6))
+        .attr("fill", (node) => (node.id === activeNodeId ? node.color : "#f8fafc"))
+        .attr("stroke-width", (node) => (node.id === activeNodeId ? 3 : 2))
 }
 
 const setActiveNode = (node) => {
@@ -259,64 +423,144 @@ const setActiveNode = (node) => {
     updateDetails(node || null)
 }
 
+// --- Event Listeners for Interaction ---
+const getLockedNodeData = () => {
+    return lockedNodeId ? nodesById.get(lockedNodeId) || obsById.get(lockedNodeId) : null
+}
+
+nodeGroups
+    .on("click", (event, node) => {
+        event.stopPropagation()
+        lockedNodeId = lockedNodeId === node.id ? null : node.id
+        setActiveNode(getLockedNodeData())
+    })
+    .on("mouseenter", (event, node) => {
+        if (!isDragging) setActiveNode(node)
+    })
+    .on("mouseleave", () => {
+        if (!isDragging) setActiveNode(getLockedNodeData())
+    })
+
+obsNodes
+    .on("click", (event, d) => {
+        event.stopPropagation()
+        lockedNodeId = lockedNodeId === d.id ? null : d.id
+        setActiveNode(getLockedNodeData())
+    })
+    .on("mouseenter", (event, d) => {
+        if (!isDragging) setActiveNode(d)
+    })
+    .on("mouseleave", () => {
+        if (!isDragging) setActiveNode(getLockedNodeData())
+    })
+
+// Slider Listeners
+const sliderMu = document.getElementById("slider-mu")
+const sliderPi = document.getElementById("slider-pi")
+
+sliderMu.addEventListener("mousedown", () => (isSliderDragging = true))
+sliderMu.addEventListener("mouseup", () => (isSliderDragging = false))
+sliderMu.addEventListener("input", (e) => {
+    if (!activeNodeId) return
+    const node = nodesById.get(activeNodeId)
+    if (node && node.level === 1) {
+        node.val = parseFloat(e.target.value)
+        document.getElementById("val-mu").textContent = formatMu(node.val)
+        updateSystem()
+    }
+})
+
+sliderPi.addEventListener("mousedown", () => (isSliderDragging = true))
+sliderPi.addEventListener("mouseup", () => (isSliderDragging = false))
+sliderPi.addEventListener("input", (e) => {
+    if (!activeNodeId) return
+    const node = nodesById.get(activeNodeId)
+    if (node && node.level === 1) {
+        // Direct conversion from the new pi slider to internal sigma
+        const pi = parseFloat(e.target.value)
+        node.variance = 1 / pi
+        node.sigma = Math.sqrt(node.variance)
+        document.getElementById("val-pi").textContent = pi
+        updateSystem()
+    }
+})
+
 function updateSystem() {
     nodes
         .filter((node) => node.level > 1)
         .sort((left, right) => left.level - right.level || left.order - right.order)
         .forEach((node) => {
-            node.val = computeTargetValue(node.id)
+            const state = computeTargetState(node.id)
+            node.val = state.val
+            node.variance = state.variance
+            node.sigma = Math.sqrt(node.variance)
         })
 
     observables.forEach((obs) => {
-        obs.val = computeTargetValue(obs.id)
+        obs.val = computeTargetState(obs.id).val
     })
 
-    nodeGroups.select(".node-dist").attr("d", (node) => drawDistribution(node.val))
-    nodeGroups.select(".node-value").text((node) => `${Math.round(node.val * 100)}%`)
+    nodeGroups.select(".node-dist").attr("d", (node) => drawDistribution(node))
+
+    // Add Pi next to Mu for Levels 1-3
+    nodeGroups.select(".node-value").text((node) => {
+        if (node.variance) {
+            return `μ = ${formatMu(node.val)}, π = ${Math.round(1 / node.variance)}`
+        }
+        return `μ = ${formatMu(node.val)}`
+    })
 
     linkPaths
-        .attr("stroke", (edge) => (getEdgeContribution(edge) > 0.5 ? "#64748b" : "#cbd5e1"))
-        .attr("stroke-width", (edge) => 1 + getEdgeContribution(edge) * 4)
+        .attr("stroke", (edge) => {
+            const val = getSourceValue(edge.source)
+            const edgeVal = edge.transform === "inverse" ? 1 - val : val
+            return edgeVal > 0.5 ? "#64748b" : "#cbd5e1"
+        })
+        .attr("stroke-width", (edge) => {
+            const val = getSourceValue(edge.source)
+            const edgeVal = edge.transform === "inverse" ? 1 - val : val
+            return 1 + edgeVal * 4
+        })
 
-    // Update Radar Polygon
     radarPoly.attr(
         "points",
-        observables
-            .map((obs) => {
-                const p = getRadarPoint(obs.angle, radarR * obs.val)
-                return `${p.x},${p.y}`
-            })
-            .join(" "),
+        observables.map((obs) => `${Math.cos(obs.angle) * radarR * obs.val},${Math.sin(obs.angle) * radarR * obs.val}`).join(" "),
     )
 
-    // Update Radar Texts
-    obsValuesTexts.data(observables).text((d) => `${Math.round(d.val * 100)}%`)
+    lollipops
+        .select(".lollipop-stem")
+        .attr("x2", (d) => Math.cos(d.angle) * radarR * d.val)
+        .attr("y2", (d) => Math.sin(d.angle) * radarR * d.val)
+
+    lollipops
+        .select(".lollipop-head")
+        .attr("cx", (d) => Math.cos(d.angle) * radarR * d.val)
+        .attr("cy", (d) => Math.sin(d.angle) * radarR * d.val)
 
     if (activeNodeId) {
-        updateDetails(nodesById.get(activeNodeId))
+        const activeData = nodesById.get(activeNodeId) || obsById.get(activeNodeId)
+        updateDetails(activeData)
     }
 }
-
-nodeGroups
-    .on("mouseenter", (_, node) => {
-        setActiveNode(node)
-    })
-    .on("mouseleave", () => {
-        setActiveNode(null)
-    })
 
 const dragHandler = d3
     .drag()
     .on("start", (_, node) => {
+        isDragging = true
         if (node.level === 1) setActiveNode(node)
     })
     .on("drag", function (event, node) {
         if (node.level !== 1) return
+
         node.val = clamp(node.val + event.dx * 0.01, 0, 1)
+        node.sigma = clamp(node.sigma + event.dy * 0.002, 0.05, 0.4)
+        node.variance = node.sigma * node.sigma
+
         updateSystem()
     })
     .on("end", () => {
-        setActiveNode(null)
+        isDragging = false
+        setActiveNode(getLockedNodeData())
     })
 
 nodeGroups.filter((node) => node.level === 1).call(dragHandler)

@@ -9,6 +9,8 @@
     </head>
     <body>
         <main class="page-stack">
+            <section id="overview-panel" class="overview-panel" aria-labelledby="overview-title"></section>
+
             <div id="cascade-container">
                 <div class="cascade-layout">
                     <section class="graph-column" aria-label="Core priors cascade simulator">
@@ -16,31 +18,32 @@
                     </section>
 
                     <aside id="node-details" class="details-panel" aria-live="polite">
-                        <p id="details-value" class="details-value"></p>
-                        <h1 id="details-title">Hover over a node</h1>
+                        <div id="details-sliders" class="details-sliders" style="display: none;">
+                            <div class="slider-row" id="row-mu">
+                                <div class="slider-header">
+                                    <span class="slider-label" id="label-mu">Location (μ)</span>
+                                    <span class="slider-val" id="val-mu">.50</span>
+                                </div>
+                                <input type="range" id="slider-mu" min="0" max="1" step="0.01">
+                            </div>
+                            <div class="slider-row" id="row-pi">
+                                <div class="slider-header">
+                                    <span class="slider-label">Precision (π)</span>
+                                    <span class="slider-val" id="val-pi">44</span>
+                                </div>
+                                <input type="range" id="slider-pi" min="6" max="400" step="1">
+                            </div>
+                        </div>
+
+                        <h1 id="details-title">Select a node</h1>
                         <p id="details-description" class="details-description">
-                            Drag the four Level 1 nodes up or down to change the cascade, then hover over any node to inspect how the
-                            current CPC revision defines it.
+                            Click a node to lock it, or drag the Level 1 distributions left/right and up/down to change the cascade.
                         </p>
                     </aside>
                 </div>
             </div>
 
-            <section class="overview-panel" aria-labelledby="overview-title">
-                <p class="overview-kicker">Overview</p>
-                <h2 id="overview-title" class="overview-title">The Core Priors Cascade Model of Personality</h2>
-                <p class="overview-text">
-                    The Core Priors Cascade model is a theoretical generative personality framework grounded in active inference, the Free
-                    Energy Principle, and broader computational and cybernetic accounts of self-organising systems. Instead of treating
-                    personality as a flat list of traits, it models personality as the downstream expression of deeper expectations and
-                    precision biases that shape how an agent interprets uncertainty, regulates action, and maintains a sense of self.
-                </p>
-                <p class="overview-text">
-                    In that view, observable personality patterns emerge from a hierarchy that runs from foundational assumptions about the
-                    world, through affective and operational priors, into more visible behavioural dispositions. This app is a simplified
-                    interactive sketch of that cascade rather than a full formal implementation of the theory.
-                </p>
-            </section>
+            <section id="frameworks-panel" class="overview-panel" aria-labelledby="frameworks-title"></section>
         </main>
 
         <script src="./data.js"></script>
