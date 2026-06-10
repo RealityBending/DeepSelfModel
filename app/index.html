@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Core Priors Cascade Simulator</title>
+        <link rel="stylesheet" href="./styles.css" />
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+    <body>
+        <main class="page-stack">
+            <div id="cascade-container">
+                <div class="cascade-layout">
+                    <section class="graph-column" aria-label="Core priors cascade simulator">
+                        <div id="graph"></div>
+                    </section>
+
+                    <aside id="node-details" class="details-panel" aria-live="polite">
+                        <p id="details-value" class="details-value"></p>
+                        <h1 id="details-title">Hover over a node</h1>
+                        <p id="details-description" class="details-description">
+                            Drag the four Level 1 nodes up or down to change the cascade, then hover over any node to inspect how the
+                            current CPC revision defines it.
+                        </p>
+                    </aside>
+                </div>
+            </div>
+
+            <section class="overview-panel" aria-labelledby="overview-title">
+                <p class="overview-kicker">Overview</p>
+                <h2 id="overview-title" class="overview-title">The Core Priors Cascade Model of Personality</h2>
+                <p class="overview-text">
+                    The Core Priors Cascade model is a theoretical generative personality framework grounded in active inference, the Free
+                    Energy Principle, and broader computational and cybernetic accounts of self-organising systems. Instead of treating
+                    personality as a flat list of traits, it models personality as the downstream expression of deeper expectations and
+                    precision biases that shape how an agent interprets uncertainty, regulates action, and maintains a sense of self.
+                </p>
+                <p class="overview-text">
+                    In that view, observable personality patterns emerge from a hierarchy that runs from foundational assumptions about the
+                    world, through affective and operational priors, into more visible behavioural dispositions. This app is a simplified
+                    interactive sketch of that cascade rather than a full formal implementation of the theory.
+                </p>
+            </section>
+        </main>
+
+        <script src="./data.js"></script>
+        <script src="./app.js"></script>
+    </body>
+</html>

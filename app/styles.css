@@ -1,0 +1,229 @@
+:root {
+    --page-background: linear-gradient(135deg, #eef6ff 0%, #f8fafc 48%, #fefce8 100%);
+    --panel-background: rgba(255, 255, 255, 0.78);
+    --surface-background: rgba(255, 255, 255, 0.92);
+    --surface-border: rgba(148, 163, 184, 0.35);
+    --ink: #1e293b;
+    --muted: #64748b;
+    --soft-ink: #334155;
+    --shadow: 0 18px 48px rgba(15, 23, 42, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 32px;
+    background: var(--page-background);
+    color: var(--ink);
+    font-family: "Aptos", "Segoe UI", sans-serif;
+}
+
+.page-stack {
+    width: min(1400px, 100%);
+    margin: 0 auto;
+    display: grid;
+    gap: 20px;
+}
+
+#cascade-container {
+    width: 100%;
+    background: var(--panel-background);
+    border: 1px solid var(--surface-border);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+}
+
+.cascade-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+}
+
+.graph-column {
+    position: relative;
+    min-width: 0;
+    padding: 24px 24px 18px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.9));
+}
+
+#graph svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.details-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding: 32px 28px;
+    border-left: 1px solid rgba(148, 163, 184, 0.24);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(241, 245, 249, 0.92));
+}
+
+#details-title {
+    margin: 0;
+    font-size: 32px;
+    line-height: 1.05;
+}
+
+.details-value {
+    min-height: 1em;
+    margin: 0;
+    color: #2563eb;
+    font-size: 44px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.details-description {
+    margin: 0;
+    color: var(--soft-ink);
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+.overview-panel {
+    padding: 28px 30px 32px;
+    border: 1px solid var(--surface-border);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+}
+
+.overview-kicker {
+    margin: 0 0 8px;
+    color: #0f766e;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.overview-title {
+    margin: 0 0 14px;
+    font-size: 28px;
+    line-height: 1.1;
+}
+
+.overview-text {
+    max-width: 980px;
+    margin: 0;
+    color: var(--soft-ink);
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.overview-text + .overview-text {
+    margin-top: 12px;
+}
+
+.node {
+    cursor: pointer;
+}
+
+.node-box {
+    transition:
+        stroke 0.12s ease,
+        stroke-width 0.12s ease,
+        fill 0.12s ease;
+}
+
+.node:hover .node-box {
+    stroke: #2563eb;
+    stroke-width: 3px;
+}
+
+.node.is-active .node-box {
+    fill: #dbeafe;
+    stroke: #0f172a;
+    stroke-width: 3px;
+}
+
+.node-l1 {
+    cursor: ew-resize;
+}
+
+.node-label {
+    fill: var(--soft-ink);
+    font-size: 12px;
+    font-weight: 600;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
+.node-value {
+    fill: var(--muted);
+    font-size: 10px;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
+.link {
+    fill: none;
+    stroke: #cbd5e1;
+    transition:
+        stroke-width 0.12s ease,
+        stroke 0.12s ease;
+}
+
+.axis-label {
+    fill: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-anchor: middle;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+}
+
+@media (max-width: 1180px) {
+    body {
+        padding: 20px;
+    }
+
+    .cascade-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .details-panel {
+        border-top: 1px solid rgba(148, 163, 184, 0.24);
+        border-left: 0;
+    }
+}
+
+@media (max-width: 720px) {
+    body {
+        padding: 12px;
+    }
+
+    .graph-column {
+        padding: 16px;
+    }
+
+    .details-panel {
+        padding: 24px 20px;
+    }
+
+    .overview-panel {
+        padding: 24px 20px 26px;
+    }
+
+    #details-title {
+        font-size: 26px;
+    }
+
+    .details-value {
+        font-size: 34px;
+    }
+
+    .overview-title {
+        font-size: 24px;
+    }
+}
