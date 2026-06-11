@@ -1,7 +1,7 @@
 const d3 = window["d3"]
-const coreSelfModel = window["CORE_SELF_MODEL"]
+const modelData = window["MODEL_DATA"]
 
-if (!d3 || !coreSelfModel) {
+if (!d3 || !modelData) {
     throw new Error("The simulator dependencies did not load correctly.")
 }
 
@@ -14,23 +14,23 @@ let lockedNodeId = null
 
 // 1. Inject Textual Overview
 const overviewContainer = document.getElementById("overview-panel")
-if (coreSelfModel.overview) {
+if (modelData.overview) {
     overviewContainer.innerHTML = `
-        <p class="overview-kicker">${coreSelfModel.overview.kicker}</p>
-        <h2 id="overview-title" class="overview-title">${coreSelfModel.overview.title}</h2>
-        ${coreSelfModel.overview.text.map((p) => `<p class="overview-text">${p}</p>`).join("")}
+        <p class="overview-kicker">${modelData.overview.kicker}</p>
+        <h2 id="overview-title" class="overview-title">${modelData.overview.title}</h2>
+        ${modelData.overview.text.map((p) => `<p class="overview-text">${p}</p>`).join("")}
     `
 }
 
 // 2. Inject Related Frameworks Panel
 const frameworksContainer = document.getElementById("frameworks-panel")
-if (coreSelfModel.relatedFrameworks && coreSelfModel.relatedFrameworks.items.length > 0) {
+if (modelData.relatedFrameworks && modelData.relatedFrameworks.items.length > 0) {
     let frameworksHtml = `
-        <p class="overview-kicker">${coreSelfModel.relatedFrameworks.kicker}</p>
-        <h2 id="frameworks-title" class="overview-title">${coreSelfModel.relatedFrameworks.title}</h2>
+        <p class="overview-kicker">${modelData.relatedFrameworks.kicker}</p>
+        <h2 id="frameworks-title" class="overview-title">${modelData.relatedFrameworks.title}</h2>
         <div class="frameworks-layout">
             <div class="frameworks-menu" id="frameworks-menu" role="tablist">
-                ${coreSelfModel.relatedFrameworks.items
+                ${modelData.relatedFrameworks.items
                     .map(
                         (item, index) => `
                     <button class="framework-menu-item ${index === 0 ? "is-active" : ""}"
@@ -44,9 +44,9 @@ if (coreSelfModel.relatedFrameworks && coreSelfModel.relatedFrameworks.items.len
                     .join("")}
             </div>
             <div class="frameworks-content-panel" role="tabpanel">
-                <h3 class="framework-detail-title" id="framework-detail-title">${coreSelfModel.relatedFrameworks.items[0].title}</h3>
+                <h3 class="framework-detail-title" id="framework-detail-title">${modelData.relatedFrameworks.items[0].title}</h3>
                 <div class="framework-detail-text" id="framework-detail-text">
-                    ${coreSelfModel.relatedFrameworks.items[0].description}
+                    ${modelData.relatedFrameworks.items[0].description}
                 </div>
             </div>
         </div>
@@ -69,7 +69,7 @@ if (coreSelfModel.relatedFrameworks && coreSelfModel.relatedFrameworks.items.len
             clickedBtn.setAttribute("aria-selected", "true")
 
             const index = clickedBtn.getAttribute("data-index")
-            const selectedData = coreSelfModel.relatedFrameworks.items[index]
+            const selectedData = modelData.relatedFrameworks.items[index]
 
             detailTitle.textContent = selectedData.title
             detailText.innerHTML = selectedData.description
@@ -115,13 +115,13 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max)
 const xPos = { 1: 100, 2: 330, 3: 560, 4: 800 }
 const nodeFillByLevel = { 1: "#3b82f6", 2: "#8b5cf6", 3: "#10b981" }
 
-const nodes = coreSelfModel.nodes.map((node) => ({
+const nodes = modelData.nodes.map((node) => ({
     ...node,
     val: node.value ?? 0.5,
     sigma: 0.15,
     variance: 0.15 * 0.15,
 }))
-const observables = coreSelfModel.observables.map((obs) => ({ ...obs, val: 0 }))
+const observables = modelData.observables.map((obs) => ({ ...obs, val: 0 }))
 
 const edges = []
 nodes.forEach((node) => {
@@ -200,7 +200,7 @@ const buildLinkPath = (edge) => {
 // Axis Layer
 const axisLayer = svg.append("g").attr("class", "axis-layer")
 
-if (coreSelfModel.axes) {
+if (modelData.axes) {
     // Generalize to fetch ALL nodes that belong to an axis group, sorting them by level and order
     // to ensure the bounding box calculation connects the correct top and bottom nodes.
     const axisNodes = nodes.filter((n) => n.axisGroup).sort((a, b) => a.level - b.level || a.order - b.order)
@@ -216,7 +216,7 @@ if (coreSelfModel.axes) {
         .style("cursor", "help")
         .on("mouseenter", function (event, d) {
             // Send Axis info to the right-hand details panel
-            const axisData = coreSelfModel.axes[d[0]]
+            const axisData = modelData.axes[d[0]]
             document.getElementById("details-title").textContent = axisData.label + " Axis"
             document.getElementById("details-description").textContent = axisData.description
             document.getElementById("details-sliders").style.display = "none"
@@ -276,7 +276,7 @@ if (coreSelfModel.axes) {
         .style("font-weight", "600")
         .style("letter-spacing", "0.08em")
         .style("fill", "#0f766e")
-        .text((d) => coreSelfModel.axes[d[0]].label)
+        .text((d) => modelData.axes[d[0]].label)
 }
 // ──────────────────────────────────────────────────────────────────────────
 
@@ -348,7 +348,7 @@ nodeGroups
     .style("text-anchor", "middle")
     .style("pointer-events", "none")
 
-coreSelfModel.levelHeaders.forEach((header) => {
+modelData.levelHeaders.forEach((header) => {
     svg.append("text").attr("class", "axis-label").attr("x", xPos[header.level]).attr("y", 40).text(header.label)
 })
 

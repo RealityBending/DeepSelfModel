@@ -20,13 +20,13 @@ Alternative Model Names:
 - ...
 */
 
-window.CORE_SELF_MODEL = {
+window.MODEL_DATA = {
     overview: {
         kicker: "Overview",
         title: "The Deep-Self Predictive Cascade Model of Personality",
         text: [
-            "The Deep-Self Predictive Cascade Model (Makowski, 2026; https://github.com/RealityBending/CoreSelfModel) is a theoretical generative personality framework grounded in active inference, the Free Energy Principle, and broader computational and cybernetic accounts of self-organising systems. Instead of treating personality as a flat list of traits people are endowed with, it models personality as the downstream expression of deep prior expectations and precision biases that shape how an agent interprets uncertainty, regulates action, and maintains a sense of self.",
-            'In that view, observable personality patterns emerge from a hierarchy that runs from foundational assumptions about the world, through affective and operational priors, into more visible behavioural dispositions. Under this model, "personality" is conceptualized as a <i>Free Energy Landscape</i>, where foundational expectations dictate the location of stable attractor basins, and precision biases determine their depth, defining exactly how much perturbation is required to dislodge the system from its habitual state. Traits are not things we have; they are holes we fall into.',
+            "The Deep-Self Predictive Cascade Model (Makowski, 2026; https://github.com/RealityBending/DeepSelfModel) is a theoretical generative personality framework grounded in active inference, the Free Energy Principle, and broader computational and cybernetic accounts of self-organising systems. Instead of treating personality as a flat list of traits people are endowed with, it models personality as the downstream expression of deep prior expectations and precision biases that shape how an agent interprets uncertainty, regulates action, and maintains a sense of self.",
+            'Under the Deep-Self Model, observable personality patterns emerge from a hierarchy that runs from foundational assumptions about the world, through affective and operational priors, into more visible behavioural dispositions. Within this framework, "personality" is conceptualized as a <i>Free Energy Landscape</i>, where foundational expectations dictate the location of stable attractor basins, and precision biases determine their depth, defining exactly how much perturbation is required to dislodge the system from its habitual state. Traits are not things we have; they are holes we fall into.',
             "This app is a simplified interactive sketch of that cascade rather than a full formal implementation of the theory.",
         ],
     },
