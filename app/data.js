@@ -1,26 +1,11 @@
 /*
 POTENTIAL FUTURE REVISIONS
 
-Terminological changes:
-- Temporal Depth -> Temporal Bias (ALREADY CHANGED). but mention in the description what the 2 "poles" of that bias might be (e.g., present-focused vs future-oriented).
-- Narrative Bias -> Coherence Bias (CHANGED). but mention in the description  what the two poles of that bias might be.
-- Epistemic Foraging -> Exploration-Exploitation Bias (label: Exploration). Only proceed if Exploration-Exploitation is appropriate. But mention Epistemic foraging, Curiosity in the description.
-- Action-Perception -> Action-Perception Bias (label: Action). 
-- Coupling Bias -> Differentiation-Dissolution Bias (label: Differentiation). Consider Coupling and Synchrony in the description.
-- Sensory Anchoring -> Interoception-Exteroception Bias (label: Interoception).
+Terminological changes: 
+- Coherence Bias -> Continuity-Flexibility Bias? Stability-Fragmentation Bias? Rigidity-Fluidity Bias? 
 
-- Reserve -> Vitality Expectation? Allostatic Expectation? Metabolic Expectation? 
-- Metabolic Deficit -> Metabolic Valence (label: Valence). Alternative: Vitality (Vitality State).
+Add a "social" parameter. For instance, a Social Rank Prior — a foundational expectation about the agent's position in social dominance hierarchies, drawing on Paul Gilbert's evolutionary psychiatry and the broader literature on shame and submission. While theoretically distinct from both Coupling Bias and Tractability, it overlaps sufficiently with their interaction that its independent contribution to the observable phenotypes requires clearer empirical delimitation before warranting a dedicated node. Alternatively, we could consider an Expectation of Synchrony, representing the baseline expectation that other agents are available for co-regulation. High Synchrony expectation drives secure attachment and Agreeableness; low Synchrony expectation drives schizoid withdrawal or paranoid ideation, independent of general environmental Tractability. A "Social Rank Prior" implies complex cultural embedding, which feels too high-level for an ultra-prior. However, an Expectation of Synchrony is fundamentally grounded in multi-agent active inference. Humans are obligatorily gregarious; our generative models assume the availability of another Markov blanket for co-regulation. However: one could also argue that an ultra-prior is the degree of consideration of other agents. Perhaps psychopathy, machiavelisms and dark triad traits could stem out of a low ultra-prior about the very existence and motivation to simulate their mental states (empathy)?
 
-
-
-
-
-Add a "social" parameter. For instance, a Social Rank Prior — a foundational expectation about the agent's position in social dominance hierarchies, drawing on Paul Gilbert's evolutionary psychiatry and the broader literature on shame and submission. While theoretically distinct from both Coupling Bias and Tractability, it overlaps sufficiently with their interaction that its independent contribution to the observable phenotypes requires clearer empirical delimitation before warranting a dedicated node. Alternatively, we could consider an Expectation of Synchrony, representing the baseline expectation that other agents are available for co-regulation. High Synchrony expectation drives secure attachment and Agreeableness; low Synchrony expectation drives schizoid withdrawal or paranoid ideation, independent of general environmental Tractability.
-
-Split the Epistemic Foraging node to differentiates where that foraging happens. Somatic Foraging: Testing the physical Markov blanket (extreme sports, somatic edge-seeking) to confirm the bodily self vs Semantic Foraging: Testing the conceptual Markov blanket (psychedelics, transgressive art, philosophy) to confirm or update the narrative self. You could split the L3 "Epistemic Foraging" into two distinct precision biases: Somatic Edge-Seeking (linked to the Bodily Self) and Semantic Edge-Seeking (linked to the Narrative Self). This perfectly explains why an adrenaline junkie and a psychedelic philosopher both score high on "Sensation Seeking" but manifest it entirely differently.
-
-Allow for non-monotonic relationships: for instance for the Uncertainty → Narrative Precision path: the current implementation treats high uncertainty as uniformly eroding narrative coherence, but clinical and empirical evidence suggests that for some individuals, elevated uncertainty triggers defensive narrative rigidification rather than fragmentation — a U-shaped or sign-reversing relationship that the present weighted-sum computation cannot represent. Addressing this would require either a threshold term in the edge computation or a richer Bayesian parameterisation of the node update rule.
 
 Consider renaming the model as Attractor Cascade Model.
 */
@@ -37,12 +22,33 @@ window.CORE_SELF_MODEL = {
     },
     levelHeaders: [
         { level: 1, label: "Ultra-Priors" },
-        { level: 2, label: "Affective Priors" },
+        { level: 2, label: "Affective States" },
         { level: 3, label: "Precision Biases" },
         { level: 4, label: "Observables" },
     ],
 
     axes: {
+        // L1 Imperatives (Ultra-Priors)
+        epistemic: {
+            id: "epistemic",
+            label: "Epistemic Imperative",
+            description:
+                "The computational drive to resolve and manage uncertainty. This dictates how the system handles the opacity of the world, generating the fundamental baseline for epistemic foraging and anxiety.",
+        },
+        allostatic: {
+            id: "allostatic",
+            label: "Allostatic Imperative",
+            description:
+                "The pragmatic, metabolic drive to maintain systemic integrity and efficacy. This dictates the system's baseline expectation of its own energetic reserves and its ability to act meaningfully upon the world.",
+        },
+        teleological: {
+            id: "teleological",
+            label: "Teleological Imperative", // Alternative names: Teleological/Goal/Volitional/Affective/Motivational?
+            description:
+                "The goal-directed, purposive drive toward preferred states. This dictates how strongly the system is pulled forward by the anticipated value of outcomes (Reward) and the temporal depth of its planning (Horizon).",
+        },
+
+        // L3 Selves (Precision Biases)
         minimal: {
             id: "minimal",
             label: "Minimal Self",
@@ -72,52 +78,53 @@ window.CORE_SELF_MODEL = {
             level: 1,
             order: 1,
             value: 0.5,
+            axisGroup: "epistemic",
             description:
                 "Expectation about how quickly the environment's hidden rules change. Grounded in the $\\omega$ parameter of Hierarchical Gaussian Filtering (Mathys et al.), high volatility discounts past learning, increases the learning rate, and keeps the system braced for fresh prediction errors. It is the primary upstream driver of Epistemic Uncertainty (Anxiety).",
             projectsTo: [{ target: "uncertainty", weight: 0.8, transform: "direct" }],
-        },
-        {
-            id: "tractability",
-            label: "Tractability",
-            title: "Tractability Expectation",
-            level: 1,
-            order: 2,
-            value: 0.5,
-            description:
-                "Expectation that action can reliably reduce prediction error (Friston's expected precision of proprioceptive and control signals). High tractability supports agency, approach, and policy execution; low tractability pushes the system toward helplessness. Because ineffective actions waste energy, low tractability is a primary driver of Metabolic Threat (Depression/Burnout).",
-            projectsTo: [
-                { target: "metabolic", weight: 0.6, transform: "inverse" },
-                { target: "action", weight: 0.5, transform: "direct" },
-                { target: "coupling", weight: 0.4, transform: "direct" },
-                { target: "temporal", weight: 0.4, transform: "direct" },
-            ],
         },
         {
             id: "noise",
             label: "Noise",
             title: "Noise Expectation",
             level: 1,
-            order: 3,
+            order: 2,
             value: 0.5,
+            axisGroup: "epistemic",
             description:
                 "Expectation about irreducible aleatoric uncertainty — the baseline level of ambiguity the agent expects to simply tolerate rather than resolve. Maps onto Yu and Dayan's 'expected uncertainty' channel, associated with tonic acetylcholine signalling: a high noise expectation permits ambient ambiguity without triggering drastic model updates or precision reallocations. Low noise expectations push the system toward premature epistemic closure and distress when residual variance cannot be eliminated.",
             projectsTo: [
                 { target: "uncertainty", weight: 0.5, transform: "direct" },
-                { target: "epistemic", weight: 0.5, transform: "direct" },
+                { target: "exploration", weight: 0.5, transform: "direct" },
             ],
         },
         {
-            id: "horizon",
-            label: "Horizon",
-            title: "Horizon Expectation",
+            id: "energy",
+            label: "Energy",
+            title: "Energy Expectation",
+            level: 1,
+            order: 3,
+            value: 0.5,
+            axisGroup: "allostatic",
+            description:
+                "Expectation of allostatic reserve, i.e., metabolic resource abundance versus scarcity. Grounded in Barrett's Constructed Emotion framework, this parameter dictates whether the agent expects its body-budget to operate at a surplus or a deficit. A high expectation of abundance raises the Vitality State, facilitating active behaviour, while a low expectation leaves the system perpetually braced for energetic bankruptcy.",
+            projectsTo: [{ target: "vitality", weight: 0.6, transform: "direct" }],
+        },
+        {
+            id: "tractability",
+            label: "Tractability",
+            title: "Tractability Expectation",
             level: 1,
             order: 4,
             value: 0.5,
+            axisGroup: "allostatic",
             description:
-                "Expectation about the depth of the agent's policy space — how far forward the generative model actively plans. Grounded in the temporal depth parameter T of active inference tree search. This parameter encodes how the agent resolves the ultimate prediction error of its own eventual dissolution. An extremely low parameter value represents Disengagement (fatalism, truncated self-model), collapsing the time horizon to avoid the free energy of a future the agent cannot control. Conversely, an extreme high value represents Transcendence, extending the Markov blanket across time through legacy, culture, or biology.",
+                "Expectation that action can reliably reduce prediction error (Friston's expected precision of proprioceptive and control signals). High tractability supports agency, approach, and policy execution; low tractability pushes the system toward helplessness. Because ineffective actions waste energy, low tractability is a primary driver of Metabolic Threat (Depression/Burnout).",
             projectsTo: [
-                { target: "temporal", weight: 0.6, transform: "direct" },
-                { target: "metabolic", weight: 0.3, transform: "inverse" },
+                { target: "vitality", weight: 0.6, transform: "direct" },
+                { target: "action", weight: 0.5, transform: "direct" },
+                { target: "differentiation", weight: 0.4, transform: "direct" },
+                { target: "future", weight: 0.4, transform: "direct" },
             ],
         },
         {
@@ -127,154 +134,181 @@ window.CORE_SELF_MODEL = {
             level: 1,
             order: 5,
             value: 0.5,
+            axisGroup: "teleological",
             description:
-                "Expectation about the value of available outcomes — the agent's baseline sensitivity to reward and goal-attainment signals. Distinct from Tractability: an agent can hold a high expectation that actions are effective (high tractability) while still expecting available outcomes to be low-value, and vice versa. Maps onto dopaminergic reward-prediction circuitry and anchors the model's relationship to BAS theory and Sensation Seeking. High reward expectation amplifies both the action-perception bias (approach drive) and epistemic foraging (reward-relevant information gain).",
+                "Expectation about the value of available outcomes — the agent's baseline sensitivity to reward and goal-attainment signals. Distinct from Tractability: an agent can hold a high expectation that actions are effective (high tractability) while still expecting available outcomes to be low-value, and vice versa. Maps onto dopaminergic reward-prediction circuitry and anchors the model's relationship to BAS theory and Sensation Seeking. Within the Free Energy Principle more formally, Reward Expectation corresponds to the log prior probability over preferred outcomes — the C-vector in Friston's active inference formalism. Rather than signalling experienced pleasure, it shapes the agent's policy by weighting expected free energy toward states the generative model treats as intrinsically valuable. The BAS and dopaminergic framing above is therefore not inconsistent with FEP accounts but represents the implementational register of the same computational quantity. High reward expectation amplifies both the action-perception bias (approach drive) and the exploration-exploitation bias (reward-relevant information gain).",
             projectsTo: [
                 { target: "action", weight: 0.4, transform: "direct" },
-                { target: "epistemic", weight: 0.4, transform: "direct" },
+                { target: "exploration", weight: 0.4, transform: "direct" },
+                { target: "valence", weight: 0.6, transform: "direct" },
             ],
         },
         {
-            id: "reserve",
-            label: "Reserve",
-            title: "Metabolic Reserve Expectation",
+            id: "horizon",
+            label: "Horizon",
+            title: "Horizon Expectation",
             level: 1,
             order: 6,
             value: 0.5,
+            axisGroup: "teleological",
             description:
-                "Expectation of allostatic reserve, i.e., metabolic resource abundance versus scarcity. Grounded in Barrett's Constructed Emotion framework, this parameter dictates whether the agent expects its body-budget to operate at a surplus or a deficit. A high expectation of abundance suppresses metabolic threat (depression/burnout), while a low expectation leaves the system perpetually braced for energetic bankruptcy.",
-            projectsTo: [{ target: "metabolic", weight: 0.6, transform: "inverse" }],
+                "Expectation about the depth of the agent's policy space — how far forward the generative model actively plans. Grounded in the temporal depth parameter T of active inference tree search. This parameter encodes how the agent resolves the ultimate prediction error of its own eventual dissolution. An extremely low parameter value represents Disengagement (fatalism, truncated self-model), collapsing the time horizon to avoid the free energy of a future the agent cannot control. Conversely, an extreme high value represents Transcendence, extending the Markov blanket across time through legacy, culture, or biology.",
+            projectsTo: [
+                { target: "future", weight: 0.6, transform: "direct" },
+                { target: "vitality", weight: 0.3, transform: "direct" },
+            ],
         },
 
         // ── Level 2: Affective Priors ─────────────────────────────────────────
         {
-            id: "metabolic",
-            label: "Metabolic Deficit",
-            title: "Metabolic Threat (Body-Budget)",
+            id: "uncertainty",
+            label: "Uncertainty",
+            title: "Epistemic Uncertainty State",
             level: 2,
             order: 1,
             value: 0,
             description:
-                "The affective readout of a body-budget deficit, generated downstream of Reserve Expectation, Tractability, and Horizon. Phenomenologically experienced as depression, burnout, or low vitality. Rather than frantically trying to resolve prediction errors, high metabolic deficit mathematically forces the system to conserve energy: it dramatically suppresses approach behavior (Action-Perception), social co-regulation (Coupling), and exploration (Epistemic Foraging).",
+                "The moment-to-moment felt state of world-opacity, generated downstream of Volatility and Noise. Where the Vitality State is a lack of energy, the Epistemic State is a lack of predictive grip. It is the phenomenological experience of uncertainty, often translating into anxiety. Chronic high epistemic uncertainty forces the system to retreat to its most reliable data stream—the body—driving hyper-vigilance (Interoception) while eroding narrative coherence.",
             projectsTo: [
-                { target: "coupling", weight: 0.8, transform: "inverse" },
-                { target: "action", weight: 0.6, transform: "inverse" },
-                { target: "epistemic", weight: 0.5, transform: "inverse" },
+                { target: "interoception", weight: 0.7, transform: "direct" },
+                { target: "rigidity", weight: 0.5, transform: "inverse" },
             ],
         },
         {
-            id: "uncertainty",
-            label: "Uncertainty",
-            title: "Epistemic Uncertainty",
+            id: "vitality",
+            label: "Vitality",
+            title: "Vitality State",
             level: 2,
             order: 2,
             value: 0,
             description:
-                "The moment-to-moment felt opacity of the world, generated downstream of Volatility and Noise. Where Metabolic Deficit is a lack of energy, Epistemic Uncertainty is a lack of predictive grip. It is the phenomenological experience of anxiety. High chronic epistemic uncertainty forces the system to retreat to its most reliable data stream—the body—driving hyper-vigilance (Sensory Anchoring) while simultaneously eroding narrative self-coherence.",
+                "The affective readout of the body-budget, generated downstream of Energy Expectation, Tractability, and Horizon. Phenomenologically experienced as vitality, depression, or burnout. High vitality signals an energetic surplus, facilitating active behavior; low vitality (allostatic load) forces the system to conserve resources, suppressing action, social coupling, and epistemic exploration.",
             projectsTo: [
-                { target: "sensory", weight: 0.7, transform: "direct" },
-                { target: "coherence", weight: 0.5, transform: "inverse" },
+                { target: "differentiation", weight: 0.8, transform: "direct" },
+                { target: "action", weight: 0.6, transform: "direct" },
+                { target: "exploration", weight: 0.5, transform: "direct" },
+                { target: "valence", weight: 0.4, transform: "inverse" },
+            ],
+        },
+        {
+            id: "valence",
+            label: "Valence",
+            title: "Valence State",
+            level: 2,
+            order: 3,
+            value: 0,
+            description:
+                "The affective readout of the reward circuit, representing hedonic tone and anticipatory positive affect. " +
+                "High Valence State signals reward availability and positive anticipation; low Valence produces hedonic flatness or anhedonia. " +
+                "Receives direct input from Reward Expectation (higher reward sensitivity → higher hedonic tone) and an inverse signal " +
+                "from Vitality (energetic depletion blunts positive affect). Projects forward to amplify both the " +
+                "Action-Perception Bias (approach drive) and Exploration-Exploitation Bias (reward-relevant curiosity). " +
+                "This node anchors the BAS observable and provides Barrett's Constructed Emotion framework with a proper " +
+                "affective-readout anchor distinct from the metabolic Vitality channel.",
+            projectsTo: [
+                { target: "action", weight: 0.4, transform: "direct" },
+                { target: "exploration", weight: 0.5, transform: "direct" },
             ],
         },
 
         // ── Level 3: Precision Biases ─────────────────────────────────────────
         {
-            id: "sensory",
-            label: "Sensory Anchoring",
-            title: "Sensory-Anchoring Bias",
+            id: "interoception",
+            label: "Interoception",
+            title: "Interoception-Exteroception Bias",
             level: 3,
             order: 1,
             value: 0,
             axisGroup: "minimal",
             description:
-                "Precision bias for where reality is grounded: internal bodily signals or external sensory structure. It defines whether the self is stabilised more by interoception or exteroception. Grounded in Seth's interoceptive inference framework, high interoceptive anchoring not only amplifies Neuroticism (hyper-vigilance to somatic arousal) but also suppresses external Coupling — the body becomes the primary regulatory anchor, reducing investment in social co-regulation.",
+                "Precision bias dictating whether the self relies more heavily on internal bodily signals or external sensory structure (formerly Sensory Anchoring). Grounded in Seth's interoceptive inference framework, high interoceptive anchoring not only amplifies Neuroticism (hyper-vigilance to somatic arousal) but also suppresses structural coupling—the body becomes the primary regulatory anchor, reducing investment in exteroceptive or social co-regulation.",
             projectsTo: [
-                { target: "neuro", weight: 0.4, transform: "direct" },
-                { target: "coupling", weight: 0.3, transform: "inverse" },
+                { target: "neuroticism", weight: 0.4, transform: "direct" },
+                { target: "differentiation", weight: 0.3, transform: "inverse" },
                 { target: "stability", weight: 0.4, transform: "inverse" },
                 { target: "bis", weight: 0.6, transform: "direct" },
             ],
         },
         {
-            id: "coupling",
-            label: "Coupling Bias",
-            title: "Coupling Bias",
+            id: "differentiation",
+            label: "Differentiation",
+            title: "Differentiation-Dissolution Bias",
             level: 3,
             order: 2,
             value: 0,
             axisGroup: "minimal",
             description:
-                "Bias governing how tightly the self should couple to other people and the wider environment. One pole favours differentiation and autonomy; the other favours synchrony, affiliation, and dissolution into external structure. Receives input from Metabolic Deficit (energy preservation drives uncoupling), Tractability (effective action enables social co-regulation), and Sensory Anchoring (interoceptive grounding reduces external coupling). This three-way input structure generates the anxious/avoidant split: high epistemic uncertainty + high tractability produces anxious high-coupling; high metabolic deficit + low tractability produces avoidant withdrawal.",
+                "Bias governing the structural coupling of the agent's Markov blanket to other agents and the environment. One pole favours Differentiation (autonomy, distinct boundaries); the other favours Dissolution (synchrony, intense coupling, and affiliation). It receives input from Metabolic Deficit (energy preservation forces differentiation/withdrawal) and Tractability (efficacy enables social synchrony). This creates the anxious/avoidant split: high epistemic uncertainty + high tractability produces anxious dissolution (hyper-coupling); high metabolic deficit + low tractability produces avoidant differentiation.",
             projectsTo: [
-                { target: "ext", weight: 0.6, transform: "direct" },
-                { target: "agree", weight: 0.6, transform: "direct" },
+                { target: "extraversion", weight: 0.6, transform: "direct" },
+                { target: "agreeableness", weight: 0.6, transform: "direct" },
                 { target: "stability", weight: 0.3, transform: "direct" },
             ],
         },
         {
             id: "action",
-            label: "Action-Perception",
+            label: "Action",
             title: "Action-Perception Bias",
             level: 3,
             order: 3,
             value: 0,
             axisGroup: "agentic",
             description:
-                "Relative precision placed on changing the world versus changing beliefs. Action-heavy styles push active environmental control; perception-heavy styles favour internal updating and accommodation. Governed jointly by Tractability (low expected efficacy forecloses action) and Reward Expectation (high outcome value motivates approach). The inverse relationship with Openness reflects the trade-off between resolving uncertainty through action versus through conceptual exploration.",
+                "Relative precision placed on changing the world versus changing beliefs. Action-heavy styles push active environmental control and policy execution; perception-heavy styles favour internal updating and accommodation. Governed jointly by Tractability (low expected efficacy forecloses action) and Reward Expectation (high outcome value motivates approach). The inverse relationship with Openness reflects the trade-off between resolving uncertainty through action versus conceptual updating.",
             projectsTo: [
-                { target: "cons", weight: 0.3, transform: "direct" },
-                { target: "ext", weight: 0.4, transform: "direct" },
-                { target: "open", weight: 0.3, transform: "inverse" },
+                { target: "conscientiousness", weight: 0.3, transform: "direct" },
+                { target: "extraversion", weight: 0.4, transform: "direct" },
+                { target: "openness", weight: 0.3, transform: "inverse" },
                 { target: "plasticity", weight: 0.5, transform: "direct" },
                 { target: "bis", weight: 0.4, transform: "inverse" },
                 { target: "bas", weight: 0.6, transform: "direct" },
             ],
         },
         {
-            id: "epistemic",
-            label: "Epistemic Foraging",
-            title: "Epistemic-Gain Expectation",
+            id: "exploration",
+            label: "Exploration",
+            title: "Exploration-Exploitation Bias",
             level: 3,
             order: 4,
             value: 0,
             axisGroup: "agentic",
             description:
-                "Expected value of sampling uncertainty — the drive to seek out information that resolves ambiguity. Maps directly onto Friston et al.'s epistemic value / information gain construct (2015). Suppressed by high Metabolic Deficit (energy preservation makes exploration costly) and elevated by both low Noise expectations (ambient ambiguity is worth resolving) and high Reward Expectation (information gain is itself rewarding). The primary upstream driver of Openness to Experience, consistent with DeYoung's identification of curiosity as the core Openness facet.",
+                "The functional balance between exploiting known priors and epistemic foraging. In active inference terms, this represents the expected value of sampling uncertainty (curiosity). This foraging might unfold across two distinct trajectories: Somatic Exploration (viscerally testing the physical Markov blanket via risk or high sensory-motor engagement) and Phenomenological Exploration (testing the conceptual boundaries of the narrative self-model via transgressive art, psychedelics, or esoteric philosophy). Suppressed by high Metabolic Deficit (which makes foraging energetically costly) and elevated by both low Noise expectations and high Reward Expectation. It is the primary upstream driver of Openness to Experience, consistent with DeYoung's identification of curiosity as the core Openness facet.",
             projectsTo: [
-                { target: "open", weight: 0.6, transform: "direct" },
+                { target: "openness", weight: 0.6, transform: "direct" },
                 { target: "plasticity", weight: 0.6, transform: "direct" },
                 { target: "bas", weight: 0.4, transform: "direct" },
             ],
         },
         {
-            id: "coherence",
-            label: "Coherence",
-            title: "Coherence Bias",
+            id: "rigidity",
+            label: "Rigidity",
+            title: "Rigidity-Fluidity Bias",
             level: 3,
             order: 5,
             value: 0,
             axisGroup: "narrative",
             description:
-                "The precision assigned to autobiographical continuity and the narrative self-model. Higher values stabilize identity across contexts; lower values allow fluid updating but increase fragmentation risk under stress. Rooted in Metzinger's narrative self-model, this bias dictates how aggressively the system works to maintain diachronic coherence. Note: the current implementation treats the Uncertainty → Coherence Bias path as monotonically inverse, but clinical evidence suggests a U-shaped relationship is possible for some individuals who respond to high uncertainty with defensive narrative rigidification.",
+                "The precision assigned to autobiographical continuity and the stability of the narrative self-model. The high pole manifests as narrative rigidification (conserving identity across contexts, often defensively); the low pole allows for a fluid, easily updated narrative self, but increases the risk of identity fragmentation under stress. Although the current model treats the Uncertainty → Rigidity path as monotonically inverse (uncertainty dissolves the narrative), clinical evidence suggests a U-shaped relationship is possible for some individuals who respond to high uncertainty with defensive rigidification.",
             projectsTo: [
-                { target: "open", weight: 0.4, transform: "inverse" },
-                { target: "cons", weight: 0.2, transform: "direct" },
+                { target: "openness", weight: 0.4, transform: "inverse" },
+                { target: "conscientiousness", weight: 0.2, transform: "direct" },
                 { target: "stability", weight: 0.4, transform: "direct" },
             ],
         },
         {
-            id: "temporal",
-            label: "Temporal",
-            title: "Temporal Bias",
+            id: "future",
+            label: "Future",
+            title: "Future-Present Bias",
             level: 3,
             order: 6,
             value: 0,
             axisGroup: "narrative",
             description:
-                "Precision weight allocated to long-range policy evaluation—representing the functional temporal depth of planning the agent actually deploys. Constrained by Horizon Expectation (the prior ceiling on policy depth) and shaped by Tractability (effective action makes long-horizon planning worthwhile). High temporal bias supports goal-directed persistence and narrative coherence; low temporal bias produces present-focused, reactive behavioral profiles.",
+                "Policy Depth Precision Bias weight allocated to long-range policy evaluation. The high pole of this temporal bias is future-oriented, enabling goal-directed persistence and delayed gratification; the low pole is present-focused, yielding highly reactive, short-horizon behavioral profiles. Constrained by Horizon Expectation (the prior ceiling on policy depth) and shaped by Tractability (effective action makes long-horizon planning worthwhile).",
             projectsTo: [
-                { target: "coherence", weight: 0.5, transform: "direct" },
-                { target: "cons", weight: 0.5, transform: "direct" },
+                { target: "rigidity", weight: 0.5, transform: "direct" },
+                { target: "conscientiousness", weight: 0.5, transform: "direct" },
                 { target: "stability", weight: 0.5, transform: "direct" },
             ],
         },
@@ -282,7 +316,7 @@ window.CORE_SELF_MODEL = {
     observables: [
         // Big Five
         {
-            id: "neuro",
+            id: "neuroticism",
             label: "Neuroticism",
             title: "Trait Neuroticism",
             level: 4,
@@ -290,10 +324,10 @@ window.CORE_SELF_MODEL = {
             color: "#ef4444",
             framework: "big5",
             description:
-                "A stable behavioral attractor generated by chronically elevated epistemic uncertainty (anxiety) and interoceptive anchoring. Characterized by hyper-vigilance to internal arousal and perceptual accommodation over action. The path runs entirely through Sensory Anchoring, making interoceptive dysregulation the necessary mediator of trait-level anxiety.",
+                "A stable behavioral attractor generated by chronically elevated epistemic uncertainty (anxiety) and a bias toward interoception over exteroception. Characterized by hyper-vigilance to internal arousal and perceptual accommodation over action. The path runs entirely through the Interoception-Exteroception Bias, making somatic dysregulation the necessary mediator of trait-level anxiety.",
         },
         {
-            id: "ext",
+            id: "extraversion",
             label: "Extraversion",
             title: "Trait Extraversion",
             level: 4,
@@ -301,10 +335,10 @@ window.CORE_SELF_MODEL = {
             color: "#3b82f6",
             framework: "big5",
             description:
-                "An outward-oriented behavioral attractor driven by high environmental coupling and a bias toward action over perception. Characterized by high reward-seeking, assertiveness, and social synchrony. Receives input from both Coupling Bias and Action-Perception Bias, reflecting both the social and the approach-motivation dimensions of the trait.",
+                "An outward-oriented behavioral attractor driven by high environmental coupling (Dissolution) and a bias toward action over perception. Characterized by high reward-seeking, assertiveness, and social synchrony. Receives converging input from both the Differentiation-Dissolution Bias and the Action-Perception Bias.",
         },
         {
-            id: "open",
+            id: "openness",
             label: "Openness",
             title: "Openness to Experience",
             level: 4,
@@ -312,10 +346,10 @@ window.CORE_SELF_MODEL = {
             color: "#f59e0b",
             framework: "big5",
             description:
-                "Driven by high epistemic-gain expectations and highly fluid narrative precision. Manifests as exploratory edge-testing and willingness to revise the self-model without catastrophic fragmentation. The inverse path from Action-Perception Bias reflects the trade-off between resolving uncertainty through action versus through conceptual exploration.",
+                "Driven by a strong bias toward epistemic foraging (Exploration) and a highly fluid Narrative Self (low Rigidity). Manifests as exploratory edge-testing and a willingness to revise the self-model without catastrophic fragmentation. The inverse path from Action-Perception Bias reflects the trade-off between resolving uncertainty through physical action versus through conceptual exploration.",
         },
         {
-            id: "agree",
+            id: "agreeableness",
             label: "Agreeableness",
             title: "Trait Agreeableness",
             level: 4,
@@ -323,10 +357,10 @@ window.CORE_SELF_MODEL = {
             color: "#8b5cf6",
             framework: "big5",
             description:
-                "Rooted in strong coupling biases and feeling secure in the environment (low metabolic deficit or epistemic uncertainty). Phenomenologically experienced as an orientation toward affiliation, trust, and structural alignment with others. The path runs through Coupling Bias, making the social-regulatory layer the necessary mediator.",
+                "Rooted in a strong bias toward Dissolution (synchrony/coupling) and feeling secure in the environment (low metabolic deficit or epistemic uncertainty). Phenomenologically experienced as an orientation toward affiliation, trust, and structural alignment with others. The path runs entirely through the Differentiation-Dissolution Bias.",
         },
         {
-            id: "cons",
+            id: "conscientiousness",
             label: "Conscientiousness",
             title: "Trait Conscientiousness",
             level: 4,
@@ -334,7 +368,7 @@ window.CORE_SELF_MODEL = {
             color: "#10b981",
             framework: "big5",
             description:
-                "Rooted in deep temporal depth, rigid self-coherence, and a perception-overriding bias toward action. Phenomenologically experienced as an organised, persistent exertion of cybernetic control over the environment. Receives converging input from Temporal Depth, Narrative Precision, and Action-Perception Bias.",
+                "Rooted in Future-Present Bias, high Rigidity Bias, and an overriding preference for Action. Phenomenologically experienced as an organised, persistent exertion of cybernetic control over the environment. Receives converging input from Future, Rigidity, and Action biases.",
         },
         // Cybernetic Big Five Theory (CB5T)
         {
@@ -346,7 +380,7 @@ window.CORE_SELF_MODEL = {
             color: "#f59e0b",
             framework: "cb5t",
             description:
-                "Drives exploration and engagement with novel information. Captures the shared variance of Extraversion and Openness. Phenomenologically represents a highly active system parameterized for active epistemic foraging, reward seeking, and approach behaviors.",
+                "Drives exploration and engagement with novel information. Captures the shared variance of Extraversion and Openness. Phenomenologically represents a highly active system parameterized for active epistemic foraging (Exploration Bias), reward seeking, and approach behaviors.",
         },
         {
             id: "stability",
@@ -357,7 +391,7 @@ window.CORE_SELF_MODEL = {
             color: "#10b981",
             framework: "cb5t",
             description:
-                "Functions to protect the system from disruption and maintain goal coherence. Captures the shared variance of Neuroticism (reversed), Agreeableness, and Conscientiousness. Relies on deep temporal depth, secure narrative precision, and low sensory/threat anchoring.",
+                "Functions to protect the system from disruption and maintain goal coherence. Captures the shared variance of Neuroticism (reversed), Agreeableness, and Conscientiousness. Relies on Future Bias, secure narrative Coherence, and low interoceptive threat-anchoring.",
         },
         // BIS/BAS Framework
         {
@@ -369,7 +403,7 @@ window.CORE_SELF_MODEL = {
             color: "#ef4444",
             framework: "bisbas",
             description:
-                "Highly sensitive to cues of punishment, ambiguity, and threat. Leads to anxiety and the halting of ongoing behavior. In the Cascade, this is driven downstream by high Sensory Anchoring (hyper-vigilance) and low Action-Perception bias (behavioral inhibition).",
+                "Highly sensitive to cues of punishment, ambiguity, and threat. Leads to anxiety and the halting of ongoing behavior. In the Cascade, this is driven downstream by high Interoceptive Bias (hyper-vigilance) and low Action Bias (behavioral inhibition).",
         },
         {
             id: "bas",
@@ -380,7 +414,7 @@ window.CORE_SELF_MODEL = {
             color: "#31c53d",
             framework: "bisbas",
             description:
-                "Sensitive to reward and goal-attainment, driving impulsivity and approach behaviors. In the Cascade, this is strongly driven by the Action-Perception bias (approach) and Epistemic Foraging (reward-relevant information seeking).",
+                "Sensitive to reward and goal-attainment, driving impulsivity and approach behaviors. In the Cascade, this is strongly driven by the Action Bias (approach) and the Exploration Bias (reward-relevant information seeking).",
         },
     ],
     relatedFrameworks: {
@@ -404,24 +438,26 @@ window.CORE_SELF_MODEL = {
                 title: "BIS/BAS",
                 description: `Biopsychological personality theory, commonly known as BIS/BAS Theory (Gray, 1981), is a neuropsychological framework that anchors behavioral dispositions in distinct neurobiological systems. It shifted personality psychology toward understanding traits as the chronic sensitivities of underlying motivational circuits. In the context of the Core Priors Cascade, Gray's dual systems can be understood as the direct affective readouts generated at Level 2 (Affective Priors):
                 <ul>
-                    <li><b>Behavioral Inhibition System (BIS):</b> Highly sensitive to cues of punishment, ambiguity, and threat, leading to anxiety and the halting of ongoing behavior. Phenomenologically, this is the equivalent of a system parameterized by high <i>Volatility</i> and low <i>Tractability</i>, generating an elevated state of <i>Uncertainty</i> and a chronic threat-biased <i>Valence</i> that aggressively halts active inference.</li>
+                    <li><b>Behavioral Inhibition System (BIS):</b> Highly sensitive to cues of punishment, ambiguity, and threat, leading to anxiety and the halting of ongoing behavior. Phenomenologically, this is the equivalent of a system parameterized by high <i>Volatility</i> and low <i>Tractability</i>, generating a chronically elevated <i>Uncertainty State</i> that aggressively suppresses the <i>Action-Perception</i> Bias.</li>
                     <li><b>Behavioral Approach System (BAS):</b> Sensitive to reward and goal-attainment, driving impulsivity and approach behaviors. In V3 this maps most directly onto the <i>Reward Expectation</i> ultra-prior, which amplifies both Action-Perception Bias and Epistemic Foraging — propelling the agent forward to exploit the environment and aggressively reduce expected free energy through action.</li>
                 </ul>`,
             },
             {
                 title: "HiTOP",
-                description:
-                    "HiTOP (Hierarchical Taxonomy of Psychopathology; Kotov et al., 2017) is a dimensional classification system that conceptualizes mental health and psychopathology as a continuous hierarchy spanning from broad spectra to specific symptom components. It eschews categorical diagnoses in favor of empirically derived clinical phenotypes.",
+                description: `
+                HiTOP (Hierarchical Taxonomy of Psychopathology; Kotov et al., 2017) is a dimensional classification system that conceptualizes mental health and psychopathology as a continuous hierarchy spanning from broad spectra to specific symptom components. It eschews categorical diagnoses in favor of empirically derived clinical phenotypes.
+                    
+                The current model maps cleanly onto HiTOP's principal spectra: the Internalising spectrum corresponds to high Vitality Load (metabolic deficit) combined with high Interoception-Exteroception Bias (somatic hyper-vigilance), generating the anxiety/depression phenotype cluster. The Externalising spectrum corresponds to high Action Bias combined with a Dissolution pole on the Differentiation axis, producing disinhibited approach behaviour. Thought Disorder maps to disrupted Coherence Bias under high Epistemic Uncertainty — the cascade predicts that narrative fragmentation is the mechanism by which elevated volatility produces psychosis-spectrum presentations.`,
             },
             {
                 title: "Attachment Theory",
                 description:
-                    "Attachment Theory (Bowlby, 1969; Ainsworth, 1978) is an evolutionary and developmental model detailing how early interactions with caregivers internalize into working models of the self and others. These deep priors shape interpersonal affect regulation and relational expectations throughout the lifespan. In V3, the two-factor structure of attachment (anxiety × avoidance) is now partially captured by the Coupling Bias node, which receives input from both Valence (threat sensitivity) and Tractability (belief in effective action): high threat + high tractability produces anxious attachment; high threat + low tractability produces avoidant withdrawal.",
+                    "Attachment Theory (Bowlby, 1969; Ainsworth, 1978) is an evolutionary and developmental model detailing how early interactions with caregivers internalize into working models of the self and others. These deep priors shape interpersonal affect regulation and relational expectations throughout the lifespan. The two-factor structure of attachment (anxiety × avoidance) maps onto the Differentiation-Dissolution Bias, which receives converging input from Vitality (energetic reserves for social engagement) and Tractability (belief in effective action): high Tractability + low Vitality produces anxious-preoccupied coupling; low Tractability produces avoidant withdrawal.",
             },
             {
                 title: "Sensation Seeking",
                 description:
-                    "Sensation Seeking (Zuckerman, 1979) is a biologically based trait defined by the persistent drive for novel, varied, and intense sensory experiences, often accompanied by a willingness to take physical, social, or financial risks to attain them. In V3, this construct is now directly anchored in the cascade via the Reward Expectation ultra-prior, which drives both approach behavior (Action-Perception Bias) and reward-relevant information seeking (Epistemic Foraging) — differentiating the sensation-seeker profile from high-tractability profiles that are effective but not necessarily reward-hungry.",
+                    "Sensation Seeking (Zuckerman, 1979) is a biologically based trait defined by the persistent drive for novel, varied, and intense sensory experiences, often accompanied by a willingness to take physical, social, or financial risks to attain them. This construct is anchored in the cascade via the Reward Expectation ultra-prior, which drives both approach behavior (Action-Perception Bias) and reward-relevant information seeking (Epistemic Foraging) — differentiating the sensation-seeker profile from high-tractability profiles that are effective but not necessarily reward-hungry.",
             },
             {
                 title: "Jungian Archetypes",
@@ -435,18 +471,20 @@ window.CORE_SELF_MODEL = {
             },
             {
                 title: "Primal World Beliefs",
-                description:
-                    "Primal World Beliefs (Clifton et al., 2019) is a cognitive framework focusing on an individual's most fundamental assumptions about the overall nature of reality—such as whether the world is essentially safe, enticing, or alive—which cascade down to shape broader behavioral and affective dispositions.",
+                description: `Primal World Beliefs (Clifton et al., 2019) is a cognitive framework focusing on an individual's most fundamental assumptions about the overall nature of reality—such as whether the world is essentially safe, enticing, or alive—which cascade down to shape broader behavioral and affective dispositions.
+                    
+                Clifton et al.'s Primal World Beliefs are essentially operationalisations of L1 Ultra-Priors — making this framework a candidate empirical validation anchor for the cascade's foundational layer. 'Is the world safe?' maps to Tractability × inverse(Noise): a safe world is one where actions reliably reduce uncertainty and residual ambiguity is tolerable. 'Is the world enticing?' maps directly to Reward Expectation: a world perceived as rich with valuable outcomes. 'Is the world alive and responsive?' maps to the Coupling expectation embedded in the Differentiation-Dissolution Bias: a responsive world is one that engages synchronously with the agent's states. If the Primals scale can be shown to predict L1 parameter estimates derived from behavioural or physiological data, it would constitute partial empirical grounding for the model's L1 structure.`,
             },
             {
                 title: "Constructed Emotion",
                 description:
-                    "Barrett's framework is a predictive processing account of affect arguing that emotions are not innate, reactive circuits. Instead, they are top-down cortical predictions generated to make sense of, and allocate resources for, bottom-up interoceptive signals (allostasis). A future revision of the CPC model may decompose the current Valence node into a metabolic (body-budget) and an epistemic (prediction error) channel to better reflect Barrett's account — this is noted as a deferred architectural change.",
+                    "Barrett's framework is a predictive processing account of affect arguing that emotions are not innate, reactive circuits. Instead, they are top-down cortical predictions generated to make sense of, and allocate resources for, bottom-up interoceptive signals (allostasis).",
             },
             {
                 title: "Primal Emotional Systems",
-                description:
-                    "Panksepp's Affective Neuroscience evolutionary neurobiological framework identifies deep, subcortical emotional operating systems (e.g., SEEKING, FEAR, RAGE, PLAY). These Primal Emotional Systems act as unconditioned foundational priors that drive mammalian behavior before higher-order cognitive regulation occurs.",
+                description: `Panksepp's Affective Neuroscience evolutionary neurobiological framework identifies deep, subcortical emotional operating systems (e.g., SEEKING, FEAR, RAGE, PLAY). These Primal Emotional Systems act as unconditioned foundational priors that drive mammalian behavior before higher-order cognitive regulation occurs.
+                    
+                The primary Primal Emotional Systems have direct anchors in the cascade. The SEEKING system corresponds most directly to the joint action of Reward Expectation and Exploration Bias: tonic SEEKING drive is equivalent to high reward sensitivity amplifying epistemic foraging. The FEAR system maps to Epistemic Uncertainty State feeding the Interoception Bias — hyperactive FEAR is the phenomenological signature of a system with high volatility and high somatic salience. The PANIC/GRIEF system maps to the Differentiation pole of the Differentiation-Dissolution Bias: loss of attachment is equivalently an abrupt forced shift toward the differentiated end of the coupling axis.`,
             },
             {
                 title: "Temperament and Character Inventory",

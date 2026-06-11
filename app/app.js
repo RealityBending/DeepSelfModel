@@ -191,8 +191,11 @@ const buildLinkPath = (edge) => {
 const axisLayer = svg.append("g").attr("class", "axis-layer")
 
 if (coreSelfModel.axes) {
-    const l3Nodes = nodes.filter((n) => n.level === 3)
-    const axisGroups = d3.group(l3Nodes, (n) => n.axisGroup)
+    // Generalize to fetch ALL nodes that belong to an axis group, sorting them by level and order
+    // to ensure the bounding box calculation connects the correct top and bottom nodes.
+    const axisNodes = nodes.filter((n) => n.axisGroup).sort((a, b) => a.level - b.level || a.order - b.order)
+
+    const axisGroups = d3.group(axisNodes, (n) => n.axisGroup)
 
     const axisBox = axisLayer
         .selectAll(".axis-box")
