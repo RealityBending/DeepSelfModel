@@ -18,7 +18,6 @@ if (coreSelfModel.overview) {
 // 2. Inject Related Frameworks Panel
 const frameworksContainer = document.getElementById("frameworks-panel")
 if (coreSelfModel.relatedFrameworks && coreSelfModel.relatedFrameworks.items.length > 0) {
-    // Generate the raw HTML structure
     let frameworksHtml = `
         <p class="overview-kicker">${coreSelfModel.relatedFrameworks.kicker}</p>
         <h2 id="frameworks-title" class="overview-title">${coreSelfModel.relatedFrameworks.title}</h2>
@@ -27,9 +26,9 @@ if (coreSelfModel.relatedFrameworks && coreSelfModel.relatedFrameworks.items.len
                 ${coreSelfModel.relatedFrameworks.items
                     .map(
                         (item, index) => `
-                    <button class="framework-menu-item ${index === 0 ? "is-active" : ""}" 
-                            data-index="${index}" 
-                            role="tab" 
+                    <button class="framework-menu-item ${index === 0 ? "is-active" : ""}"
+                            data-index="${index}"
+                            role="tab"
                             aria-selected="${index === 0}">
                         ${item.title}
                     </button>
@@ -47,30 +46,25 @@ if (coreSelfModel.relatedFrameworks && coreSelfModel.relatedFrameworks.items.len
     `
     frameworksContainer.innerHTML = frameworksHtml
 
-    // Wire up the click events
     const menuItems = frameworksContainer.querySelectorAll(".framework-menu-item")
     const detailTitle = document.getElementById("framework-detail-title")
     const detailText = document.getElementById("framework-detail-text")
 
     menuItems.forEach((item) => {
         item.addEventListener("click", (e) => {
-            // Reset active states
             menuItems.forEach((btn) => {
                 btn.classList.remove("is-active")
                 btn.setAttribute("aria-selected", "false")
             })
 
-            // Set newly clicked state
             const clickedBtn = e.target
             clickedBtn.classList.add("is-active")
             clickedBtn.setAttribute("aria-selected", "true")
 
-            // Update content panel
             const index = clickedBtn.getAttribute("data-index")
             const selectedData = coreSelfModel.relatedFrameworks.items[index]
 
             detailTitle.textContent = selectedData.title
-            // Using innerHTML here allows your data.js to contain <p>, <b>, <ul>, etc.
             detailText.innerHTML = selectedData.description
         })
     })
@@ -88,8 +82,10 @@ const formatMu = (val) => {
     return val.toFixed(2).replace(/^0\./, ".")
 }
 
+// Increased height from 650 → 750 to accommodate 5 L1 nodes and 6 L3 nodes
+// without cramping the vertical spacing.
 const width = 960
-const height = 650
+const height = 750
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max)
 
 const xPos = { 1: 100, 2: 330, 3: 560, 4: 800 }
@@ -335,22 +331,37 @@ const getSourceValue = (sourceId) => {
 
 const computeTargetState = (targetId) => {
     const incomingEdges = incomingEdgesByTarget.get(targetId) || []
-    let sumMu = 0
-    let sumVar = 0
+    let sumWeightedMu = 0
+    let sumEffectivePrecision = 0
 
     incomingEdges.forEach((edge) => {
         const sourceNode = nodesById.get(edge.source) || obsById.get(edge.source)
         const sourceVal = sourceNode ? sourceNode.val : 0
+
+        // Retrieve variance, defaulting to 0.0225 (precision ~44) if undefined
         const sourceVar = sourceNode && sourceNode.variance !== undefined ? sourceNode.variance : 0.0225
+
+        // In active inference, precision acts as the multiplier on the message
+        const sourcePrecision = 1 / sourceVar
+
+        // The effective weight is the structural weight modulated by the node's precision
+        const effectiveWeight = edge.weight * sourcePrecision
+
         const edgeContribution = edge.transform === "inverse" ? 1 - sourceVal : sourceVal
 
-        sumMu += edgeContribution * edge.weight
-        sumVar += sourceVar * (edge.weight * edge.weight)
+        sumWeightedMu += edgeContribution * effectiveWeight
+        sumEffectivePrecision += effectiveWeight
     })
 
+    // Normalize by total precision to solve the path accumulation problem
+    const finalVal = sumEffectivePrecision > 0 ? sumWeightedMu / sumEffectivePrecision : 0
+
+    // The target's new variance is derived from the sum of incoming precisions
+    const finalVariance = sumEffectivePrecision > 0 ? 1 / sumEffectivePrecision : 0.0225
+
     return {
-        val: clamp(sumMu, 0, 1),
-        variance: clamp(sumVar, 0.001, 1),
+        val: clamp(finalVal, 0, 1),
+        variance: clamp(finalVariance, 0.001, 1),
     }
 }
 
@@ -404,7 +415,6 @@ const renderActiveState = () => {
     nodeGroups.classed("is-active", (node) => node.id === activeNodeId)
     obsNodes.classed("is-active", (node) => node.id === activeNodeId)
 
-    // Highlight links connected to the active node
     linkPaths.classed("connected", (edge) => {
         if (!activeNodeId) return false
         return edge.source === activeNodeId || edge.target === activeNodeId
@@ -476,7 +486,6 @@ sliderPi.addEventListener("input", (e) => {
     if (!activeNodeId) return
     const node = nodesById.get(activeNodeId)
     if (node && node.level === 1) {
-        // Direct conversion from the new pi slider to internal sigma
         const pi = parseFloat(e.target.value)
         node.variance = 1 / pi
         node.sigma = Math.sqrt(node.variance)
@@ -502,7 +511,6 @@ function updateSystem() {
 
     nodeGroups.select(".node-dist").attr("d", (node) => drawDistribution(node))
 
-    // Add Pi next to Mu for Levels 1-3
     nodeGroups.select(".node-value").text((node) => {
         if (node.variance) {
             return `μ = ${formatMu(node.val)}, π = ${Math.round(1 / node.variance)}`
