@@ -1,6 +1,6 @@
 ---
-title: "Towards an Active Inference Personality Framework: The Core Priors Cascade Model of the Self"
-shorttitle: "Core Priors Cascade Model"
+title: "Towards an Active Inference Personality Framework: The Deep-Self Predictive Cascade Model"
+shorttitle: "Deep-Self Model of Personality"
 author:
   - name: Dominique Makowski
     orcid: 0000-0001-5375-9967
@@ -38,7 +38,12 @@ author-note:
     financial-support: null
     gratitude: null
     authorship-agreements: null
-abstract: "The Core Priors Cascade (CPC) Model is a hierarchical generative account of personality and individual differences grounded in the Free Energy Principle and active inference. In contrast to descriptive psychometric frameworks that identify behavioural phenotypes, the CPC Model proposes that observable personality traits represent the downstream expressions of deeply entrenched probabilistic parameters: hierarchically organised expectations and precision settings. These govern an agent's structural expectations and information processing biases. These hyper-priors are organised into three groups: Existential Expectations, encoding global parameters of volatility, agency, and temporal self-extension; Boundary and Relational Biases, governing Markov blanket permeability and sensory grounding; and Operational Expectations and Biases, regulating error-resolution strategies and self-model coherence. From this hierarchical structure, five latent factors are hypothesised. These factors (Epistemic Plasticity, Cybernetic Stability, Blanket Permeability, Temporal Extension, and Self-Model Stability) are argued to constitute the generative mechanisms underlying the phenotypic variance captured by existing descriptive models including the Big Five, behavioural inhibition and activation systems, attachment theory, and sensation seeking. The CPC Model is presented as a principled, mechanistic complement to existing descriptive frameworks, offering testable predictions regarding the hierarchical structure of individual differences and differential psychopathological vulnerability."
+    abstract: "V1:
+Inter-individual differences in personality suffer from a weak generative and mechanistic conceptualisation. Contemporary psychological science heavily relies on empirical taxonomies, such as the Big-5, yet these descriptive structures remain largely silent about the generative mechanisms underlying individual differences. By bridging active inference frameworks with established trait psychology, we introduce the Deep-Self Predictive Cascade Model: a principled, hierarchical architecture grounded in the Free Energy Principle. The model posits that observable personality traits are not static endowments, but stable attractor basins within a Free Energy landscape, whose depth and location are jointly determined by a structured cascade of Bayesian priors. This hierarchy cascades across nested levels: from foundational Ultra-Priors governing Epistemic, Allostatic, and Teleological imperatives; through physiological Core Affective States (Arousal, Vitality, Valence); and into Precision Biases that dictate resource allocation across the minimal, agentic, and narrative self-models. Computationally, the cascade implements precision-weighted belief updating, where each downstream state reflects the precision-normalized sum of its upstream inputs. By parameterizing these abstract computational layers, the model naturally generates the phenotypic profiles described by the Cybernetic Big Five Theory, BIS/BAS, Barrett's Constructed Emotion model, Primal World Beliefs, and the HiTOP dimensional taxonomy of psychopathology. Ultimately, this framework offers a unified computational ontology for personality, subsuming existing taxonomies and yielding testable, mechanistic predictions for cognitive neuroscience and computational psychiatry.
+    
+V2:
+Contemporary psychological science heavily relies on empirical taxonomies, such as the Five-Factor Model, to categorize individual differences. Yet, these descriptive structures remain largely silent on the generative mechanisms underlying human personality. To bridge established trait psychology with active inference, we introduce the Deep-Self Predictive Cascade Model. We argue that personality is best understood not as a static inventory of traits an individual possesses, but as a topography of expected free energy: a landscape of attractor basins whose depth and location are jointly determined by an agent’s deep priors and precision allocation strategies. This hierarchical architecture cascades from foundational Ultra-Priors governing epistemic and allostatic imperatives, through physiological core affective states, into precision biases that dictate resource allocation across the minimal, agentic, and narrative self-models. Computationally, the cascade implements precision-weighted belief updating, allowing abstract parameters to naturally generate the diverse phenotypic profiles described by major cybernetic, affective, and clinical taxonomies (e.g., CB5T, BIS/BAS, and HiTOP). Ultimately, this framework offers a unified, formal ontology for personality, subsuming existing paradigms and yielding testable, mechanistic predictions for cognitive neuroscience and computational psychiatry.
+"
 keywords:
   - active inference
   - free energy principle
@@ -46,9 +51,8 @@ keywords:
   - individual differences
   - predictive processing
   - cybernetics
-  - expectations
-  - precision bias
-impact-statement: "The Core Priors Cascade Model provides a mechanistic, mathematically grounded account of how hierarchical expectations and precision biases generate the full range of observable personality phenotypes, offering a principled bridge between the Free Energy Principle and the scientific study of individual differences."
+  - computational psychiatry
+impact-statement: "The Deep-Self Predictive Cascade Model provides a mechanistic, mathematically grounded account of how hierarchical expectations and precision biases generate a wide range of observable personality phenotypes, offering a principled bridge between the active inference frameworks of cognition and the scientific study of individual differences."
 word-count: false
 floatsintext: true
 numbered-lines: false
@@ -90,268 +94,326 @@ editor_options:
   chunk_output_type: console
 ---
 
-Personality psychology faces a persistent explanatory gap. While descriptive frameworks, such as the Big Five model of personality traits [@mccrae1992introduction; @goldberg1990alternative], have proven remarkably successful at organising individual differences in behaviour, affect, and cognition, their structural parsimony comes at a theoretical cost. These models describe what varies across individuals but offer limited purchase on why such variation exists or how it is generated and maintained. Comprehensive mechanistic accounts capable of specifying the processes that produce the characteristic patterns we label as Neuroticism, Openness, or Conscientiousness are relatively scarce. 
-
-Several generative frameworks have attempted to bridge this descriptive-process divide. The Cognitive-Affective Personality System [CAPS, @mischel1995cognitive] conceptualises personality as a network of interacting cognitive and affective units, while Whole Trait Theory [@fleeson2015whole] frames traits as density distributions of momentary states. More recently, Cybernetic Big Five Theory [CB5T, @deyoung2015cybernetic] has offered a functionalist account of traits as parameters of a cybernetic system optimising for distinct goals. Yet, while these models successfully introduce process dynamics, they largely lack a unified mathematical ontology to explain why certain cognitive-affective parameters reliably coalesce into the stable phenotypic attractors we observe.
-
-The Free Energy Principle [FEP, @friston2010free] and its process theory, active inference, offer a principled candidate for such a generative account. Under the FEP, all self-organising biological systems minimise the upper bound on their own surprise, formally defined as variational free energy, by maintaining and continuously updating probabilistic generative models of their sensory environment. This minimisation operates through two complementary pathways: perceptual inference (revising internal models to fit sensory signals) and active inference (acting on the world to bring sensory signals into conformity with predictions). 
-
-Applied to the domain of personality, this framework implies that characteristic individual differences do not reflect fixed trait properties of the organism but rather the downstream consequences of deeply entrenched probabilistic parameters. To ground these parameters in the formal mathematics of the FEP, the framework explicitly distinguishes between *expectations* (the locations or means of an internal distribution, $\mu$) and *biases* (the precisions, gains, or relative inverse-variance ratios assigned to different processing channels, $\pi$). What are colloquially called "prior preferences" or "drives" are recast under this architecture as state expectations equipped with exceptionally high precision constraints. These foundational parameters scaffold the agent's predictive architecture and act as strong constraints on all subsequent inference and action.
-
-The present paper proposes the Core Priors Cascade (CPC) Model of Personality, a hierarchical framework that defines and organises these foundational expectations and biases across levels of abstraction and influence. At the apex sit *Existential Expectations*, representing the most fundamental assumptions the agent holds about the volatility of its environment, the tractability of prediction error through action, and the ultimate temporal horizon of the self. These global location parameters cascade downward to constrain a second group of *Boundary and Relational Biases*. This category governs the precision weighting, permeability, and sensory grounding of the agent's Markov blanket, the statistical boundary demarcating self from environment [@friston2019markov]. These in turn constrain a third level of *Operational Expectations and Biases*, which dictate the agent's characteristic strategies for minimizing free energy across the perception-action cycle.
-
-The CPC Model is explicitly positioned not as a replacement for existing descriptive frameworks but as a generative account of the mechanisms underlying the phenotypes those frameworks identify. The Big Five describe individual differences at the level of behavioural output, and the Cybernetic Big Five Theory begins to explain them at the level of cybernetic function. The CPC Model proposes to account for both at the level of the hierarchical expectation and precision structure from which such function emerges. It thereby offers testable structural predictions and a principled basis for understanding individual differences in general temperament as well as psychopathological vulnerability.
 
 
 
-# Model Summary
 
-## Level 1: Ultra-Priors (Proto-Self)
+## 4. Relationship with Existing Frameworks
 
-This level represents the deepest, sub-personal assumptions the generative model holds about the fundamental physics of its environment and its own capacities. These parameters set the ultimate boundaries for both the location and precision of all downstream inference.
+The DSPCM is not a competing taxonomy; it is a generative architecture that subsumes existing personality and psychopathological frameworks by explaining where, in the cascade, each framework's constructs are generated. Each framework constitutes either: (a) a direct operationalisation of specific cascade parameters, making it a candidate empirical validator of those parameters; (b) a descriptive summary of cascade outputs at L4; or (c) a partial mechanistic account that the DSPCM integrates and extends. The following subsections address each major framework in turn.
 
-- **Volatility Expectation:** The assumed baseline rate of change in the environment's hidden states.
-- **Tractability Expectation:** The assumed capacity for the organism's own active inference to resolve prediction errors.
-- **Noise Expectation:** The baseline threshold at which unresolved variance is accepted as an irreducible property of reality.
-- **Terminal Expectation:** The ultimate temporal horizon over which the self-organizing system models its own structural coherence before anticipating dissolution.
+### 4.1 The Five-Factor Model and Cybernetic Big Five Theory
 
-## Level 2: Affective Priors (Core Self)
+The Five-Factor Model (FFM; Costa & McCrae, 1992; Goldberg, 1990) is the dominant descriptive taxonomy in personality psychology. Its five dimensions — Openness, Conscientiousness, Extraversion, Agreeableness, and Neuroticism — represent the empirically derived structure of trait covariance at the level of observable behaviour. The DSPCM treats the FFM as a map of L4: a description of the attractor landscape that the cascade generates, without itself explaining the generative mechanisms that produce that landscape. Critically, the DSPCM provides a mechanistic explanation for two features of the FFM that are empirically well-established but theoretically underspecified: the existence of higher-order meta-traits, and the partial independence of the five factors despite their developmental and genetic correlations.
 
-At this tier, the abstract mathematical assumptions of Level 1 are translated into the organism's allostatic budget. This is the birth of phenomenological valence, where the mathematical probability of error is experienced as *feeling*.
+The Cybernetic Big Five Theory (CB5T; DeYoung, 2015) represents the most theoretically sophisticated existing mechanistic account of the Big Five and constitutes the framework most closely adjacent to the DSPCM. DeYoung conceptualises personality as the typical parameters of a goal-directed, self-regulating cybernetic system and organises the Big Five into two higher-order meta-traits — Plasticity (the shared variance of Extraversion and Openness) and Stability (the shared variance of Neuroticism reversed, Agreeableness, and Conscientiousness) — each corresponding to a distinct functional requirement of any cybernetic agent:
 
-- **Valence Expectation**: Baseline Free Energy Expectation. The chronic, affective anticipation of prediction error (felt as anxiety vs. safety). Emerges from Volatility and Tractability: an organism with high expected Volatility and low Tractability is mathematically forced to experience a high Global Valence Expectation.
-- **Uncertainty Expectation**: Ambiguity Expectation. The anticipated opacity of immediate hidden states. Emerges from Noise and Volatility, dictating how much ambient confusion the system expects to feel moment-to-moment.
-- **Temporal Expectation**: Efficacy Horizon. The functional, felt depth of temporal planning. Related to Terminal Expectation; an agent expecting imminent structural dissolution cannot sustain a deep Temporal Efficacy Expectation.
+- **Plasticity** drives the exploration of and engagement with novel information and environments. In the DSPCM, Plasticity maps onto the joint action of the Exploration-Exploitation Bias and the Action-Perception Bias — a system parameterised for active, flexible engagement with an information-rich world. The common upstream driver of both biases is the Epistemic Imperative's configuration, particularly the interaction of Reward Expectation (making novelty valuable) and Noise Expectation (making tolerance of ambiguity feasible). The DSPCM thus specifies the generative mechanism that CB5T identifies at a functional level, providing two separable upstream contributions to the single Plasticity meta-trait.
 
-## Level 3: Precision Biases (The Operational Self)
+- **Stability** protects the system from disruption and maintains goal coherence across time and context. In the DSPCM, Stability maps onto the downstream regulatory effects of the Allostatic and Teleological Imperatives — specifically, how high Tractability, adequate Vitality, high Future-Present Bias, and secure Narrative Precision collectively shield the self-model from catastrophic fragmentation under the pressure of volatile prediction errors. The DSPCM prediction is that the three facets of Stability — emotional stability (low Neuroticism), affiliative warmth (Agreeableness), and organised agency (Conscientiousness) — should share variance precisely because they all receive substantial input from Tractability Expectation at L1, which functions as a common upstream driver of all three.
 
-Constrained by the affective reality of Level 2, this level dictates the actual precision-weighting strategies the organism deploys to survive. These parameters define the operational boundaries of the self across three cybernetic axes.
+The DSPCM extends CB5T by providing an explicitly computational, Bayesian account of the update rules governing these cybernetic parameters (precision-weighted message passing), by embedding them in a full hierarchical model that includes affective states as mediators, and by connecting the cybernetic architecture to the Free Energy Principle, which provides it with a normative foundation: the system is parameterised the way it is because its prior configuration constitutes a (perhaps locally) optimal strategy for minimising long-run variational free energy given the agent's developmental and ecological history.
 
-- **Axis A: Topological Biases (Minimal Self)**
-    - *Sensory-Anchoring Bias:* The precision ratio between interoceptive (visceral) and exteroceptive (environmental) ground truth.
-    - *Coupling Bias:* The precision ratio between internal autonomy (differentiation) and external synchronization (dissolution). Related to Valence; high chronic threat often forces a rigid differentiation bias to protect the Markov blanket.
-- **Axis B: Epistemic Biases (Agentic Self)**
-    - *Action-Perception Bias:* The precision allocated to altering the environment (active inference) versus altering internal beliefs (perceptual inference). Governed by the Tractability Expectation; low expected tractability forecloses an action-heavy bias.
-    - *Epistemic Foraging Bias:* The domain ratio governing where the organism seeks uncertainty-resolving information (somatic/physical edge-seeking vs. semantic/conceptual worldview-testing).
-- **Axis C: Temporal Biases (Narrative Self)**
-    - *Narrative Precision Bias:* The precision weight assigned to the agent's autobiographical coherence, dictating whether identity is held rigidly across time or updated fluidly in response to context.
+### 4.2 Gray's Biopsychological Theory: BIS/BAS
 
-## Level 4: Phenotypic Attractors (The Observable Self)
+Biopsychological theory (Gray, 1981; Gray & McNaughton, 2000; Carver & White, 1994) anchors behavioural dispositions in two neurobiological motivational systems: the Behavioral Inhibition System (BIS), sensitive to signals of punishment, non-reward, novelty, and conflict; and the Behavioral Approach System (BAS), sensitive to signals of reward and goal-attainment. This framework was among the first to ground personality dimensions in specific neurochemical substrates, associating BIS sensitivity with septo-hippocampal functioning and serotonergic modulation, and BAS sensitivity with mesolimbic dopaminergic circuits.
 
-These are the stable, behavioral profiles measured by descriptive psychometric models (e.g., the Big Five trait aggregations). Under this framework, these are not causal psychological drivers, but merely the observable behavioral attractors emerging from the complex, cascading interplay of the parameters across the three levels above.
+Within the DSPCM, Gray's dual systems emerge as Level 4 observables that are generated downstream of specific cascade configurations:
 
-- **Neuroticism:** This phenotype is generated by a sub-personal bedrock of high Volatility Expectation combined with a low Tractability Expectation (Level 1). This ontological configuration mathematically forces a chronically elevated Global Valence Expectation (Level 2), experienced phenomenologically as persistent threat or anxiety. To manage this high expected free energy, the operational switchboard defaults to a perception-heavy Action-Perception Bias (over-updating internal models because environmental action is expected to fail) and an interoceptive Sensory-Anchoring Bias (hyper-vigilance to internal somatic arousal) at Level 3. The stable behavioral manifestation of this specific parametric cascade is what psychometrics captures as high Trait Neuroticism.
-- **Openness to Experience:** This phenotype is driven by a bedrock of high Noise Expectation (tolerance for irreducible variance) and high Tractability Expectation (Level 1). This generates a low Global Valence Expectation (Level 2), experienced as baseline safety rather than threat. This secure affective foundation liberates the operational switchboard to adopt a semantic Epistemic Foraging Bias (conceptual edge-testing) and a highly fluid Narrative Precision Bias (willingness to revise the self-model without catastrophic fragmentation) at Level 3. The resulting exploratory behavioral pattern is captured by standard Openness inventories.
+- The **BIS** is understood as the observable readout of a system in which high Volatility Expectation generates chronically elevated Epistemic Arousal, which in turn drives the Interoception-Exteroception Bias toward the somatic pole and suppresses the Action-Perception Bias through the mechanism of arousal-induced behavioral inhibition. The BIS is thus not a primitive system within the cascade but an emergent phenotypic profile: the characteristic sensory hyper-vigilance, behavioral freezing, and approach suppression that follows from a particular configuration of L1 Epistemic parameters, mediated by L2 Arousal and L3 interoceptive bias.
 
+- The **BAS** maps most directly onto the joint action of Reward Expectation (L1) driving Valence (L2), which in turn amplifies the Action-Perception Bias and Exploration-Exploitation Bias (L3). The DSPCM makes a specific prediction that BAS theory does not: BAS strength should show a multiplicative interaction with Tractability Expectation. An agent with high Reward Expectation but low Tractability will generate high approach motivation without the efficacy beliefs required to translate that motivation into goal-directed action — a potentially depressogenic configuration that should be distinguishable from the simple "low BAS" profile.
 
-```{r}
-#| message: false
-#| warning: false
-#| apa-twocolumn: true
-#| label: fig-model
-#| fig-height: 12
-#| fig-width: 12
-#| fig-cap: "TODO"
+The DSPCM thus reframes BIS/BAS not as competing neural systems but as two distinct attractor configurations of the same generative cascade, sharing a common computational substrate (precision-weighted message passing) but differing in which L1 parameters dominate their expression.
 
+### 4.3 The Hierarchical Taxonomy of Psychopathology (HiTOP)
 
-library(tidyverse)
-library(tidygraph)
-library(ggraph)
+The Hierarchical Taxonomy of Psychopathology (HiTOP; Kotov et al., 2017) is a dimensional, empirically derived classification system that organises mental health and psychopathology as a hierarchy of continuously varying dimensions spanning from broad spectra to specific symptom components. HiTOP explicitly rejects categorical diagnoses in favour of dimensional representations, positioning psychopathology as continuous with normal personality variation.
 
-# 1. Scaled Distribution Generator Function (For Levels 1-3 Only)
-generate_dist <- function(id, cx, cy, shift, profile) {
-  x_seq <- seq(cx - 1.5, cx + 1.5, length.out = 100)
-  mu <- cx + (shift * 0.5)
-  sigma <- 0.25
-  y_dens <- dnorm(x_seq, mean = mu, sd = sigma)
-  y_scaled <- cy + (y_dens / max(y_dens)) * 0.8
-  tibble(
-    id = id,
-    profile = profile,
-    x = c(min(x_seq), x_seq, max(x_seq)),
-    y = c(cy, y_scaled, cy)
-  )
-}
+The DSPCM provides a generative account of HiTOP's principal spectra that is consistent with HiTOP's dimensional commitments while specifying the mechanistic cascade that produces them:
 
-# 2. Define Node Data (4 Levels, Perfectly Spaced to Avoid Crossed Edges)
-nodes_df <- tibble(
-  id = 1:15,
-  title = c(
-    # Level 1: Ultra-Priors
-    "Noise\nExpectation", "Volatility\nExpectation", "Tractability\nExpectation", "Terminal\nExpectation",
-    # Level 2: Hyper-Priors
-    "Ambiguity\nExpectation", "Free Energy\nExpectation", "Efficacy\nHorizon",
-    # Level 3: Biases / Meta-Priors
-    "Sensory-Anchoring\nBias", "Coupling\nBias", "Epistemic-Gain\nExpectation", "Action-Perception\nBias", "Self-Coherence\nExpectation",
-    # Level 4: Observables
-    "Openness", "Neuroticism", "Conscientiousness"
-  ),
-  tier = c(rep("Level 1", 4), rep("Level 2", 3), rep("Level 3", 5), rep("Level 4", 3)),
-  left_lbl = c("Low", "Static", "Helpless", "Uncertain", "Low", "Low", "Immediate", "Intero", "Differen.", "Low", "Percept.", "Fragile", "Low", "Low", "Low"),
-  right_lbl = c("High", "Chaotic", "Agency", "Certain", "High", "High", "Extended", "Extero", "Dissol.", "High", "Action", "Integ.", "High", "High", "High"),
-  x = c(
-    -5.4, -1.8, 1.8, 5.4,         # L1
-    -3.6, 0, 3.6,                 # L2
-    -5.4, -2.7, 0, 2.7, 5.4,      # L3
-    -3.6, 0, 3.6                  # L4
-  ), 
-  y = c(rep(7, 4), rep(5, 3), rep(3, 5), rep(1, 3))
-)
+**Internalizing Spectrum.** The Internalizing spectrum encompasses anxiety and depressive disorders and is the broadest super-spectrum in the HiTOP system. In the DSPCM, this corresponds to the co-occurrence of two L3 configurations: high Interoception-Exteroception Bias (generating somatic hyper-vigilance) combined with low Vitality State (generating allostatic depletion). These two inputs to the Internalizing observable are themselves driven by different L1 parameters — Volatility Expectation (for interoceptive bias) and Energy/Tractability Expectations (for Vitality) — generating the prediction that the Internalizing spectrum should show dissociable anxiety-specific and depression-specific sub-dimensions that map differentially onto distinct L1 configurations. This is consistent with the empirically observed Fear-Distress substructure of the Internalizing spectrum (Krueger & Markon, 2006).
 
-# 3. Define Profile Shifts & Separate Latent Polygons from Phenotypic Lollipops
-shifts <- tibble(
-  id = 1:15,
-  profile = c(rep("Level 1", 4), rep("Level 2", 3), rep("Level 3", 5), rep("Level 4", 3)),
-  shift = c(-1, 1, -1, 1, 1, 1, -1, 1, -1, 1, -1, -1, 0.7, 0.8, -0.6) # Shift handles position
-)
+**Externalizing Spectrum.** The Externalizing spectrum encompasses substance use disorders, conduct problems, and disinhibited personality features. In the DSPCM, this corresponds to high Action Bias (L3) combined with the Dissolution pole of the Differentiation-Dissolution Bias (L3). High Action bias drives aggressive approach behavior and policy execution; the Dissolution pole reduces the self-other boundary that would otherwise constrain impulsive actions by incorporating the anticipated consequences to others into the agent's own generative model. The absence of this social constraint — not as a moral deficit but as a precision allocation imbalance — constitutes the computational mechanism of disinhibited externalizing behavior.
 
-# Render distributions only for sub-personal levels (IDs 1-12)
-poly_data <- left_join(shifts, nodes_df, by = "id") %>%
-  filter(id <= 12) %>%
-  pmap_dfr(function(id, x, y, shift, profile, ...) {
-    generate_dist(id, x, y, shift, profile)
-  })
+**Thought Disorder Spectrum.** The Thought Disorder spectrum encompasses psychosis-spectrum presentations. In the DSPCM, this maps onto disrupted Rigidity-Fluidity Bias under chronically high Epistemic Arousal. When the narrative self-model is parameterised with very low precision (high fluidity) and simultaneously subjected to high-precision prediction errors from an expected-volatile environment, the narrative cannot maintain coherent diachronic binding — the self-model fragments across time, generating the loose associations, referential ideas, and identity disruption characteristic of psychosis-spectrum presentations. This mechanism directly connects to the predictive coding account of psychosis (Corlett et al., 2019; Adams et al., 2013), which attributes positive psychotic symptoms to aberrant precision signals that inflate the gain on unexpected prediction errors.
 
-# ------------------------------------------------------------------
-# Observable profiles represented as miniature bar charts
-# ------------------------------------------------------------------
-# Note that the observable traits (e.g., Neuroticism) could have been represented as distributions, 
-# Which would align it with Whole Trait Theory. Under this framework, a trait is defined as a density 
-# distribution of momentary states. However, for clarity, we prefer to represent observable traits as 
-# fixed "values" (akin to what would be observed on a Likert scale)
-bar_data <- tribble(
-  ~id, ~trait, ~value,
+The DSPCM prediction is that HiTOP's three principal spectra should be jointly predictable from a small set of L1 Ultra-Prior parameters — perhaps as few as four (Volatility, Tractability, Energy, and Noise Expectation) — with L2 and L3 serving as mediators of these effects. This constitutes a testable structural hypothesis about the generative architecture of psychopathology.
 
-  # Openness phenotype
-  13, "Openness",          0.95,
-  13, "Neuroticism",       0.35,
-  13, "Conscientiousness", 0.45,
+### 4.4 Sensation Seeking
 
-  # Neurotic phenotype
-  14, "Openness",          0.40,
-  14, "Neuroticism",       0.95,
-  14, "Conscientiousness", 0.30,
+Sensation Seeking (Zuckerman, 1979; Zuckerman & Kuhlman, 2000) is a biologically grounded trait defined by a persistent drive for novel, varied, and intense sensory experiences, often accompanied by a willingness to accept risk in service of these experiences. Zuckerman's work established the heritability and neurobiological correlates of the trait, associating it with dopaminergic tone and the Monoamine Oxidase (MAO) system, and distinguishing four facets: Thrill and Adventure Seeking, Experience Seeking, Disinhibition, and Boredom Susceptibility.
 
-  # Conscientious phenotype
-  15, "Openness",          0.35,
-  15, "Neuroticism",       0.25,
-  15, "Conscientiousness", 0.95
-) %>%
-  left_join(nodes_df %>% select(id, x, y), by = "id") %>%
-  mutate(
-    x_bar = case_when(
-      trait == "Openness"          ~ x - 0.45,
-      trait == "Neuroticism"       ~ x,
-      trait == "Conscientiousness" ~ x + 0.45
-    ),
-    width = 0.28,
-    height = value * 0.9
-  )
+In the DSPCM, Sensation Seeking is anchored primarily in the Reward Expectation Ultra-Prior (L1), which drives both the Action-Perception Bias (approach behavior) and the Exploration-Exploitation Bias (reward-relevant information seeking) simultaneously. This dual pathway differentiates the Sensation-Seeking profile from high-Tractability profiles in which agents are effective but not necessarily reward-hungry: the Sensation Seeker is not simply a competent agent but one whose generative model treats the world as richly endowed with highly valuable, novel outcomes, and simultaneously treats exploration as an effective strategy for accessing them.
 
-trait_colors <- c(
-  "Openness" = "#42A5F5",
-  "Neuroticism" = "#EF5350",
-  "Conscientiousness" = "#66BB6A"
-)
+The DSPCM also distinguishes the Somatic and Phenomenological sub-dimensions of the Exploration Bias (described in Section 3.4.2), which map onto Zuckerman's facets in a theoretically interpretable way: Thrill and Adventure Seeking maps onto Somatic Exploration (physical edge-testing), while Experience Seeking and the more psychologically oriented forms of Sensation Seeking map onto Phenomenological Exploration (conceptual self-boundary testing). The model thus predicts that Sensation Seeking should be factorially decomposable into these two dimensions, each with distinguishable upstream predictors.
+
+### 4.5 Primal World Beliefs
+
+Primal World Beliefs (Clifton et al., 2019; Clifton & Kim, 2023) constitute a framework of individuals' most fundamental assumptions about the overall character of the world — whether the world is essentially safe, enticing, or alive and responsive. These beliefs are characterised by their object (the world in general, not specific entities or contexts), their stability, and their pervasive influence on behavior and affect.
+
+Within the DSPCM architecture, Primal World Beliefs occupy a uniquely important position: they are the closest existing measurement framework to a direct operationalisation of L1 Ultra-Priors. Each of the three primal dimensions maps onto specific L1 parameters with considerable theoretical precision:
+
+- **Safe World** maps onto the joint action of high Tractability Expectation and low Noise Expectation. A world experienced as safe is mathematically one in which the agent's actions reliably reduce uncertainty (high Tractability) and in which residual ambient ambiguity is expected to remain within tolerable limits (high Noise Expectation). The conjunction of these two parameters generates an expectation that the environment is both predictable and responsive — the computational definition of safety.
+
+- **Enticing World** maps directly and primarily onto Reward Expectation. A world perceived as enticing is one whose generative model treats available outcomes as high-value — a world whose offer space is represented as rich, attractive, and worth pursuing. This mapping is theoretically precise and generates a specific empirical prediction: the Enticing World subscale should correlate strongly with dopaminergic reward sensitivity measures and with BAS scores, independent of Safe World.
+
+- **Alive World** maps onto the Coupling expectation embedded in the Differentiation-Dissolution Bias — specifically, the prior that the world is responsive to the agent's own internal states, that other agents are available for synchrony. A world perceived as alive and responsive is one in which the agent's generative model treats other Markov blankets as engaged and co-regulatory — the computational precondition for affiliative behavior, trust, and Agreeableness.
+
+If the Primals inventory can be shown empirically to predict L1 parameter estimates derived independently from behavioral or physiological data, it would constitute the most direct empirical grounding of the cascade's foundational layer. The DSPCM thus positions the Primals framework as the primary candidate measurement instrument for L1 assessment, with clear implications for the development of a cascade-informed personality questionnaire.
+
+### 4.6 Panksepp's Affective Neuroscience and Primal Emotional Systems
+
+Panksepp's Affective Neuroscience (Panksepp, 1998; Panksepp & Biven, 2012) identifies a set of phylogenetically ancient, subcortical emotional operating systems — including SEEKING, FEAR, RAGE, LUST, CARE, PLAY, and PANIC/GRIEF — that are argued to constitute the primary mammalian affective infrastructure, operating prior to and independently of higher-order cognitive regulation. These systems produce unconditional affective states that shape behavior across species and that serve as the evolutionary bedrock upon which higher-order emotional conceptualisation is layered.
+
+The DSPCM treats Panksepp's primary emotional systems as partially instantiated within the L1 and L2 levels of the cascade — as deep biological priors and their immediate affective readouts — while arguing that the full phenomenological richness of these systems is generated through their interaction with L3 precision biases and L4 narrative constructions. Three primary systems have clear cascade anchors:
+
+- **SEEKING** maps onto the joint action of Reward Expectation (L1) and Exploration-Exploitation Bias (L3). The tonic SEEKING drive — the constitutive forward-leaning motivational orientation of the mammalian brain — is equivalent to a generative model that treats the world as rich with undiscovered value and epistemic opportunity. Dopaminergic tonic firing provides the biological substrate of this persistent forward orientation, consistent with the DSPCM's mapping of Reward Expectation onto mesolimbic dopamine.
+
+- **FEAR** maps onto Epistemic Arousal (L2) feeding the Interoception-Exteroception Bias (L3). Hyperactive FEAR is the phenomenological signature of a generative model dominated by chronically high Volatility Expectation, producing an Epistemic Arousal State that persistently exceeds the agent's capacity for prediction error resolution and is channelled through a somatic anchoring strategy into a state of vigilant threat readiness.
+
+- **PANIC/GRIEF** maps onto the Differentiation pole of the Differentiation-Dissolution Bias (L3). The PANIC/GRIEF system is activated by social separation and generates a characteristic distress signal that motivates attachment-seeking behavior. In cascade terms, separation corresponds to an abrupt, involuntary shift toward the Differentiation pole — the sudden loss of social co-regulation — which generates a massive prediction error at the level of the Differentiation-Dissolution Bias, experienced phenomenologically as separation distress.
+
+The DSPCM does not claim to fully subsume Panksepp's framework; systems like RAGE, LUST, CARE, and PLAY represent additional dimensions of the affective architecture that may require further Ultra-Prior parameters to accommodate. The potential extension of the cascade to include a Social or Affiliative Ultra-Prior — perhaps encoding the baseline expectation of co-regulatory availability — is explicitly flagged as a theoretically important development that awaits sufficient empirical delimitation.
+
+### 4.7 Attachment Theory
+
+Attachment Theory (Bowlby, 1969, 1973, 1980; Ainsworth et al., 1978) provides a developmental and evolutionary account of how early interactions with caregivers are internalised into working models — internal representations of the self and others — that subsequently shape affect regulation, interpersonal expectations, and behavioral strategies throughout the lifespan. The two-dimensional structure of adult attachment — Anxiety (concern about rejection and availability) and Avoidance (discomfort with closeness and dependence) — constitutes one of the most robust structural findings in personality and social psychology.
+
+The DSPCM provides a mechanistic account of this two-factor structure. The Anxiety-Avoidance matrix of attachment maps onto two specific interactions within the cascade:
+
+- **Secure Attachment** arises from high Tractability Expectation combined with an expectation of social Synchrony (Dissolution bias). The agent expects its actions to be effective and expects other Markov blankets to be available for co-regulation — the computational conditions under which close interdependence is sustainable without catastrophic resource depletion or overwhelming prediction error. This configuration generates a generative model in which social proximity is associated with both security and efficacy, producing the classic secure attachment phenotype.
+
+- **Anxious-Preoccupied Attachment** arises from high Epistemic Arousal combined with a strong Dissolution bias. The agent experiences high uncertainty and attempts to resolve it through urgent structural coupling — bringing another agent's Markov blanket into tight synchrony with its own. The resulting hyperactivation of attachment behavior (monitoring, protest, clinging) reflects the precision allocation of an uncertain system attempting to use social co-regulation as an uncertainty-reduction strategy.
+
+- **Dismissive-Avoidant Attachment** arises from low Tractability combined with a defensive shift toward the Differentiation pole. An agent that expects high metabolic cost from social engagement and low benefit (because action is expected to be ineffective) minimises structural coupling to preserve internal stability and metabolic resources. This deactivation strategy — the suppression of attachment needs — is computationally rational given the agent's prior configuration, even though it forecloses opportunities for the co-regulation that might improve Tractability estimates over time.
+
+This cascade account makes a specific prediction not explicitly generated by standard attachment theory: Tractability Expectation and Vitality State should be independent predictors of attachment style, with Tractability predicting the anxiety dimension and Vitality predicting the avoidance dimension, possibly after controlling for each other. This is a testable hypothesis that could be examined in studies combining established attachment measures with task-based assessments of self-efficacy and interoceptive body-budget signalling.
+
+### 4.8 Barrett's Theory of Constructed Emotion
+
+Barrett's (2017) Theory of Constructed Emotion (TCE) argues that emotions are not pre-formed responses triggered by external stimuli but are instead continuously constructed, top-down predictive processes in which the brain makes sense of interoceptive signals through conceptual categories shaped by prior learning and cultural context. The TCE positions allostasis — the predictive regulation of the body's metabolic resources — as the brain's primary function, with emotional experience as a secondary consequence of the need to make sense of interoceptive states generated during allostatic management.
+
+The DSPCM is architecturally consistent with the TCE and can be read as a structural complement to it. Barrett's allostatic account of the body budget maps directly onto the Energy Expectation and Tractability Expectation Ultra-Priors and the Vitality State. Her account of interoceptive inference maps directly onto the Interoception-Exteroception Bias. And her core affect space — a two-dimensional valence × arousal representation of the affective bedrock beneath conceptual emotional categories — corresponds to the Valence State and Epistemic Arousal State at L2.
+
+The DSPCM extends the TCE in two important respects. First, by dissociating Epistemic Arousal (generated by world-opacity) from approach arousal (generated by reward availability), it provides a finer-grained account of the arousal dimension than the TCE's single-axis treatment. Second, by embedding the body-budget and affective states within a full hierarchical prior model that extends to personality traits and psychopathological spectra, it operationalises the TCE's claim that emotions are "instances of more general affective states" (Barrett, 2017, p. 30) in a formal computational architecture, making predictions about which broader individual-difference constructs should covary with which specific affective tendencies.
+
+### 4.9 Existential Coping Frameworks
+
+Existential psychology has long been concerned with how individuals manage the awareness of their own mortality — what Terror Management Theory (Greenberg et al., 1986; Solomon et al., 1991) has formalised as the management of death anxiety through cultural worldview adoption and self-esteem maintenance, and what Yalom (1980) treated in terms of the ultimate concerns of death, freedom, isolation, and meaninglessness.
+
+The DSPCM provides a computational account of existential coping strategies that derives them from the cascade rather than treating them as separate psychological phenomena:
+
+- **Legacy-Seeking and Transcendence** is generated by the combination of high Tractability Expectation, deep Horizon Expectation, and a Dissolution bias. The agent that expects to be effective, plans far into the future, and is oriented toward structural coupling with others naturally extends its generative model across time through the construction of things that outlast it: offspring, institutions, creative works, cultural contributions. This is not a compensatory mechanism for death anxiety (as in TMT) but a natural consequence of a generative model that has been parameterised with a deep temporal horizon and high expected efficacy.
+
+- **Nihilistic Disengagement** is generated by the combination of high Volatility Expectation, low Tractability Expectation, and a shallow Horizon. The agent that expects the world to be structurally opaque and its own actions to be ineffective has no computational incentive to extend its generative model into a future it cannot influence. The collapse of temporal depth is therefore not a failure of will or meaning but a computationally rational truncation: to avoid the massive free energy cost of modelling a future that the agent's own prior architecture treats as uncontrollable, the system contracts its self-model to the immediate.
+
+This cascade account positions death-coping as a *downstream* consequence of deep prior configuration rather than a primary psychological process, generating the prediction that individual differences in existential orientation should be substantially predictable from L1 Ultra-Prior parameters — particularly Tractability, Horizon, and Volatility — even before explicit death awareness is invoked.
+
+### 4.10 Cloninger's Temperament and Character Inventory
+
+Cloninger's biopsychosocial model (Cloninger et al., 1993; Cloninger, 1994) distinguishes between heritable, biologically anchored *temperaments* — Novelty Seeking (dopaminergic; approach), Harm Avoidance (serotonergic; inhibition), Reward Dependence (noradrenergic; social attachment), and Persistence — and higher-order *character* dimensions — Self-Directedness, Cooperativeness, and Self-Transcendence — that regulate and transform these basic drives through experience and self-understanding.
+
+This temperament-character architecture maps naturally onto the cascade. Cloninger's temperaments correspond broadly to the L1-L2 portion of the DSPCM: Novelty Seeking maps onto high Reward Expectation (dopaminergic); Harm Avoidance maps onto high Volatility Expectation generating elevated Epistemic Arousal; Reward Dependence maps onto the Dissolution bias; Persistence maps onto Future-Present Bias. Cloninger's character dimensions correspond more closely to L3 precision biases: Self-Directedness maps onto the Action-Perception and Future-Present biases (a sense of agentic self-determination and goal coherence); Cooperativeness maps onto the Dissolution pole of the Differentiation-Dissolution Bias; Self-Transcendence maps onto the Horizon Expectation and its downstream effects on the Narrative Self.
+
+The critical theoretical contribution of the DSPCM vis-à-vis Cloninger is the precision-weighted mechanism that specifies how temperamental parameters generate character-level expressions — a mechanism that Cloninger's model posits as a developmental process but does not specify computationally. The cascade provides this specification: character dimensions are precision-weighted summaries of temperamental configurations, not independent endowments.
+
+### 4.11 REBUS and Pharmacological Evidence
+
+REBUS (Relaxed Beliefs Under Psychedelics; Carhart-Harris & Friston, 2019) is an active inference account of the psychological and neurological effects of classic psychedelic substances. It proposes that serotonergic psychedelics — particularly 5-HT2A agonists — acutely reduce the precision weighting assigned to high-level prior beliefs, effectively flattening the free energy landscape and allowing bottom-up prediction errors (and the sensory richness they carry) to revise deeply entrenched internal models that would normally be too highly weighted to be displaced by ordinary experience.
+
+REBUS constitutes perhaps the most compelling existing *pharmacological validation* of the DSPCM's Ultra-Prior architecture. If high-level priors can be transiently relaxed by pharmacological intervention, and if this relaxation produces predictable psychological effects — increased perceptual openness, ego dissolution, mystical experiences, and, in therapeutic contexts, lasting reductions in trait anxiety and depression — then this provides strong evidence for the causal role of precisely the prior precision parameters that the DSPCM places at L1.
+
+The DSPCM makes specific additional predictions about psychedelic effects beyond those offered by the original REBUS framework. Because the cascade specifies which L1 parameters have which downstream consequences, it predicts that psychedelic-induced changes in trait psychopathology (e.g., reductions in depression and anxiety) should be mediated by specific L2–L3 changes (e.g., increased Vitality State and reduced Interoception-Exteroception Bias), which in turn should be predictable from baseline L1 parameter configurations (particularly Energy Expectation and Volatility Expectation). This generates a testable individual-differences prediction: individuals whose L1 configuration is characterised by low Energy Expectation and high Volatility should show the largest and most durable therapeutic responses to psychedelic intervention, as these are precisely the parameters that serotonergic precision relaxation is expected to modify.
+
+Moreover, REBUS can be read as specifying the *mechanism of L1 parameter update*: if Ultra-Priors are normally highly resistant to revision precisely because of their high precision, then therapeutic change at the level of deep personality requires temporarily reducing this precision — either pharmacologically (psychedelics), physiologically (via states of high entropy, such as meditation or deep sleep), or psychologically (via therapeutic techniques that deliberately introduce uncertainty into the client's self-model). This has implications for understanding why personality change, while possible, is typically slow, and why interventions that explicitly target precision (rather than mere belief content) may be more effective for durable change.
 
 
-# 4. Construct the Graph with Clean Hierarchical Parameter Routing
-edges_df <- tibble(
-  from = c(
-    # L1 -> L2
-    2, 3, 1, 3, 2, 1, 4,
-    # L2 -> L3
-    5, 5, 5, 6, 6, 7, 7, 6,
-    # L3 -> L4
-    10, 8, 6, 11, 12, 11
-  ), 
-  to = c(
-    # L1 -> L2
-    6, 6, 6, 5, 5, 5, 7,
-    # L2 -> L3
-    8, 10, 9, 9, 11, 11, 12, 12,
-    # L3 -> L4
-    13, 13, 14, 14, 15, 15
-  ),
-  type = c(
-    rep(c("Location", "Precision"), 3), "Location", # L1 -> L2
-    "Location", "Location", "Location", "Precision", "Location", "Precision", "Location", "Precision", # L2 -> L3
-    "Location", "Precision", "Location", "Precision", "Location", "Precision" # L3 -> L4
-  )
-)
+# V4 ===============================
 
-graph <- tbl_graph(nodes = nodes_df, edges = edges_df)
 
-# 5. Render the System Dynamics Diagram
-profile_colors <- c("Level 1" = "#0D47A1", "Level 2" = "#2196F3", "Level 3" = "#009688")
-edge_colors <- c("Location" = "red", "Precision" = "purple")
+# Introduction
+ 
+Personality psychology has achieved something genuinely remarkable: a near-complete consensus descriptive taxonomy of human individual differences. The Five-Factor Model (FFM; Costa & McCrae, 1992; Goldberg, 1990) has proven robustly replicable across cultures, methods, and informants, accounting for a substantial proportion of variance in behaviour, health, and life outcomes (Roberts et al., 2007; Soto & John, 2017). Its hierarchical extension into the meta-traits of Plasticity and Stability (DeYoung, 2006) reveals that this variance is not merely structured, but organized in a way that hints at an underlying generative structure. At the level of psychopathology, the Hierarchical Taxonomy of Psychopathology (HiTOP; Kotov et al., 2017) has extended this approach into clinical science, demonstrating that many maladaptive traits and psychopathological symptoms can be grouped into the internalizing, externalizing, and thought disorder spectra, which form a coherent dimensional continuum with normal-range personality. Together, these frameworks represent the cumulative empirical achievement of trait science: they describe what personality looks like, with extraordinary reliability, across the full range of human behavioral variation. What they do not do, by design, is explain *why* personality coalesces that way.
+ 
+The Big Five and HiTOP are explicitly constructed as descriptive systems, not causal ones. They specify the latent structure of trait covariance but remain largely agnostic about the generative processes that produce stable dispositions in the first place: why particular traits co-occur as they do, why the same underlying individual differences express themselves across psychopathological and non-clinical phenotypes, and why personality is so robustly heritable yet meaningfully shaped by experience. This mechanistic silence constitutes the central theoretical gap that the present framework addresses.
+ 
+## The Limits of Existing Mechanistic Accounts
+ 
+This gap has not gone unnoticed. Three broad traditions have attempted to ground personality in underlying mechanisms. The first is neurobiological: Eysenck (1967) anchored Extraversion and Neuroticism in cortical arousal and limbic reactivity; Gray (1981) reconceived these dimensions in terms of opponent motivational systems: the Behavioral Inhibition System (BIS), sensitive to punishment and uncertainty, and the Behavioral Approach System (BAS), sensitive to reward, with substantial neuroanatomical and pharmacological support; and Cloninger (1987) extended this into a biopsychosocial model distinguishing temperament (biologically grounded, early-emerging) from character (higher-order, self-reflective). These contributions were foundational: they shifted personality science from pure description toward biological instantiation and opened the door to testable predictions about pharmacological manipulation and neural correlates. Yet each framework remained relatively domain-local, anchored in a specific neural system (arousal, reinforcement, dopamine) without a unifying computational principle that scales across all levels of psychological organization.
+ 
+The second tradition is cybernetic. DeYoung's Cybernetic Big Five Theory (CB5T; 2015), building on Powers' (1973) perceptual control theory, reconceptualizes personality as the characteristic parameters of a goal-directed, self-regulating system navigating uncertainty and reward. CB5T offers genuine mechanistic traction: Extraversion is reframed as reward-driven approach, Neuroticism as the chronic misalignment between expected and encountered outcomes, and the Plasticity/Stability meta-trait structure as reflecting the fundamental cybernetic tradeoff between exploration and regulation. This is conceptually the closest precursor to the present framework, and the present model is best understood as an attempt to formalize and deepen the CB5T intuition within a more principled computational architecture. However, CB5T remains primarily verbal: it does not specify the mathematical form of the control-system computations, the algorithmic structure of the hierarchy, or the mechanism by which regulatory failures cascade into psychopathology.
+ 
+The third tradition is computational, and it is the most recent. Active inference models (Friston et al., 2017; Pezzulo et al., 2024) and hierarchical Bayesian accounts of perception and action (Clark, 2016; Hohwy, 2013) have begun to be applied to individual differences in cognition, emotion, and psychopathology (Badcock et al., 2017; Huys et al., 2016; Smith et al., 2021). Yet a systematic application of these formalisms to the full landscape of personality to cover not only cognitive style but affective temperament, motivational structure, self-model architecture, and their continuity with clinical psychopathology has not been attempted. Crucially, the existing computational accounts have largely been developed independently of the taxonomic personality literature, leaving the rich empirical structure of the FFM and HiTOP unexplained rather than subsumed.
+ 
+A further problem compounds these theoretical divisions: the proliferation of partially overlapping constructs across frameworks has produced a landscape plagued by what Kelley (1927) termed the jingle-jangle fallacy: distinct labels applied to identical processes, and identical labels redefined across frameworks. Within personality science alone, the construct space around negative affect, threat sensitivity, behavioral inhibition, and Neuroticism represents a dense offering of nominally distinct but empirically overlapping measures (Bainbridge et al., 2022). This terminological fragmentation is not merely a nuisance; it actively impedes cumulative theoretical progress, because it is impossible to identify genuine convergence when the same underlying computation appears under different names in every framework. A mechanistic account that operates at the level of latent computational processes rather than surface-level trait labels offers a principled basis for resolving these ambiguities.
+ 
+## The Free Energy Principle as a Unifying Framework
+ 
+The framework we propose draws its computational foundation from the Free Energy Principle (FEP; Friston, 2010) and its action-oriented extension, active inference (Friston et al., 2017). The FEP holds that any self-organizing biological system (*i.e.,* any system that maintains its structural integrity against the entropic tendency toward disorder) must, implicitly or explicitly, act to minimize the divergence between its internal model of the world and the sensory observations it receives. This quantity, formalized as "variational free energy", serves as a tractable upper bound on surprise: a measure of how poorly a system's generative model accounts for its current sensory states. Minimizing free energy is equivalent to maintaining an accurate internal model of the world and, by extension, maintaining the organism's own organized existence.
+ 
+In the active inference formulation, agents minimize free energy through two complementary strategies. *Perceptual inference* updates internal beliefs to better fit incoming sensory data, changing its model to fit the world. *Active inference* changes the world to fit the model: it generates actions that bring sensory states into correspondence with the predictions of the internal generative model. These two strategies are not alternatives but partners in a continuous cycle of self-organization. Their relative balance, determined by the *precision* (inverse variance) assigned to prior beliefs versus incoming prediction errors, is what determines whether an agent primarily accommodates to the world or asserts upon it.
+ 
+Critically, this architecture is hierarchical. Biological brains implement generative models as deep hierarchies of predictive representations, where higher levels generate top-down predictions about lower-level activity, and lower levels propagate bottom-up prediction errors whenever observations deviate from these predictions (Friston, 2008; Rao & Ballard, 1999). Precision weighting (the selective amplification or attenuation of prediction errors at each level) is the unified mechanistic substrate of attention, confidence, and affective valuation. The FEP is therefore not merely a theory of perception or action, but a theory of the entire self-organizing agent: from the interoceptive signals that anchor bodily selfhood to the long-range policies that constitute deliberate goal pursuit.
+ 
+What makes the FEP particularly powerful as a foundation for a personality theory is that it operates coherently across multiple timescales simultaneously. Fast timescale dynamics (moment-to-moment perceptual inference) are nested within slower dynamics (learning about environmental statistics), which are nested within slower dynamics still (updating the deep prior beliefs that constitute the enduring self). This nested temporal architecture maps naturally onto the structure of personality itself: traits are defined by precisely their cross-situational and longitudinal stability. They are patterns that persist across contexts because they are implemented as deep, slowly updating prior beliefs rather than as context-specific learned associations. On the FEP account, a trait is not a cause of behaviour; it is the computational signature of a stable configuration of prior expectations and precision weightings, whose downstream consequences we observe as consistent patterns of affect, cognition, and action.
+ 
+This insight, that personality is best understood as *prior architecture* rather than as a set of fixed endowments, is the conceptual pivot of the present framework.
+ 
+## Personality as a Free Energy Landscape
+ 
+Under the FEP, an agent's generative model defines an implicit probability distribution over possible states of the world. This distribution has a geometry: some configurations of belief and policy correspond to regions of low expected free energy, *i.e.,* states the agent's model treats as coherent, predictable, and aligned with its own preferred outcomes, while others correspond to regions of high expected free energy, treated as uncertain, costly, or threatening. The agent's behaviour is not random within this geometry; it gravitates toward the low-free-energy configurations. In this sense, the trajectory of behaviour through state-space is analogous to the movement of celestial bodies under general relativity: just as gravity warps spacetime to dictate orbital geodesics, an agent's deep priors warp the free energy manifold, creating the path of least resistance that the system inevitably follows.
 
-ggraph(graph, layout = "manual", x = x, y = y) +
-  # Parametric Routing System
-  geom_edge_link(
-    aes(color = type, linetype = type),
-    arrow = arrow(length = unit(0.22, "cm"), type = "closed"),
-    linewidth = 0.8,
-    alpha = 0.75, 
-    start_cap = circle(0.15, "cm"),  
-    end_cap = circle(1.6, "cm") 
-  ) +
-  scale_edge_color_manual(values = edge_colors, name = "Parameter Influence:") +
-  scale_edge_linetype_manual(values = c("Location" = "solid", "Precision" = "dashed"), name = "Parameter Influence:") +
-  
-  # Latent Sub-personal Probability Densities (Levels 1-3)
-  geom_polygon(
-    data = poly_data, 
-    aes(x = x, y = y, group = interaction(id, profile), fill = profile),
-    color = "#2d3748", linewidth = 0.5, alpha = 0.8
-  ) +
-  
-  # Node Scale Baselines (Serving as the axes/Likert scales)
-  geom_segment(
-    aes(x = x - 1.2, xend = x + 1.2, y = y, yend = y),
-    color = "#2d3748", linewidth = 0.8
-  ) +
-  
-  # Observable phenotypes as miniature bar charts
-  geom_rect(
-    data = bar_data,
-    aes(
-      xmin = x_bar - width/2,
-      xmax = x_bar + width/2,
-      ymin = y,
-      ymax = y + height,
-      fill = trait
-    ),
-    color = "#2d3748",
-    linewidth = 0.4
-  ) +
-  
-  # Structural Metadata & Dynamic Labels
-  geom_node_text(aes(label = title), fontface = "bold", size = 3.6, vjust = 0, color = "#2d3748", nudge_y = 0.95) +
-  geom_node_text(aes(label = left_lbl), size = 3.0, color = "#4a5568", hjust = 0.5, nudge_x = -1.1, nudge_y = -0.25) +
-  geom_node_text(aes(label = right_lbl), size = 3.0, color = "#4a5568", hjust = 0.5, nudge_x = 1.1, nudge_y = -0.25) +
-  
-  # Functional Stratigraphy Annotations
-  annotate("text", x = -8.0, y = 7, label = "ULTRA-PRIORS", angle = 90, fontface = "bold", size = 4.2, color = "#4a5568") +
-  annotate("text", x = -8.0, y = 5, label = "HYPER-PRIORS", angle = 90, fontface = "bold", size = 4.2, color = "#4a5568") +
-  annotate("text", x = -8.0, y = 3, label = "BIASES / META", angle = 90, fontface = "bold", size = 4.2, color = "#4a5568") +
-  annotate("text", x = -8.0, y = 1, label = "OBSERVABLES", angle = 90, fontface = "bold", size = 4.2, color = "#FF9800") +
-  
-  # Graph Formatting
-  scale_fill_manual(
-    values = c(profile_colors, trait_colors)
-  ) +
-  coord_cartesian(xlim = c(-8.5, 7.5), ylim = c(0.2, 8.2), clip = "off") +
-  guides(fill = "none") + 
-  theme_void() +
-  theme(
-    legend.position = "bottom",
-    legend.title = element_text(face = "bold", size = 11),
-    legend.text = element_text(size = 10),
-    plot.margin = margin(1, 1, 1, 1, "cm")
-  )
-```
+These low-free-energy configurations are the model's *attractor basins*. The depth of a basin (which also corresponds to the amount of perturbation the system can absorb before being dislodged from its habitual configuration) is determined by the precision assigned to the governing priors: high-precision priors create deep, rigid attractors that resist revision; low-precision priors create shallow, fluid ones that update readily under evidence. An agent's characteristic behavioural profile, its persistent ways of perceiving, feeling, and acting, corresponds not to some quantity the agent possesses but to the geometry of its free energy landscape: the location, depth, and connectivity of its attractor basins. A trait, in this dynamical account, is not something one *has*, it is a basin one falls into. By extension, personality profiles are the macro-level topographies of this landscape: a complex, idiosyncratic manifold of nested attractors governing the agent's trajectory.
 
+ 
+This reformulation resolves several puzzles that the purely descriptive tradition leaves untouched, such as why traits display the co-occurrence structure they do. For instance, why does Neuroticism reliably correlate with emotional reactivity, cognitive rumination, and somatic vigilance simultaneously? Because all of these are downstream expressions of the same upstream prior configuration: a generative model that simultaneously expects the world to be volatile, the body to be under threat, and incoming information to be unreliable. Why do the Plasticity and Stability meta-traits partition the phenotypic space in the particular way they do? Because they reflect the fundamental computational tradeoff between exploration (actively seeking information to update the model) and regulation (maintaining the model's stability against perturbation), which is the same tradeoff that structures the FEP's treatment of expected information gain versus expected free energy reduction. Why do personality dimensions and psychopathological spectra share such substantial genetic and structural variance? Because both are attractors in the same landscape; psychopathology is not categorically different from personality but represents attractor configurations that are particularly costly, rigid, or maladaptive under typical environmental conditions.
+ 
+## The Deep-Self Predictive Cascade Model
+ 
+The present paper introduces the Deep-Self Predictive Cascade Model as a principled, formally specified realization of these principles. The model proposes that the free energy landscape of personality is generated by a structured computational hierarchy, in which parameter configurations at each level constrain and produce the states at the next. Formally, this hierarchy implements precision-weighted Bayesian message passing: each downstream state is the precision-normalized integration of its upstream inputs, directly instantiating belief propagation under predictive coding architecture (Friston, 2008).
+ 
+The hierarchy cascades from foundational *Ultra-Priors* at the apex (deep prior expectations governing the agent's epistemic, allostatic, and teleological constitution) through emergent *Core Affective States* (Epistemic Arousal, Vitality, and Valence) that serve as precision-weighted summaries of upstream signals, into *Precision Biases* that govern attentional and volitional resource allocation across the Minimal, Agentic, and Narrative registers of self-organization, and finally into the observable *phenotypic profiles* that empirical taxonomy has catalogued as traits, spectra, and emotional types.
+ 
+Crucially, the cascade is generative in the technical sense: the same upstream parameter configuration simultaneously and necessarily produces multiple downstream phenotypes, explaining their covariance not by positing a common cause *post hoc* but by deriving it from the computational structure of the hierarchy. This stands in contrast to factor-analytic models, where covariance is identified empirically and its source left open, and to neurobiological models, where covariance is attributed to shared substrate without specifying the computational process that links a given substrate to a phenotype.
+ 
+Several theoretical commitments of this framework warrant explicit statements. First, the model is positioned at Marr's (1982) computational and algorithmic levels of analysis. It specifies what the system computes (minimization of variational free energy across a temporal hierarchy), the representations and processes used (hierarchical prior beliefs and precision-weighted message passing), and how these generate observable personality phenomena. At this stage, it remains largely agnostic about specific neural implementations, except where strong independent evidence supports specific claims. Second, the model does not compete with the FFM or HiTOP as descriptive systems; it provides a mechanistic explanation for the patterns those systems describe. The Big Five is not displaced but derived: its five factors emerge as the natural phenotypic attractors of the cascade, and their higher-order meta-trait structure (Plasticity and Stability) is explained by the fundamental computational architecture of the hierarchy rather than discovered *post hoc* in covariance data. Third, the hierarchy is not strictly unidirectional. Ultra-Priors are the slowest-updating level, constituted largely by genetic, developmental, and early experiential factors, but they are not immutable: sustained therapeutic, pharmacological, or transformative experiential interventions and catastrophic life events that generate sufficient precision-weighted prediction error at the highest levels of the hierarchy can lead to their update. The unidirectionality of the cascade is a description of moment-to-moment computational flow, not a claim about the impossibility of deep change.
+ 
+The remainder of the paper proceeds as follows. We first describe the four levels of the cascade in detail, specifying the computational role of each node, its theoretical grounding in the existing literature, and its connectivity within the generative hierarchy. We then show how the cascade naturally generates the phenotypic profiles documented by the Big Five, Cybernetic Big Five Theory, Gray's BIS/BAS, Barrett's Constructed Emotion model, Primal World Beliefs, Panksepp's affective neuroscience, attachment theory, and the HiTOP dimensional taxonomy of psychopathology, subsuming these frameworks not by analogy but by derivation. We close by discussing the model's testable predictions, its implications for computational psychiatry and intervention science, and the empirical programme required to validate its core claims.
+
+<!-- TODO: Add screenshot of app with a legend that a Schematic Interactive Model has been built and is available and open-source at ... -->
+
+## Ultra-Priors (The Deep Self)
+
+Ultra-Priors constitute the agent's most fundamental and deeply entrenched probabilistic beliefs about its situation. They are called "ultra" to emphasise their position at the apex of the generative hierarchy: above the priors governing individual inferences, above the affective states those inferences generate, and above the moment-to-moment precision allocations that modulate attention and action. They form the computational bedrock of the system, the slow-moving constitutional layer that sets the ceiling and floor on what is achievable at every level below.
+
+In formal active inference terms, Ultra-Priors correspond to the hyperparameters of the generative model: the parameters that govern the parameters governing the agent's predictions. They evolve on slow developmental timescales, are substantially heritable (consistent with the high heritability of broad personality dimensions; Bouchard & McGue, 2003; Vukasović & Bratko, 2015), and are shaped by early attachment experiences, cultural embedding, and cumulative learning history. Their effects are pervasive rather than domain-specific: a shift in any single Ultra-Prior propagates through the entire cascade, reconfiguring affective states, precision biases, and observable phenotypes simultaneously. This pervasive influence is what justifies their hierarchical apex position: they are not one set of parameters among others, but the constitutive conditions under which all other parameters operate.
+
+Crucially, these priors do not exist in a vacuum; they govern a self-organising system that is formally delimited by a *Markov blanket*. This central concept refers to the statistical boundary that separates an agent's internal states from the external environment: it consists of the sensory states through which external causes impinge on the agent, and the active states through which the agent impinges on the environment. The blanket is not a physical membrane but a formal partition that defines what counts as "self" and "world" for a given system. Individual differences in how agents manage the permeability and coupling of this boundary (i.e., how open or closed they are to environmental influence, how strongly they couple their internal dynamics to those of other agents) are central to the personality differences this framework aims to explain.
+
+Six Ultra-Priors are identified, organised along three Imperatives. The Epistemic Imperative governs the agent's foundational relationship with uncertainty. The Allostatic Imperative governs its foundational expectations about its own metabolic and efficacy resources. The Teleological Imperative governs its goal-directed orientation: the expected value of outcomes and the temporal depth across which it plans. Together, these three Imperatives cover the full space of what an agent must implicitly "believe" about its world, its body, and its future in order to operate as a self-organising system.
+
+
+### The Epistemic Imperative
+
+The Epistemic Imperative governs the agent's foundational relationship with uncertainty: its deep beliefs about the opacity of the world and the tractability of its own knowledge-generating processes. It is composed of two orthogonal parameters that dissociate the *dynamics* of uncertainty from its *baseline level*.
+
+*Volatility Expectation* encodes the agent's prior belief about how rapidly the hidden causes of sensory observations change over time (i.e., the expected rate of environmental non-stationarity). This parameter corresponds directly to the ω (omega) hyperparameter of the Hierarchical Gaussian Filter (HGF; Mathys et al., 2011, 2014), a widely validated computational model of learning under uncertainty, whose recoverability from behavioural data provides a natural empirical route to measuring this prior. High ω implies that the agent expects environmental contingencies to fluctuate rapidly, with several cascading consequences: it attenuates confidence in previously learned associations (yielding a higher effective learning rate), keeps prediction error signals in a state of chronic partial unresolvability, and maintains the agent in a posture of readiness for model revision. This profile (chronically elevated learning rate combined with persistent uncertainty about whether the current model is adequate) constitutes the computational substrate of anxiety-related disposition: the world is expected to surprise, and those surprises are expected to reflect genuine structural change rather than incidental noise.
+
+At the neurobiological level, Volatility Expectation is associated with noradrenergic signalling (Payzan-LeNestour et al., 2013), consistent with the known role of noradrenaline in adjusting the gain on prediction error signals and promoting environmental scanning under heightened uncertainty. High Volatility Expectation is the primary upstream driver of Epistemic Arousal (the Level 2 affective state detailed below), which in turn mediates its downstream effects on Internalizing psychopathology, the FEAR affective system, and anxious attachment.
+
+*Noise Expectation* encodes the agent's belief about irreducible aleatoric uncertainty: the degree of ambiguity expected to persist *after* the agent has developed the best possible model of its environment. Where Volatility Expectation concerns uncertainty about the *structure* of the world (i.e., epistemic uncertainty that could in principle be resolved by better learning), Noise Expectation concerns uncertainty that is, by the agent's own reckoning, fundamentally irresolvable. This dissociation maps directly onto Yu and Dayan's (2005) influential distinction between *unexpected uncertainty* (signalled by noradrenaline, driving model updating) and *expected uncertainty* (signalled by tonic acetylcholine, enabling the agent to tolerate residual ambiguity without triggering full-scale model revision).
+
+A high Noise Expectation functions as a permissive prior: the agent expects some irreducible ambiguity and, having already incorporated it into the generative model, does not interpret residual variance as evidence of catastrophic model failure. Low Noise Expectation produces the opposite configuration: the agent expects its world model to account for nearly all sensory variance, so residual uncertainty reads as a signal demanding correction. When that correction cannot be achieved, the mismatch triggers elevated arousal and aggressive precision reallocations, predisposing the agent toward premature epistemic closure, cognitive inflexibility, and heightened distress in response to ambiguous information. The pairing of low Noise Expectation with high Volatility Expectation is particularly destabilising: the agent both expects its model to be comprehensive and finds it perpetually outdated.
+
+### The Allostatic Imperative
+
+The Allostatic Imperative governs the agent's foundational expectations about its own metabolic and efficacy resources (its "body budget"; Barrett, 2017) and its capacity to act meaningfully upon the world. It dissociates two components that are often conflated in the broader literature: the expectation of *having* resources, and the expectation that those resources *can be used effectively*.
+
+*Energy Expectation* encodes the agent's prior belief about the state of its allostatic reserve, i.e., whether the body budget is expected to operate at a surplus or a deficit. This parameter is grounded in Barrett's (2017) Constructed Emotion framework, which argues that the brain's primary interoceptive task is to regulate the metabolic economy of the body through predictive allostasis rather than reactive homeostasis: the brain maintains running predictions about the body's energy needs and pre-emptively allocates resources on the basis of those predictions.
+
+The Energy Expectation Ultra-Prior represents the agent's long-run default prediction about this allostatic economy. An agent with high Energy Expectation approaches each moment presuming that metabolic resources are available for expenditure, generating a Vitality State that facilitates active coping, social engagement, and epistemic foraging. An agent with chronically low Energy Expectation presumes an imminent or ongoing deficit, generating a low Vitality State that suppresses action, social coupling, and exploration in favour of conservation. Chronic low Energy Expectation, interacting with the other Ultra-Priors in a manner detailed below, constitutes the computational substrate of depressive states and burnout, not as acute mood disturbances but as stable attractor configurations driven by a fundamental prior expectation of metabolic insufficiency.
+
+*Tractability Expectation* encodes the agent's prior belief that its own actions can reliably reduce prediction error: the sense that the world is amenable to influence. This corresponds to what psychological language variously calls perceived controllability, self-efficacy (Bandura, 1977), or, in FEP lexicon, the expected precision of proprioceptive signals and the expected sensitivity of environmental outcomes to policy execution (Friston et al., 2011; Adams et al., 2013).
+
+This parameter governs not only the pragmatic dimension of policy selection (high Tractability supporting approach behaviour, active coping, and environmental engagement) but also the structural coupling of the agent's Markov blanket to the social environment. Because ineffective actions waste metabolic resources, low Tractability creates dual pressure: it suppresses action (via the Vitality State and Action-Perception Bias) and simultaneously discourages social engagement (via the Differentiation-Dissolution Bias). The interaction of these effects generates the anxious-avoidant structure of attachment insecurity, the Internalizing-Externalizing bifurcation in psychopathology, and the Stability meta-trait in personality. Conversely, Tractability is the primary upstream determinant of secure attachment and existential transcendence, i.e., the capacity to extend one's generative model beyond the lifespan through cultural, biological, or structural legacy.
+
+### The Teleological Imperative
+
+The Teleological Imperative governs the agent's goal-directed orientation: its fundamental expectations about the value of available outcomes and the temporal depth across which it plans. It is composed of two parameters that independently determine the *magnitude* and *temporal scope* of motivational engagement, though the interaction between them is where the most consequential personality configurations emerge.
+
+*Reward Expectation* encodes the agent's baseline sensitivity to goal-attainment signals and the expected value of available outcomes (i.e., the prior probability distribution over preferred states). In the formal active inference framework, this corresponds to the log prior over preferred observations, the **C**-vector in Friston's (2016) formulation, which weights the expected free energy of a policy by the degree to which it leads the agent toward intrinsically valued states.
+
+Crucially, Reward Expectation is not identical to experienced hedonic pleasure, nor is it synonymous with Tractability. An agent can hold a high expectation that actions are effective (high Tractability) while simultaneously expecting available outcomes to be low in value (low Reward Expectation), yielding a configuration of competent apathy: the capacity for action without motivational engagement. Conversely, high Reward Expectation with low Tractability yields frustrated approach drive: the agent is drawn toward valued outcomes it cannot reliably attain, a profile with clear relevance to approach-motivated depression (Trew, 2011) and the specific suffering of the high-BAS/low-efficacy presentation.
+
+At the neurobiological level, Reward Expectation maps onto mesolimbic dopaminergic circuitry, specifically the tonic dopamine signalling that encodes prior expectations about reward availability (Schultz et al., 1997). Within the cascade, high Reward Expectation simultaneously amplifies approach behaviour (via the Action-Perception Bias), promotes exploratory foraging (via the Exploration-Exploitation Bias), and elevates hedonic tone (via the Valence State). This triple action makes it the primary upstream anchor of the Behavioral Approach System (BAS), Sensation Seeking, and the Primal World Belief that the world is *enticing*.
+
+*Horizon Expectation* encodes the agent's prior belief about the temporal depth of its policy space (i.e., how far into the future the generative model actively extends its predictions and plans). In formal active inference tree-search frameworks (Friston et al., 2017), this corresponds to the parameter *T*, the maximum look-ahead depth of the policy evaluation procedure. It is, in an important sense, the most distinctively existential of the Ultra-Priors: it encodes how the agent implicitly resolves the ultimate prediction error of its own eventual termination.
+
+The Horizon parameter interacts with Reward Expectation to produce a characteristic two-dimensional motivational space. An agent with high Reward Expectation and low Horizon operates as an active present-hedonic system: highly motivated, attuned to immediate reward, but disengaged from longer-range consequences (the computational signature of impulsivity and sensation seeking). An agent with high Reward Expectation and high Horizon is the ambitious, legacy-oriented profile: motivated by high expected value and capable of deferring gratification across extended temporal windows. An agent with low Reward Expectation and high Horizon represents a stoic, duty-driven configuration: capable of long-range planning but not animated by anticipated pleasure, planning out of structure or obligation rather than desire. Low Reward Expectation combined with low Horizon yields a truncated, disengaged motivational profile (the territory of nihilistic withdrawal). This truncation is not necessarily pathological; in some contexts it is an adaptive response to genuine uncontrollability.
+
+At its extreme low end, a truncated Horizon represents a self-model contracted to the immediate term, either because the future is expected to be too uncertain to be worth modelling (related to high Volatility Expectation) or because the agent has adopted strategic disengagement to avoid the enormous free energy cost of a future it cannot control. When chronic, this configuration corresponds to the nihilistic disengagement observable in existential depression and certain presentations of personality disorder, marking a collapse of both narrative coherence and existential purpose. At its high end, a deep Horizon represents a self-model extended across time through legacy, cultural production, biological reproduction, or ideological commitment, i.e., the phenomenological signature of transcendence: the agent that resolves the prediction error of mortality by embedding its generative model in structures that outlast its physical boundaries. Horizon Expectation is accordingly the primary driver of the Existential Transcendence phenotype and a strong upstream determinant of Conscientiousness through its structuring influence on the Future-Present Bias described below.
+
+
+## Core Affective States
+
+Core Affective States represent the first level of integration across the Ultra-Prior configuration: the phenomenological signal that the agent's deep computational constitution generates as it engages with the world. Importantly, these states are not reactive outputs of discrete emotional circuits. On the model's account, they are continuously generated predictions: the agent's ongoing forecast of its own affective condition, updated in light of how closely the world conforms to its deep prior expectations. They are, in the language of predictive processing, interoceptive predictions rather than interoceptive readouts.
+
+We describe three affective dimensions that dissociate the phenomenological quality of affective experience more precisely than the standard two-dimensional valence-arousal circumplex (Russell, 1980), while remaining computationally grounded. Each dimension has distinct upstream drivers and serves distinct downstream functions within the cascade.
+
+*Epistemic Arousal* is the interoceptively registered consequence of unresolved, high-precision prediction errors, i.e., the phenomenological experience of world-opacity. Generated downstream of both Volatility Expectation and Noise Expectation, it captures the autonomic nervous system's response to epistemic threat: the heightened physiological preparation that occurs when the environment is generating surprises that the current generative model cannot adequately absorb.
+
+Epistemic Arousal is phenomenologically distinct from reward-anticipatory arousal (BAS-type arousal), i.e., the physiological activation generated by the anticipation of valued outcomes. Where incentive arousal covaries with positive Valence and drives approach behaviour, Epistemic Arousal is generated by the anticipation of prediction error: the sense that the world is behaving in ways the generative model has not anticipated and cannot yet resolve. This distinction is computationally important: high Epistemic Arousal without high Valence corresponds to anxiety; high Valence with moderate Arousal corresponds to excitement. Dissociating these two dimensions from a shared generic "arousal" construct is one of the theoretically significant contributions of this level's architecture, and it generates a specific empirical prediction: measures of interoceptive prediction error sensitivity should load independently of measures of reward anticipation on psychophysiological tasks, even when both produce elevated autonomic arousal.
+
+Chronically elevated Epistemic Arousal forces the agent to retreat to its most reliable internal data stream (i.e., interoceptive signals from the body), thereby driving the Interoception-Exteroception Bias toward the somatic pole and eroding narrative coherence. This cascade predicts the empirically observed association between trait anxiety, interoceptive sensitivity, and narrative identity disruption (see below).
+
+*Vitality State* is the phenomenological correlate of the agent's allostatic reserve: what agents experience as energy, drive, and engagement at the high end, and as fatigue, depletion, and burnout at the low end. Generated downstream of Energy Expectation, Tractability Expectation, and Horizon Expectation, it integrates allostatic, efficacy, and temporal signals into a single scalar representation of the agent's capacity to engage with its environment. High Vitality signals an expected surplus: the agent is well-provisioned, its actions are anticipated to be effective, and its future is sufficiently modellable to warrant investment. Low Vitality reflects the contrary: an expected or actual allostatic deficit that triggers a suite of conservative responses, including reduced action, social withdrawal, and suppressed epistemic foraging.
+
+The Vitality State is the principal mediator between the allostatic Ultra-Priors and the Differentiation-Dissolution Bias described in the next section. High Vitality supports social engagement and structural coupling with others (the Dissolution pole), while low Vitality triggers withdrawal and boundary reinforcement (the Differentiation pole). This mechanism generates a specific prediction about attachment behaviour: allostatic load should predict avoidant attachment strategies independently of epistemic threat, a prediction that existing attachment research has not explicitly tested but that is consistent with the empirical literature on illness, chronic fatigue, and depression-linked social withdrawal.
+
+*Valence State* is the phenomenological correlate of the agent's hedonic tone and anticipatory positive affect. It corresponds to the agent's real-time tracking of its trajectory through the free energy landscape: a system moving toward preferred states (i.e., one for which prediction errors are being progressively resolved) generates positive Valence, while a system moving away from preferred states, or one for which preferred states appear increasingly inaccessible, generates negative Valence. Valence thus encodes not the absolute distance from a preferred state but the direction and rate of change toward or away from it, making it sensitive to momentum and trajectory rather than static position.
+
+Valence receives direct input from Reward Expectation (higher prior sensitivity to reward generates higher baseline hedonic tone) and an inverse modulatory signal from Vitality State (energetic depletion blunts positive affect, even when preferred outcomes remain nominally available). This interaction generates the theoretical possibility of approach-motivated low mood: an agent with high Reward Expectation but low Vitality that remains drawn toward valued outcomes it lacks the metabolic capacity to pursue. This configuration maps closely onto the clinical profile of agitated depression and may help explain the heterogeneity of depressive presentations, in particular why some depressed individuals experience prominent anhedonia (low Reward Expectation driving low baseline Valence) while others present with preserved or even heightened goal-directedness alongside severe functional impairment (high Reward Expectation with depleted Vitality).
+
+## Precision Biases (The Self)
+ 
+The third level of the cascade represents the precision allocation machinery of the active inference agent: the dispositional parameters that determine, moment-to-moment and across situations, how much weight the system places on different information sources, action strategies, and temporal frames. Within the FEP framework, precision weighting is the mechanism by which beliefs are selectively amplified into attention and action. It is not a peripheral process but a core computational operation: the agent that assigns high precision to a signal treats it as reliable evidence; the agent that assigns low precision treats it as noise. Stable individual differences in these allocations are what observers classify as personality.
+ 
+These biases are called "self" biases because they correspond to the three canonical layers of phenomenological self-organisation identified in both cognitive neuroscience and the philosophy of mind, now given explicit computational content by the cascade. The Minimal Self governs the agent's sensory and somatic boundary with the world. The Agentic Self governs its epistemic and volitional engagement with the world. The Narrative Self governs its temporal continuity and autobiographical coherence. Together these three registers span the full architecture of selfhood: how the agent is in the world, who it is as an acting subject, and what it projects itself to be across time.
+ 
+It is worth noting that these three self-registers map preferentially onto the three Imperatives at the top of the hierarchy: the Minimal Self is primarily shaped by the Epistemic Imperative, the Agentic Self by the Allostatic and Teleological Imperatives, and the Narrative Self by the Teleological Imperative. This cross-level structural coherence is not incidental. It reflects the model's underlying claim that the full architecture of the self, from its most primitive sensory boundary to its most elaborated temporal self-projection, can be derived from three fundamental questions every self-organising agent must implicitly answer. Echoing Kant's fundamental triad (*Critique of Pure Reason*), these are: what can I know? what can I control? and what should I seek? Or, in more existentialist terms: how to read the world, how to wield the body, and what to value across time.
+ 
+### The Minimal Self: Interoceptive and Boundary Biases
+ 
+The Minimal Self represents the most fundamental layer of self-organisation: the topological parameters of the Markov blanket that delineates the agent from its environment. It is linked to Metzinger's (2003) Minimal Phenomenal Self, Damasio's (1999) Proto-Self, and the interoceptive inference framework of Seth (2013, 2021). Its two biases govern where the agent's primary self-regulatory anchor is located (interoception vs. exteroception) and how permeable its boundary with the world is (differentiation vs. dissolution).
+ 
+The *Interoception-Exteroception Bias* governs the relative weight the self-model places on internal bodily signals versus external sensory structure for the purposes of self-regulation and prediction error resolution. When the body is the primary anchor, driven by chronically elevated Epistemic Arousal, the agent monitors its own somatic state with high precision, amplifying the consequences of physiological disturbances and privileging interoceptive signals in the construction of emotional experience. This configuration corresponds to the Neuroticism phenotype: a stable attractor in which trait anxiety is sustained not by the world's objective unpredictability but by the agent's tendency to use its own aroused somatic state as the primary evidence about the world's safety.
+ 
+High interoceptive bias also suppresses structural coupling with other agents: when the body is the primary regulatory anchor, the agent invests less in establishing synchrony with others or in using environmental structure for prediction. This suppression is the mechanism by which chronic anxiety generates social withdrawal, not through deliberate avoidance but through the implicit reallocation of precision toward the interoceptive channel.
+ 
+At the neurobiological level, interoceptive precision weighting is associated with insular cortex activity, anterior cingulate cortex function, and the high-low vagal tone continuum, consistent with the extensive literature linking these structures to both trait anxiety and interoceptive awareness (Critchley & Garfinkel, 2017).
+ 
+The *Differentiation-Dissolution Bias* governs the structural coupling of the agent's Markov blanket to other agents and to the environment more broadly. The Differentiation pole favours the maintenance of clearly bounded, autonomous self-models; the Dissolution pole favours intense synchrony with other agents and the environment, reducing the information-theoretic boundary between self and other.
+ 
+This bias receives converging inputs from the Vitality State (energetic surplus enables social engagement while deficit forces withdrawal) and from Tractability Expectation (an agent that expects its actions to be effective can afford to couple closely with others; an agent that expects futility will withdraw to preserve internal integrity). The interaction of these two inputs generates the empirically observed anxious-avoidant structure of attachment insecurity: high Epistemic Arousal combined with adequate Tractability produces anxious over-coupling, as the agent seeks synchrony to resolve uncertainty; low Vitality combined with low Tractability produces avoidant withdrawal, as the agent retreats to preserve limited resources.
+ 
+The Differentiation-Dissolution Bias is the primary upstream driver of Extraversion and Agreeableness in the Big Five, of the Externalizing spectrum in HiTOP, and of all three attachment pattern phenotypes. It also determines the expression of Panksepp's PANIC/GRIEF system: separation distress is, on this account, the phenomenological signature of an abrupt, involuntary shift toward the extreme Differentiation pole, resulting in the loss of synchrony with a partner whose Markov blanket had been partially incorporated into the agent's own self-model.
+ 
+### The Agentic Self: Epistemic and Volitional Biases
+ 
+The Agentic Self represents the epistemic and volitional dimension of the self-model: the system that actively controls its own knowledge-gathering and world-changing processes. It corresponds to Metzinger's (2003) Epistemic Agent Model, the active inference framework for understanding how agents select among exploration and exploitation policies (Friston et al., 2015; Pezzulo et al., 2015), and DeYoung's (2015) cybernetic analysis of the Plasticity meta-trait as a system for managing uncertainty.
+ 
+The *Action-Perception Bias* governs the relative weight the agent places on changing the world versus changing its beliefs about the world as the primary mode of prediction error resolution. An action-heavy parameterisation (i.e., high precision on proprioceptive signals and motor commands) generates a system that resolves uncertainty by acting upon the environment: approach drive, assertiveness, and rapid behavioural engagement. A perception-heavy parameterisation generates a system that resolves uncertainty by internal belief updating: reflection, accommodation, and conceptual revision.
+ 
+This bias is shaped by two convergent upstream inputs. Tractability Expectation amplifies action, since an agent that expects its actions to be effective naturally prefers action as a resolution strategy. Reward Expectation amplifies action as well, because high-value outcomes motivate approach. However, the bias stands in a structural trade-off with the Exploration-Exploitation Bias: the same attentional and metabolic resources allocated to active environmental control cannot simultaneously be allocated to exploratory information-gathering. This trade-off generates a specific prediction that is consistent with the empirically observed small negative correlation between Conscientiousness and Openness to Experience: a generative account in which that correlation reflects a precision allocation constraint rather than two independently varying trait dimensions.
+ 
+The *Exploration-Exploitation Bias* governs the relative weight the agent places on epistemic policies, i.e., those that yield high information gain, versus pragmatic policies that exploit known priors to secure preferred outcomes. In the active inference formalism, this corresponds to the expected epistemic value of sampling under uncertainty (Friston et al., 2015), a construct closely related to curiosity (Kidd & Hayden, 2015; Parr & Friston, 2017).
+ 
+Importantly, this bias may be more precisely understood as two qualitatively distinct sub-dimensions that share a common upstream driver but diverge in their target domain. *Somatic Exploration* is epistemic foraging directed at the physical Markov blanket, translating into risk-taking, high-intensity sensory experience, and somatic edge-testing. This sub-dimension is the primary driver of Sensation Seeking and shares variance with the action pole of the Action-Perception Bias. *Phenomenological Exploration* is epistemic foraging directed at the conceptual and narrative boundaries of the self-model, translating into appetite for transgressive art, psychedelic experience, esoteric philosophy, and creative experimentation. This sub-dimension is the primary driver of Openness to Experience, particularly its Intellect and Openness-proper facets.
+ 
+Both sub-dimensions are suppressed by Vitality deficit (foraging is metabolically costly and is curtailed under allostatic load), elevated by high Noise Expectation (an agent that can tolerate irreducible ambiguity finds exploration rewarding rather than threatening), and strongly driven by Reward Expectation (reward-relevant information carries both pragmatic and epistemic value). This multi-input structure generates a specific prediction: the correlation between Reward Expectation and Exploration should be moderated by Vitality State, such that reward sensitivity translates into active foraging only when metabolic resources are available.
+ 
+### The Narrative Self: Temporal and Coherence Biases
+ 
+The Narrative Self represents the diachronic dimension of self-organisation: the self that persists across time, integrates experiences into a coherent autobiography, and projects itself into an anticipated future. It corresponds to McAdams' (1993, 2001) Narrative Identity theory and Metzinger's (2003) Autobiographical Self-Model, and is sustained by the binding operations of the hippocampal-default mode network system. Crucially, the Narrative Self is a hierarchically higher-order structure: it requires a functioning, stable synchronic substrate (i.e., a coherent Minimal and Agentic Self) before it can construct and maintain diachronic continuity. This hierarchical dependence generates a specific empirical prediction: disruptions to the Minimal Self, such as those arising from severe interoceptive dysregulation, should impair narrative coherence even when the explicit narrative-processing system is structurally intact.
+ 
+The *Rigidity-Fluidity Bias* governs the weight assigned to autobiographical continuity and the stability of the narrative self-model, i.e., the degree to which the agent treats its past self-model as a high-precision prior on its current and future self. At the Rigidity pole, the narrative self is assigned high precision: past identity configurations carry great weight, the self-model is resistant to revision, and the agent experiences a strong sense of continuous personal identity across time and contexts. This translates dispositionally into conservatism, deliberateness, and, in adaptive forms, the stable goal-directedness that underlies Conscientiousness.
+ 
+At the Fluidity pole, the narrative self is assigned low precision: the self-model updates readily in response to new information, allowing for flexible self-revision but also creating vulnerability to identity fragmentation under conditions of high Epistemic Arousal. This vulnerability is the computational mechanism underlying the positive relationship between trait Openness and susceptibility to psychosis-spectrum experiences (Mason et al., 2005), a relationship that has been empirically documented but not previously explained at the level of generative process.
+ 
+Clinical evidence also suggests a U-shaped relationship between Epistemic Arousal and Rigidity in some individuals, who respond to elevated uncertainty with defensive rigidification rather than increased fluidity. This can be interpreted as a compensatory precision re-allocation in which threat amplifies rather than attenuates narrative prior precision, functioning as a structural defence against fragmentation. This inverted response constitutes a clinically important individual difference: it predicts that some individuals will respond to threat with increased rigidity of self-narrative, manifesting as dogmatism, black-and-white thinking, or identity foreclosure, while others will show the more typical fluidity response. Future empirical work should test whether this difference is itself a stable prior parameter or a situationally induced precision shift.
+ 
+The *Future-Present Bias* governs the temporal discounting of predicted outcomes, specifically the rate at which the precision assigned to a predicted consequence degrades as a function of its temporal distance. A high Future Bias (low discounting) means that the agent weights distal consequences almost as heavily as proximate ones, enabling the deliberate, goal-directed, delayed-gratification behaviour that observers rate as Conscientiousness. A high Present Bias (high discounting) means that the agent's decision-relevant representations are dominated by immediately available evidence, yielding highly reactive, context-sensitive, impulsive behaviour profiles.
+ 
+The Future-Present Bias is constrained from above by Horizon Expectation (policy depth cannot exceed the temporal boundary set by the Horizon Prior) and is shaped by Tractability Expectation (an agent that expects its actions to be ineffective has little incentive to plan far ahead, since long-horizon plans that cannot be executed generate free energy without resolving it). This dual constraint generates a specific and testable prediction: Tractability should moderate the translation of Horizon into Future Bias, such that a deep temporal horizon only produces genuinely Conscientiousness-like behaviour when the agent also expects its actions to be effective. High Horizon combined with low Tractability should instead produce ruminative future-orientation without goal-directed follow-through, a pattern consistent with the anxious perfectionism cluster seen in certain presentations of obsessive-compulsive spectrum disorders.
+ 
+## Observable Personality Phenotypes
+ 
+The final level of the cascade represents the "Observables": the terminal, macro-level behavioral and experiential patterns that reliably emerge from the dynamic interactions of the upstream parameters. In the context of our model, personality phenotypes are not discrete entities but the stable, downstream attractor states generated by a specific configuration of Ultra-Priors, Core Affective States, and Precision Biases. Crucially, these phenotypes correspond to the constructs typically targeted by traditional psychometric instruments, such as self-report questionnaires, clinical interviews, and behavioral assessments. While we acknowledge that some modern psychometric tools attempt to directly capture higher-order latent parameters, and conversely, that some deep computational phenotypes remain notoriously difficult to measure, this level essentially groups the "outcome variables" of the descriptive level at which the majority of historical personality psychology and clinical taxonomy has operated. By situating these familiar trait taxonomies here, at the base of the predictive cascade, we do not invalidate them; rather, we provide them with the mechanistic, generative foundation they have historically lacked. The specific mappings between the generative parameters of the Deep-Self Model and the observable phenotypes of established taxonomies will be detailed next.
+
+# Relationship with Existing Frameworks and Constructs
+
+<!-- TODO: perhaps consider grouping these models into various categories. For instance Interpersonal and Evolutionary Systems, Existentialist ones, Affective ones, Trait ones, etc. to give structure and avoid the laundry list section. -->
 
 # References
 
