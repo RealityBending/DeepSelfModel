@@ -76,11 +76,21 @@ if (coreSelfModel.relatedFrameworks && coreSelfModel.relatedFrameworks.items.len
 
             // Framework Mode Switcher
             let newFrameworkMode = "big5" // Default
-            if (selectedData.title === "Cybernetic Big Five Theory") {
-                newFrameworkMode = "cb5t"
-            } else if (selectedData.title === "BIS/BAS") {
-                newFrameworkMode = "bisbas"
+
+            const frameworkMap = {
+                "Cybernetic Big Five Theory": "cb5t",
+                "BIS/BAS": "bisbas",
+                HiTOP: "hitop",
+                "Sensation Seeking": "sensation",
+                "Primal World Beliefs": "primals",
+                "Primal Emotional Systems": "panksepp",
+                "Attachment Theory": "attachment",
+                "Constructed Emotion": "emotion",
+                Existentialism: "existential",
             }
+
+            // This single line replaces the entire if/else block
+            newFrameworkMode = frameworkMap[selectedData.title] || "big5"
 
             if (newFrameworkMode !== currentFrameworkMode) {
                 currentFrameworkMode = newFrameworkMode
