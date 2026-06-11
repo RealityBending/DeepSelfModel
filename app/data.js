@@ -1,29 +1,24 @@
 /*
 POTENTIAL FUTURE REVISIONS
 
-Three constructs identified could potentially be added but need to be carefully considered to favour parsimony.
+Deepen the Horizon Expectation to encompass how the agent resolves the prediction error of its own eventual dissolution. An extremely low parameter value represents Disengagement (fatalism, shallow temporal depth, truncated self-model), whereas extreme high value represents Transcendence (extending the Markov blanket across time through legacy, culture, or biology). Could be renamed Terminal Expectation.
 
-The first is a Social Rank Prior — a foundational expectation about the agent's position in
-social dominance hierarchies, drawing on Paul Gilbert's evolutionary psychiatry and the broader
-literature on shame and submission. While theoretically distinct from both Coupling Bias and
-Tractability, it overlaps sufficiently with their interaction that its independent contribution
-to the observable phenotypes requires clearer empirical delimitation before warranting a
-dedicated node.
+Add a "social" parameter. For instance, a Social Rank Prior — a foundational expectation about the agent's position in social dominance hierarchies, drawing on Paul Gilbert's evolutionary psychiatry and the broader literature on shame and submission. While theoretically distinct from both Coupling Bias and Tractability, it overlaps sufficiently with their interaction that its independent contribution to the observable phenotypes requires clearer empirical delimitation before warranting a dedicated node. Alternatively, we could consider an Expectation of Synchrony, representing the baseline expectation that other agents are available for co-regulation. High Synchrony expectation drives secure attachment and Agreeableness; low Synchrony expectation drives schizoid withdrawal or paranoid ideation, independent of general environmental Tractability.
 
-The second is Allostatic Reserve, grounded in Barrett's Constructed Emotion framework, which
-would reframe the L2 Valence node as a body-budget prediction rather than a purely epistemic
-free-energy summary. Incorporating this would require splitting L2 into a metabolic and an
-epistemic channel — a substantive architectural revision best treated as a parallel development.
+Add a parameter related to Allostatic Reserve, grounded in Barrett's Constructed Emotion framework, which would reframe the L2 Valence node as a body-budget prediction rather than a purely epistemic free-energy summary. Incorporating this would require splitting L2 into a metabolic and an epistemic channel — a substantive architectural revision best treated as a parallel development. Alternatively, itnroduce a Allostatic Baseline parameter: The innate expectation of metabolic resource abundance vs. scarcity. Volatility and Noise would then feed into Uncertainty (Epistemic threat / Anxiety). Allostatic Baseline and Tractability into Valence/Vitality (Metabolic threat / Depression). This separates the "anxious" phenotype (too much prediction error) from the "depressed" phenotype (bankrupt body-budget).
 
-The third is the non-monotonic structure of the Uncertainty → Narrative Precision path: the
-current implementation treats high uncertainty as uniformly eroding narrative coherence, but
-clinical and empirical evidence suggests that for some individuals, elevated uncertainty triggers
-defensive narrative rigidification rather than fragmentation — a U-shaped or sign-reversing
-relationship that the present weighted-sum computation cannot represent. Addressing this would
-require either a threshold term in the edge computation or a richer Bayesian parameterisation
-of the node update rule.
+Allow for non-monotonic relationships: for instance for the Uncertainty → Narrative Precision path: the current implementation treats high uncertainty as uniformly eroding narrative coherence, but clinical and empirical evidence suggests that for some individuals, elevated uncertainty triggers defensive narrative rigidification rather than fragmentation — a U-shaped or sign-reversing relationship that the present weighted-sum computation cannot represent. Addressing this would require either a threshold term in the edge computation or a richer Bayesian parameterisation of the node update rule.
+
+Split the Epistemic Foraging node to differentiates where that foraging happens. Somatic Foraging: Testing the physical Markov blanket (extreme sports, somatic edge-seeking) to confirm the bodily self vs Semantic Foraging: Testing the conceptual Markov blanket (psychedelics, transgressive art, philosophy) to confirm or update the narrative self. You could split the L3 "Epistemic Foraging" into two distinct precision biases: Somatic Edge-Seeking (linked to the Bodily Self) and Semantic Edge-Seeking (linked to the Narrative Self). This perfectly explains why an adrenaline junkie and a psychedelic philosopher both score high on "Sensation Seeking" but manifest it entirely differently.
 
 Another potential issue: The Overloaded Valence Node: Because there is no "Allostatic Reserve" node, the Valence node is currently doing double-duty. It represents both epistemic free energy (prediction error) and metabolic free energy (body-budget deficit). Until these are split, the model will struggle to differentiate between anxiety (epistemic threat) and depression/burnout (metabolic bankruptcy).
+
+Move the Narrative Self to a different level as it arguably requires a functioning synchronic self as its substrate before it can operate. McAdams' three-tier model of personality (traits → characteristic adaptations → narrative identity) maps loosely onto this, and Metzinger himself distinguishes the minimal phenomenal self from the narrative self as a higher-order structure. But perhaps this subtle hierarchical relationship is best explained in the description rather than in the model architecture.
+
+Add in the "Existing Frameworks" an "Existential & Meaning" one, which collects constructs related to how individuals cope with the awareness of their own mortality and seek meaning in life. This allows users to actively see how death-coping mechanisms fall out of the cybernetic math. For instance, Legacy-Seeking (Transcendence): Driven by high Tractability, deep Temporal Depth, and high Coupling. The agent builds structures that outlast them or Nihilistic Disengagement: Driven by high Volatility, low Tractability, and shallow Temporal Depth. The agent collapses their time horizon to avoid the free energy of a future they cannot control.
+
+
+Consider renaming the model as Attractor Cascade Model.
 */
 
 window.CORE_SELF_MODEL = {
@@ -31,8 +26,9 @@ window.CORE_SELF_MODEL = {
         kicker: "Overview",
         title: "The Core Priors Cascade Model of Personality",
         text: [
-            "The Core Priors Cascade model is a theoretical generative personality framework grounded in active inference, the Free Energy Principle, and broader computational and cybernetic accounts of self-organising systems. Instead of treating personality as a flat list of traits, it models personality as the downstream expression of deeper expectations and precision biases that shape how an agent interprets uncertainty, regulates action, and maintains a sense of self.",
-            "In that view, observable personality patterns emerge from a hierarchy that runs from foundational assumptions about the world, through affective and operational priors, into more visible behavioural dispositions. This app is a simplified interactive sketch of that cascade rather than a full formal implementation of the theory.",
+            "The Core Priors Cascade model (Makowski, 2026; https://github.com/RealityBending/CoreSelfModel) is a theoretical generative personality framework grounded in active inference, the Free Energy Principle, and broader computational and cybernetic accounts of self-organising systems. Instead of treating personality as a flat list of traits, it models personality as the downstream expression of deeper expectations and precision biases that shape how an agent interprets uncertainty, regulates action, and maintains a sense of self.",
+            'In that view, observable personality patterns emerge from a hierarchy that runs from foundational assumptions about the world, through affective and operational priors, into more visible behavioural dispositions. Under this model, "personality" is conceptualized as a <i>Free Energy Landscape</i>, where foundational expectations dictate the location of stable attractor basins, and precision biases determine their depth, defining exactly how much perturbation is required to dislodge the system from its habitual state.',
+            "This app is a simplified interactive sketch of that cascade rather than a full formal implementation of the theory.",
         ],
     },
     levelHeaders: [
@@ -41,6 +37,28 @@ window.CORE_SELF_MODEL = {
         { level: 3, label: "Precision Biases" },
         { level: 4, label: "Observables" },
     ],
+
+    axes: {
+        topological: {
+            id: "topological",
+            label: "Minimal Self",
+            description:
+                "Topological parameters related to the Markov blanket definition. Defined by interoceptive and allostatic circuitry, anchoring the boundary where the organism ends and the world begins. Governs foundational somatic stability.",
+        },
+        epistemic: {
+            id: "epistemic",
+            label: "Agentic Self",
+            description:
+                "Epistemic parameters related to the Uncertainty-resolution strategy. Driven by prefrontal and dopaminergic policy selection, defining the agent's strategy for resolving uncertainty through action, exploration, or inference.",
+        },
+        temporal: {
+            id: "temporal",
+            label: "Narrative Self",
+            description:
+                "The Temporal (Diachronic) coherence — how the self persists across time. Sustained by hippocampal and default-mode network binding, managing how identity persists across time and integrates experiences into a coherent autobiography.",
+        },
+    },
+
     nodes: [
         // ── Level 1: Ultra-Priors ─────────────────────────────────────────────
         {
@@ -119,12 +137,12 @@ window.CORE_SELF_MODEL = {
         {
             id: "valence",
             label: "Valence",
-            title: "Valence / Free Energy Expectation",
+            title: "Valence Expectation",
             level: 2,
             order: 1,
             value: 0,
             description:
-                "Affective readout of baseline expected free energy. It is the felt sense of safety versus chronic threat generated downstream of Volatility and Tractability. High valence (threat-biased) drives interoceptive anchoring, suppresses external coupling, and forecloses both active inference and epistemic foraging. The direct paths to Neuroticism and Agreeableness that appeared in earlier model versions have been removed: those phenotypic effects are now carried entirely by the indirect routes through Sensory Anchoring and Coupling Bias, making the Level 3 layer the necessary mediator.",
+                "Affective readout of baseline expected free energy. It represents the felt sense of safety versus chronic threat generated downstream of Volatility and Tractability. High valence (threat-biased) drives interoceptive anchoring, suppresses external coupling, and forecloses both active inference and epistemic foraging. The direct paths to Neuroticism and Agreeableness that appeared in earlier model versions have been removed: those phenotypic effects are now carried entirely by the indirect routes through Sensory Anchoring and Coupling Bias, making the Level 3 layer the necessary mediator.",
             projectsTo: [
                 { target: "sensory", weight: 0.7, transform: "direct" },
                 { target: "coupling", weight: 0.8, transform: "inverse" },
@@ -135,12 +153,12 @@ window.CORE_SELF_MODEL = {
         {
             id: "uncertainty",
             label: "Uncertainty",
-            title: "Uncertainty / Ambiguity Expectation",
+            title: "Uncertainty Expectation",
             level: 2,
             order: 2,
             value: 0,
             description:
-                "The moment-to-moment felt opacity of the world, generated downstream of both Volatility and Noise. Where Noise (L1) sets the prior baseline for tolerable ambiguity, Uncertainty is its affective realisation: the phenomenological experience of not knowing what is happening right now. Corresponds to tonic acetylcholine-mediated expected uncertainty in the Yu and Dayan neuromodulatory framework. High chronic uncertainty erodes narrative self-coherence and biases the system toward interoceptive over exteroceptive anchoring.",
+                "The moment-to-moment felt opacity of the world, generated downstream of both Volatility and Noise. Where Noise (L1) sets the prior baseline for tolerable ambiguity, Uncertainty is its affective realisation: the phenomenological experience of not knowing what is happening right now. Corresponds to tonic acetylcholine-mediated expected ambiguity. High chronic uncertainty erodes narrative self-coherence and biases the system toward interoceptive over exteroceptive anchoring.",
             projectsTo: [
                 { target: "sensory", weight: 0.3, transform: "direct" },
                 { target: "narrative", weight: 0.5, transform: "inverse" },
@@ -155,11 +173,14 @@ window.CORE_SELF_MODEL = {
             level: 3,
             order: 1,
             value: 0,
+            axisGroup: "topological",
             description:
                 "Precision bias for where reality is grounded: internal bodily signals or external sensory structure. It defines whether the self is stabilised more by interoception or exteroception. Grounded in Seth's interoceptive inference framework, high interoceptive anchoring not only amplifies Neuroticism (hyper-vigilance to somatic arousal) but also suppresses external Coupling — the body becomes the primary regulatory anchor, reducing investment in social co-regulation.",
             projectsTo: [
                 { target: "neuro", weight: 0.4, transform: "direct" },
                 { target: "coupling", weight: 0.3, transform: "inverse" },
+                { target: "stability", weight: 0.4, transform: "inverse" },
+                { target: "bis", weight: 0.6, transform: "direct" },
             ],
         },
         {
@@ -169,11 +190,13 @@ window.CORE_SELF_MODEL = {
             level: 3,
             order: 2,
             value: 0,
+            axisGroup: "topological",
             description:
                 "Bias governing how tightly the self should couple to other people and the wider environment. One pole favours differentiation and autonomy; the other favours synchrony, affiliation, and dissolution into external structure. Receives input from Valence (threat drives uncoupling), Tractability (effective action enables social co-regulation), and Sensory Anchoring (interoceptive grounding reduces external coupling). This three-way input structure generates the anxious/avoidant split: high threat + high tractability produces anxious high-coupling; high threat + low tractability produces avoidant withdrawal.",
             projectsTo: [
                 { target: "ext", weight: 0.6, transform: "direct" },
                 { target: "agree", weight: 0.6, transform: "direct" },
+                { target: "stability", weight: 0.3, transform: "direct" },
             ],
         },
         {
@@ -183,12 +206,16 @@ window.CORE_SELF_MODEL = {
             level: 3,
             order: 3,
             value: 0,
+            axisGroup: "epistemic",
             description:
                 "Relative precision placed on changing the world versus changing beliefs. Action-heavy styles push active environmental control; perception-heavy styles favour internal updating and accommodation. Governed jointly by Tractability (low expected efficacy forecloses action) and Reward Expectation (high outcome value motivates approach). The inverse relationship with Openness reflects the trade-off between resolving uncertainty through action versus through conceptual exploration.",
             projectsTo: [
                 { target: "cons", weight: 0.3, transform: "direct" },
                 { target: "ext", weight: 0.4, transform: "direct" },
                 { target: "open", weight: 0.3, transform: "inverse" },
+                { target: "plasticity", weight: 0.5, transform: "direct" },
+                { target: "bis", weight: 0.4, transform: "inverse" },
+                { target: "bas", weight: 0.6, transform: "direct" },
             ],
         },
         {
@@ -198,22 +225,29 @@ window.CORE_SELF_MODEL = {
             level: 3,
             order: 4,
             value: 0,
+            axisGroup: "epistemic",
             description:
                 "Expected value of sampling uncertainty — the drive to seek out information that resolves ambiguity. Maps directly onto Friston et al.'s epistemic value / information gain construct (2015). Suppressed by high Valence (threat makes exploration costly) and elevated by both low Noise expectations (ambient ambiguity is worth resolving) and high Reward Expectation (information gain is itself rewarding). The primary upstream driver of Openness to Experience, consistent with DeYoung's identification of curiosity as the core Openness facet.",
-            projectsTo: [{ target: "open", weight: 0.6, transform: "direct" }],
+            projectsTo: [
+                { target: "open", weight: 0.6, transform: "direct" },
+                { target: "plasticity", weight: 0.6, transform: "direct" },
+                { target: "bas", weight: 0.4, transform: "direct" },
+            ],
         },
         {
             id: "narrative",
             label: "Narrative Precision",
-            title: "Narrative Precision / Self-Coherence",
+            title: "Narrative Precision",
             level: 3,
             order: 5,
             value: 0,
+            axisGroup: "temporal",
             description:
-                "Precision assigned to autobiographical continuity and the narrative self. Higher values stabilise identity across contexts; lower values allow fluid updating but increase fragmentation risk under stress. Rooted in Metzinger's narrative self-model and McAdams' identity work. Note: the current implementation treats the Uncertainty → Narrative Precision path as monotonically inverse, but clinical evidence suggests a U-shaped relationship is possible — some individuals respond to high uncertainty with defensive narrative rigidification rather than fragmentation. This non-monotonicity is a known simplification deferred to a future revision.",
+                "Precision assigned to autobiographical continuity and the narrative self. Higher values stabilise identity across contexts; lower values allow fluid updating but increase fragmentation risk under stress. Rooted in Metzinger's narrative self-model and McAdams' identity work. Note: the current implementation treats the Uncertainty → Narrative Precision path as monotonically inverse, but clinical evidence suggests a U-shaped relationship is possible — some individuals respond to high uncertainty with defensive narrative rigidification rather than fragmentation.",
             projectsTo: [
                 { target: "open", weight: 0.4, transform: "inverse" },
                 { target: "cons", weight: 0.2, transform: "direct" },
+                { target: "stability", weight: 0.4, transform: "direct" },
             ],
         },
         {
@@ -223,15 +257,18 @@ window.CORE_SELF_MODEL = {
             level: 3,
             order: 6,
             value: 0,
+            axisGroup: "temporal",
             description:
                 "Precision weight allocated to long-range policy evaluation — the functional depth of planning the agent actually deploys. Moved from Level 2 in V3 because it functions as a precision allocation (an operational bias) rather than an affective prior per se. Constrained by Horizon Expectation (the prior ceiling on policy depth) and shaped by Tractability (effective action makes long-horizon planning worthwhile). High temporal depth supports narrative coherence and goal-directed persistence; low temporal depth produces present-focused, reactive behavioural profiles.",
             projectsTo: [
                 { target: "narrative", weight: 0.5, transform: "direct" },
                 { target: "cons", weight: 0.5, transform: "direct" },
+                { target: "stability", weight: 0.5, transform: "direct" },
             ],
         },
     ],
     observables: [
+        // Big Five
         {
             id: "neuro",
             label: "Neuroticism",
@@ -239,6 +276,7 @@ window.CORE_SELF_MODEL = {
             level: 4,
             angle: -Math.PI / 2, // -90 deg (Top)
             color: "#ef4444",
+            framework: "big5",
             description:
                 "A stable behavioral attractor generated by chronically elevated valence expectations (threat) and interoceptive anchoring. Characterized by hyper-vigilance to internal arousal and perceptual accommodation over action. In V3, Valence no longer projects directly to Neuroticism — the path runs entirely through Sensory Anchoring, making interoceptive dysregulation the necessary mediator of trait-level anxiety.",
         },
@@ -249,6 +287,7 @@ window.CORE_SELF_MODEL = {
             level: 4,
             angle: -Math.PI / 10, // -18 deg (Top Right)
             color: "#3b82f6",
+            framework: "big5",
             description:
                 "An outward-oriented behavioral attractor driven by high environmental coupling and a bias toward action over perception. Characterized by high reward-seeking, assertiveness, and social synchrony. Receives input from both Coupling Bias and Action-Perception Bias, reflecting both the social and the approach-motivation dimensions of the trait.",
         },
@@ -259,6 +298,7 @@ window.CORE_SELF_MODEL = {
             level: 4,
             angle: (3 * Math.PI) / 10, // 54 deg (Bottom Right)
             color: "#f59e0b",
+            framework: "big5",
             description:
                 "Driven by high epistemic-gain expectations and highly fluid narrative precision. Manifests as exploratory edge-testing and willingness to revise the self-model without catastrophic fragmentation. The inverse path from Action-Perception Bias reflects the trade-off between resolving uncertainty through action versus through conceptual exploration.",
         },
@@ -269,6 +309,7 @@ window.CORE_SELF_MODEL = {
             level: 4,
             angle: (7 * Math.PI) / 10, // 126 deg (Bottom Left)
             color: "#8b5cf6",
+            framework: "big5",
             description:
                 "Rooted in strong coupling biases and feeling secure in the environment (low threat expectations). Phenomenologically experienced as an orientation toward affiliation, trust, and structural alignment with others. In V3, Valence no longer projects directly to Agreeableness — the path runs through Coupling Bias, making the social-regulatory layer the necessary mediator.",
         },
@@ -279,8 +320,55 @@ window.CORE_SELF_MODEL = {
             level: 4,
             angle: (11 * Math.PI) / 10, // 198 deg (Top Left)
             color: "#10b981",
+            framework: "big5",
             description:
                 "Rooted in deep temporal depth, rigid self-coherence, and a perception-overriding bias toward action. Phenomenologically experienced as an organised, persistent exertion of cybernetic control over the environment. Receives converging input from Temporal Depth, Narrative Precision, and Action-Perception Bias.",
+        },
+        // Cybernetic Big Five Theory (CB5T)
+        {
+            id: "plasticity",
+            label: "Plasticity",
+            title: "Meta-Trait Plasticity",
+            level: 4,
+            angle: -Math.PI / 2, // Top
+            color: "#f59e0b",
+            framework: "cb5t",
+            description:
+                "Drives exploration and engagement with novel information. Captures the shared variance of Extraversion and Openness. Phenomenologically represents a highly active system parameterized for active epistemic foraging, reward seeking, and approach behaviors.",
+        },
+        {
+            id: "stability",
+            label: "Stability",
+            title: "Meta-Trait Stability",
+            level: 4,
+            angle: Math.PI / 2, // Bottom
+            color: "#10b981",
+            framework: "cb5t",
+            description:
+                "Functions to protect the system from disruption and maintain goal coherence. Captures the shared variance of Neuroticism (reversed), Agreeableness, and Conscientiousness. Relies on deep temporal depth, secure narrative precision, and low sensory/threat anchoring.",
+        },
+        // BIS/BAS Framework
+        {
+            id: "bis",
+            label: "BIS",
+            title: "Behavioral Inhibition System",
+            level: 4,
+            angle: Math.PI / 2, // Bottom
+            color: "#ef4444",
+            framework: "bisbas",
+            description:
+                "Highly sensitive to cues of punishment, ambiguity, and threat. Leads to anxiety and the halting of ongoing behavior. In the Cascade, this is driven downstream by high Sensory Anchoring (hyper-vigilance) and low Action-Perception bias (behavioral inhibition).",
+        },
+        {
+            id: "bas",
+            label: "BAS",
+            title: "Behavioral Approach System",
+            level: 4,
+            angle: -Math.PI / 2, // Top
+            color: "#31c53d",
+            framework: "bisbas",
+            description:
+                "Sensitive to reward and goal-attainment, driving impulsivity and approach behaviors. In the Cascade, this is strongly driven by the Action-Perception bias (approach) and Epistemic Foraging (reward-relevant information seeking).",
         },
     ],
     relatedFrameworks: {
@@ -344,9 +432,9 @@ window.CORE_SELF_MODEL = {
                     "Barrett's framework is a predictive processing account of affect arguing that emotions are not innate, reactive circuits. Instead, they are top-down cortical predictions generated to make sense of, and allocate resources for, bottom-up interoceptive signals (allostasis). A future revision of the CPC model may decompose the current Valence node into a metabolic (body-budget) and an epistemic (prediction error) channel to better reflect Barrett's account — this is noted as a deferred architectural change.",
             },
             {
-                title: "Affective Neuroscience",
+                title: "Primal Emotional Systems",
                 description:
-                    "Panksepp's evolutionary neurobiological framework that identifies deep, subcortical emotional operating systems (e.g., SEEKING, FEAR, RAGE, PLAY). These act as unconditioned foundational priors that drive mammalian behavior before higher-order cognitive regulation occurs.",
+                    "Panksepp's Affective Neuroscience evolutionary neurobiological framework identifies deep, subcortical emotional operating systems (e.g., SEEKING, FEAR, RAGE, PLAY). These Primal Emotional Systems act as unconditioned foundational priors that drive mammalian behavior before higher-order cognitive regulation occurs.",
             },
             {
                 title: "Temperament and Character Inventory",
