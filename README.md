@@ -1,1 +1,14 @@
-# CoreSelfModel
+# The Deep-Self Model of Personality
+
+Dominant personality models describe how people differ but not why those differences arise. The Deep-Self Predictive Cascade Model addresses this gap by deriving the major dimensions of personality from a small set of hierarchical expectations and precision-allocation strategies within the active inference framework. In doing so it recasts traits as the surface expression of an agent's generative model, unifying otherwise disparate taxonomies under a single formal ontology and yielding testable, mechanistic predictions for cognitive neuroscience and computational psychiatry.
+
+- [Paper](TODO)
+- [Interactive app](TODO)
+
+[![](TODO)](LINK)
+
+1. Check that the model in the paper matches the Figure 2
+2. Check that the model in the paper matches the interactive app
+3. Check that all the content in the paper is copied in frameworks.js
+4. Work on the simulation study
+5. Implement the suggestions reviewer. 

@@ -1,5 +1,6 @@
 const d3 = window["d3"]
 const modelData = window["MODEL_DATA"]
+const frameworksData = window["FRAMEWORKS_DATA"]
 
 if (!d3 || !modelData) {
     throw new Error("The simulator dependencies did not load correctly.")
@@ -24,13 +25,13 @@ if (modelData.overview) {
 
 // 2. Inject Related Frameworks Panel
 const frameworksContainer = document.getElementById("frameworks-panel")
-if (modelData.relatedFrameworks && modelData.relatedFrameworks.items.length > 0) {
+if (frameworksData && frameworksData.items.length > 0) {
     let frameworksHtml = `
-        <p class="overview-kicker">${modelData.relatedFrameworks.kicker}</p>
-        <h2 id="frameworks-title" class="overview-title">${modelData.relatedFrameworks.title}</h2>
+        <p class="overview-kicker">${frameworksData.kicker}</p>
+        <h2 id="frameworks-title" class="overview-title">${frameworksData.title}</h2>
         <div class="frameworks-layout">
             <div class="frameworks-menu" id="frameworks-menu" role="tablist">
-                ${modelData.relatedFrameworks.items
+                ${frameworksData.items
                     .map(
                         (item, index) => `
                     <button class="framework-menu-item ${index === 0 ? "is-active" : ""}"
@@ -44,9 +45,9 @@ if (modelData.relatedFrameworks && modelData.relatedFrameworks.items.length > 0)
                     .join("")}
             </div>
             <div class="frameworks-content-panel" role="tabpanel">
-                <h3 class="framework-detail-title" id="framework-detail-title">${modelData.relatedFrameworks.items[0].title}</h3>
+                <h3 class="framework-detail-title" id="framework-detail-title">${frameworksData.items[0].title}</h3>
                 <div class="framework-detail-text" id="framework-detail-text">
-                    ${modelData.relatedFrameworks.items[0].description}
+                    ${frameworksData.items[0].description}
                 </div>
             </div>
         </div>
@@ -69,7 +70,7 @@ if (modelData.relatedFrameworks && modelData.relatedFrameworks.items.length > 0)
             clickedBtn.setAttribute("aria-selected", "true")
 
             const index = clickedBtn.getAttribute("data-index")
-            const selectedData = modelData.relatedFrameworks.items[index]
+            const selectedData = frameworksData.items[index]
 
             detailTitle.textContent = selectedData.title
             detailText.innerHTML = selectedData.description
