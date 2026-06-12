@@ -2,12 +2,6 @@
 POTENTIAL FUTURE REVISIONS
 (perhaps best left to be discussed in the future directions of the paper)
 
-Is there a need for some kind of "social" parameter, grounded in multi-agent active inference. Humans are obligatorily gregarious; our generative models assume the availability of another Markov blanket for co-regulation.
-- For instance, a Social Rank Prior — a foundational expectation about the agent's position in social dominance hierarchies, drawing on Paul Gilbert's evolutionary psychiatry and the broader literature on shame and submission. While theoretically distinct from both Coupling Bias and Tractability, it overlaps sufficiently with their interaction that its independent contribution to the observable phenotypes requires clearer empirical delimitation before warranting a dedicated node. However, a "Social Rank Prior" implies complex cultural embedding, which feels too high-level for an ultra-prior.
-- Alternatively, we could consider an Expectation of Synchrony, representing the baseline expectation that other agents are available for co-regulation. High Synchrony expectation drives secure attachment and Agreeableness; low Synchrony expectation drives schizoid withdrawal or paranoid ideation, independent of general environmental Tractability. However, it might overlap with Differentiation-Dissolution. 
-- One could also argue that an ultra-prior is the degree of consideration / acknowledgement of other agents. Perhaps psychopathy, machiavelism and dark triad traits could stem out of a low ultra-prior about the very existence and motivation to simulate other agents' mental states (empathy)?
-
-
 Alternative Model Names:
 - Core Priors Cascade Model of Personality
 - Attractor Cascade Model of Personality
