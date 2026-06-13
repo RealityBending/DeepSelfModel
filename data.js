@@ -102,9 +102,9 @@ window.MODEL_DATA = {
             description:
                 "Expectation about irreducible aleatoric uncertainty — the baseline level of ambiguity the agent expects to simply tolerate rather than resolve. Maps onto Yu and Dayan's 'expected uncertainty' channel, associated with tonic acetylcholine signalling: a high noise expectation permits ambient ambiguity without triggering drastic model updates or precision reallocations. Low noise expectations push the system toward premature epistemic closure and distress when residual variance cannot be eliminated.",
             projectsTo: [
-                { target: "arousal", weight: 0.5, transform: "direct" },
+                { target: "arousal", weight: 0.5, transform: "inverse" },
                 { target: "exploration", weight: 0.5, transform: "direct" },
-                { target: "primal_safe", weight: 0.6, transform: "inverse" },
+                { target: "primal_safe", weight: 0.6, transform: "direct" },
             ],
         },
         {
@@ -132,7 +132,7 @@ window.MODEL_DATA = {
             projectsTo: [
                 { target: "vitality", weight: 0.6, transform: "direct" },
                 { target: "action", weight: 0.5, transform: "direct" },
-                { target: "differentiation", weight: 0.4, transform: "direct" },
+                { target: "differentiation", weight: 0.4, transform: "inverse" },
                 { target: "future", weight: 0.4, transform: "direct" },
                 { target: "primal_safe", weight: 0.7, transform: "direct" },
                 { target: "attachment_secure", weight: 0.8, transform: "direct" },
@@ -196,6 +196,7 @@ window.MODEL_DATA = {
                 { target: "attachment_anxious", weight: 0.6, transform: "direct" },
                 { target: "emotion_distress", weight: 0.7, transform: "direct" },
                 { target: "emotion_calm", weight: 0.8, transform: "inverse" },
+                { target: "conscientiousness", weight: 0.25, transform: "inverse" },
             ],
         },
         {
@@ -208,10 +209,10 @@ window.MODEL_DATA = {
             description:
                 "The affective readout of the body-budget, generated downstream of Energy Expectation, Tractability, and Horizon. Phenomenologically experienced as vitality, depression, or burnout. High vitality signals an energetic surplus, facilitating active behavior; low vitality (allostatic load) forces the system to conserve resources, suppressing action, social coupling, and epistemic exploration.",
             projectsTo: [
-                { target: "differentiation", weight: 0.8, transform: "direct" },
+                { target: "differentiation", weight: 0.8, transform: "inverse" },
                 { target: "action", weight: 0.6, transform: "direct" },
                 { target: "exploration", weight: 0.5, transform: "direct" },
-                { target: "valence", weight: 0.4, transform: "inverse" },
+                { target: "valence", weight: 0.4, transform: "direct" },
                 { target: "hitop_internalizing", weight: 0.7, transform: "inverse" },
                 { target: "emotion_depression", weight: 0.8, transform: "inverse" },
                 { target: "attachment_avoidant", weight: 0.5, transform: "inverse" },
@@ -273,14 +274,14 @@ window.MODEL_DATA = {
             description:
                 "Bias governing the structural coupling of the agent's Markov blanket to other agents and the environment. One pole favours Differentiation (autonomy, distinct boundaries); the other favours Dissolution (synchrony, intense coupling, and affiliation). It receives input from Metabolic Deficit (energy preservation forces differentiation/withdrawal) and Tractability (efficacy enables social synchrony). This creates the anxious/avoidant split: high epistemic uncertainty + high tractability produces anxious dissolution (hyper-coupling); high metabolic deficit + low tractability produces avoidant differentiation.",
             projectsTo: [
-                { target: "extraversion", weight: 0.6, transform: "direct" },
-                { target: "agreeableness", weight: 0.6, transform: "direct" },
-                { target: "stability", weight: 0.3, transform: "direct" },
-                { target: "hitop_externalizing", weight: 0.6, transform: "direct" },
-                { target: "primal_alive", weight: 0.8, transform: "direct" },
-                { target: "panksepp_panic", weight: 0.8, transform: "inverse" },
-                { target: "attachment_anxious", weight: 0.7, transform: "direct" },
-                { target: "attachment_avoidant", weight: 0.8, transform: "inverse" },
+                { target: "extraversion", weight: 0.6, transform: "inverse" },
+                { target: "agreeableness", weight: 0.6, transform: "inverse" },
+                { target: "stability", weight: 0.3, transform: "inverse" },
+                { target: "hitop_externalizing", weight: 0.6, transform: "inverse" },
+                { target: "primal_alive", weight: 0.8, transform: "inverse" },
+                { target: "panksepp_panic", weight: 0.8, transform: "direct" },
+                { target: "attachment_anxious", weight: 0.7, transform: "inverse" },
+                { target: "attachment_avoidant", weight: 0.8, transform: "direct" },
             ],
         },
         {
@@ -335,6 +336,7 @@ window.MODEL_DATA = {
             projectsTo: [
                 { target: "openness", weight: 0.4, transform: "inverse" },
                 { target: "conscientiousness", weight: 0.2, transform: "direct" },
+                { target: "neuroticism", weight: 0.4, transform: "inverse" },
                 { target: "stability", weight: 0.4, transform: "direct" },
                 { target: "hitop_thought_disorder", weight: 0.7, transform: "inverse" },
                 { target: "existential_nihilism", weight: 0.5, transform: "inverse" },
@@ -353,6 +355,7 @@ window.MODEL_DATA = {
             projectsTo: [
                 { target: "rigidity", weight: 0.5, transform: "direct" },
                 { target: "conscientiousness", weight: 0.5, transform: "direct" },
+                { target: "agreeableness", weight: 0.58, transform: "direct" },
                 { target: "stability", weight: 0.5, transform: "direct" },
             ],
         },
@@ -368,7 +371,7 @@ window.MODEL_DATA = {
             color: "#ef4444",
             framework: "big5",
             description:
-                "A stable behavioral attractor generated by chronically elevated anxiety and a bias toward interoception over exteroception. Characterized by hyper-vigilance to internal arousal and perceptual accommodation over action. The path runs entirely through the Interoception-Exteroception Bias, making somatic dysregulation the necessary mediator of trait-level anxiety.",
+                "A stable behavioral attractor generated by chronically elevated anxiety and a bias toward interoception over exteroception. Characterized by hyper-vigilance to internal arousal and perceptual accommodation over action. The path runs through the Interoception-Exteroception Bias, making somatic dysregulation the necessary mediator of trait-level anxiety, and is buffered by Narrative Rigidity, which protects against identity fragmentation by strictly conserving the self-model against volatile inputs.",
         },
         {
             id: "extraversion",
@@ -401,7 +404,7 @@ window.MODEL_DATA = {
             color: "#8b5cf6",
             framework: "big5",
             description:
-                "Rooted in a strong bias toward Dissolution (synchrony/coupling) and feeling secure in the environment (low metabolic deficit or epistemic uncertainty). Phenomenologically experienced as an orientation toward affiliation, trust, and structural alignment with others. The path runs entirely through the Differentiation-Dissolution Bias.",
+                "Rooted in a strong bias toward Dissolution (synchrony/coupling) and feeling secure in the environment (low metabolic deficit or epistemic uncertainty). Phenomenologically experienced as an orientation toward affiliation, trust, and structural alignment with others. Related to Differentiation-Dissolution Bias and moderated by Future Bias, which enables the temporal depth necessary to value long-term cooperative strategies over immediate exploitation. Phenomenologically experienced as an orientation toward affiliation, trust, and structural alignment with others.",
         },
         {
             id: "conscientiousness",
@@ -412,7 +415,7 @@ window.MODEL_DATA = {
             color: "#10b981",
             framework: "big5",
             description:
-                "Rooted in Future-Present Bias, high Rigidity Bias, and an overriding preference for Action. Phenomenologically experienced as an organised, persistent exertion of cybernetic control over the environment. Receives converging input from Future, Rigidity, and Action biases.",
+                "Rooted in Future-Present Bias, high Rigidity Bias, and an overriding preference for Action. Phenomenologically experienced as an organised, persistent exertion of cybernetic control over the environment. Receives converging input from Future, Rigidity, and Action biases. It is also inversely disrupted by high Epistemic Arousal, which degrades long-range policy execution. Phenomenologically experienced as an organised, persistent exertion of cybernetic control over the environment",
         },
         // Cybernetic Big Five Theory (CB5T)
         {

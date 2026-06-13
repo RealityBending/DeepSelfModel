@@ -7,8 +7,5 @@ Dominant personality models describe how people differ but not why those differe
 
 [![](TODO)](LINK)
 
-1. Check that the model in the paper matches the Figure 2
-2. Check that the model in the paper matches the interactive app
-3. Check that all the content in the paper is copied in frameworks.js
 4. Work on the simulation study
 5. Implement the suggestions reviewer. 

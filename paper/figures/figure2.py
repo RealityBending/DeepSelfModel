@@ -1,6 +1,6 @@
 """
 Figure 2. The Deep-Self Predictive Cascade Model (static schematic).
-Final Polish: Material Design Palette, Clean Routing, and Layout Spacing.
+Final Polish: Material Design Palette, Clean Routing, Layout Spacing, and Corrected Logic.
 """
 
 from pathlib import Path
@@ -36,7 +36,7 @@ BIG5 = {
     "Neuroticism": "#E53935",
 }
 
-ACT = "#2E7D32"  # activating (+) : Green 800 (Changed from Indigo)
+ACT = "#2E7D32"  # activating (+) : Green 800
 INH = "#E53935"  # inhibiting (-) : Red 600
 INK = "#23272E"
 BAND = "#F4F3EE"
@@ -161,8 +161,8 @@ def draw_landscape(x_lo, x_hi, nx=116, ny=44, color=LAND):
 grid_left = 0.0
 grid_right = 12.8
 
-# Increased the height (bh) of the T3 band from 2.1 to 2.45 to envelop the sub-titles
-for by, bh in [(T1 - 1.05, 2.25), (T2 - 0.72, 1.45), (T3 - 1.05, 2.45)]:
+# Envelope banding (Heights uniformly set to 2.45 for consistency)
+for by, bh in [(T1 - 1.05, 2.45), (T2 - 1.05, 2.45), (T3 - 1.05, 2.45)]:
     ax.add_patch(
         plt.Rectangle(
             (grid_left, by),
@@ -379,7 +379,7 @@ def sign_node(x, y, col, sign, r=0.11, z=8):
     )
 
 
-def path(pts, sign, weight, z=5, alpha=0.92):
+def path(pts, sign, weight, z=5, alpha=0.66):
     col = ACT if sign == "+" else INH
     xs = [p[0] for p in pts]
     ys = [p[1] for p in pts]
@@ -403,13 +403,14 @@ def vhv(x0, y0, x1, y1, bus_y):
 PAD = 0.14
 
 # ---- L1 -> L2 ---- #
+# Adjusted bus spacing to create a clean routing ladder (high to low)
 l1l2 = [
-    ("Volatility", 2.00, 0.8, "+", 11.2),
-    ("Noise", 2.60, 0.5, "+", 11.5),
-    ("Energy", 5.90, 0.6, "+", 11.2),
-    ("Tractability", 6.40, 0.6, "+", 11.5),
-    ("Horizon", 6.90, 0.3, "+", 11.85),
-    ("Reward", 10.50, 0.6, "+", 11.2),
+    ("Volatility", 2.00, 0.8, "+", 11.5),
+    ("Noise", 2.60, 0.5, "-", 10.9),
+    ("Energy", 5.90, 0.6, "+", 12.5),
+    ("Tractability", 6.40, 0.6, "+", 12.3),
+    ("Horizon", 6.90, 0.3, "+", 12.1),
+    ("Reward", 10.50, 0.6, "+", 11.7),
 ]
 for src, tx, w, s, bus in l1l2:
     path(vhv(prior_x[src], T1_bot, tx, T2_top + PAD, bus), s, w)
@@ -418,13 +419,115 @@ for src, tx, w, s, bus in l1l2:
 l2l3 = [
     ("arousal", "Interoception", 1.25, 0.7, "+", 8.05),
     ("arousal", "Rigidity", 9.40, 0.5, "-", 8.80),
-    ("vitality", "Differentiation", 3.35, 0.8, "+", 8.25),
-    ("vitality", "Action", 5.20, 0.6, "+", 7.70),
-    ("vitality", "Exploration", 7.30, 0.5, "+", 7.70),
-    ("valence", "Exploration", 7.60, 0.5, "+", 8.25),
+    ("vitality", "Differentiation", 3.35, 0.8, "-", 8.25),
+    ("vitality", "Action", 5.15, 0.6, "+", 7.70),  # Spread evenly (5.15)
+    (
+        "vitality",
+        "Exploration",
+        7.45,
+        0.5,
+        "+",
+        7.70,
+    ),  # Adjusted to center cleanly at 7.45
 ]
 for src, _tgt, tx, w, s, bus in l2l3:
     path(vhv(aff_x[src], T2_bot, tx, T3_top + PAD, bus), s, w)
+
+# ---- L1 -> L3 & L2 Lateral (Cross-tier & horizontal connections) ---- #
+# Buses systematically structured within the 10.7-12.5 routing ladder
+extra_paths = [
+    # Horizon -> Future (+)
+    (
+        "+",
+        0.5,
+        [
+            (11.55, T1_bot),
+            (11.55, 12.0),
+            (12.0, 12.0),
+            (12.0, 8.7),
+            (11.55, 8.7),
+            (11.55, T3_top + PAD),
+        ],
+    ),
+    # Tractability -> Future (+)
+    (
+        "+",
+        0.4,
+        [
+            (7.45, T1_bot),
+            (7.45, 11.9),
+            (11.8, 11.9),
+            (11.8, 8.8),
+            (11.35, 8.8),
+            (11.35, T3_top + PAD),
+        ],
+    ),
+    # Tractability -> Action (+)
+    (
+        "+",
+        0.4,
+        [
+            (7.45, T1_bot),
+            (7.45, 11.3),
+            (4.8, 11.3),
+            (4.8, 8.6),
+            (5.35, 8.6),  # Spread evenly (5.35)
+            (5.35, T3_top + PAD),
+        ],
+    ),
+    # Reward -> Action (+)
+    (
+        "+",
+        0.4,
+        [
+            (9.45, T1_bot),
+            (9.45, 11.1),
+            (4.95, 11.1),
+            (4.95, 8.7),
+            (5.55, 8.7),  # Spread evenly (5.55)
+            (5.55, T3_top + PAD),
+        ],
+    ),
+    # Tractability -> Differentiation (-)
+    ("-", 0.4, [(7.45, T1_bot), (7.45, 10.7), (3.65, 10.7), (3.65, T3_top + PAD)]),
+    # Vitality -> Valence (Lateral Inhibitory -)
+    (
+        "-",
+        0.5,
+        [
+            (aff_x["vitality"] + AW / 2 + 0.05, T2),
+            (aff_x["valence"] - AW / 2 - 0.15, T2),
+        ],
+    ),
+    # Noise -> Exploration (+)
+    (
+        "+",
+        0.4,
+        [
+            (3.35, T1_bot),  # Drop from Noise
+            (3.35, 11.6),  # Bus safely above L2
+            (4.5, 11.6),  # Move right above the gap between Arousal and Vitality
+            (4.5, 8.4),  # Drop vertically through the gap
+            (7.25, 8.4),  # Move horizontally below L2 to Exploration
+            (7.25, T3_top + PAD),  # Drop to Exploration
+        ],
+    ),
+    # Reward -> Exploration (+)
+    (
+        "+",
+        0.5,
+        [
+            (9.45, T1_bot),  # Drop from Reward
+            (9.45, 11.4),  # Bus safely above L2
+            (8.65, 11.4),  # Move left above the gap between Vitality and Valence
+            (8.65, 8.5),  # Drop vertically through the gap
+            (7.65, 8.5),  # Move horizontally below L2 to Exploration
+            (7.65, T3_top + PAD),  # Drop to Exploration
+        ],
+    ),
+]
+for sign, w, pts in extra_paths:
+    path(pts, sign, w, z=4)
 
 # ---- L3 -> L4 (Clean routing avoiding intersections) ---- #
 V = {t: polar(angles_deg[t], RAD_R) for t in order}
@@ -440,7 +543,7 @@ radar_edges = [
         ],
     ),
     (
-        "+",
+        "-",
         0.6,
         [
             (3.20, T3_bot),
@@ -449,7 +552,7 @@ radar_edges = [
         ],
     ),
     (
-        "+",
+        "-",
         0.6,
         [
             (3.55, T3_bot),
@@ -464,6 +567,18 @@ radar_edges = [
             (5.35, T3_bot),
             (5.35, V["Extraversion"][1] + 0.45),
             (V["Extraversion"][0] - 0.15, V["Extraversion"][1] + 0.45),
+        ],
+    ),
+    (
+        "+",
+        0.4,
+        [
+            (5.65, T3_bot),
+            (5.65, 4.4),  # Drop down securely above radar
+            (3.0, 4.4),  # Shift left outside radar region
+            (3.0, -0.6),  # Safely drop down completely avoiding intersection
+            (V["Conscientiousness"][0] - 0.15, -0.6),
+            (V["Conscientiousness"][0] - 0.15, V["Conscientiousness"][1] - 0.25),
         ],
     ),
     (
@@ -502,6 +617,39 @@ radar_edges = [
             (11.65, T3_bot),
             (11.65, V["Conscientiousness"][1] - 0.15),
             (V["Conscientiousness"][0] + 0.25, V["Conscientiousness"][1] - 0.15),
+        ],
+    ),
+    (
+        "-",
+        0.3,
+        [
+            (aff_x["arousal"] - 0.2, T2_bot),
+            (aff_x["arousal"] - 0.2, 8.4),
+            (0.15, 8.4),
+            (0.15, -0.9),
+            (V["Conscientiousness"][0] - 0.42, -0.9),
+            (V["Conscientiousness"][0] - 0.42, V["Conscientiousness"][1] - 0.25),
+        ],
+    ),
+    (
+        "-",
+        0.4,
+        [
+            (9.35, T3_bot),
+            (9.35, 5.1),
+            (2.8, 5.1),
+            (2.8, V["Neuroticism"][1] - 0.23),
+            (V["Neuroticism"][0] - 0.15, V["Neuroticism"][1] - 0.23),
+        ],
+    ),
+    (
+        "+",
+        0.6,
+        [
+            (bias_x["Future"] - 0.15, T3_bot),
+            (bias_x["Future"] - 0.15, -1.1),
+            (V["Agreeableness"][0] + 0.25, -1.1),
+            (V["Agreeableness"][0] + 0.25, V["Agreeableness"][1] - 0.25),
         ],
     ),
 ]
@@ -600,11 +748,11 @@ for t in order:
 
 # Custom tight offsets to cleanly avoid all incoming connection edges
 label_offsets = {
-    "Extraversion": (0.20, 0.10, "left", "bottom"),  # Tucked safely to the right
-    "Openness": (0.42, 0.02, "left", "center"),  # Snug between top and bottom lines
-    "Conscientiousness": (0, -0.28, "left", "top"),  # Tucked below
-    "Agreeableness": (-0.15, -0.28, "right", "top"),  # Tucked below
-    "Neuroticism": (0, 0.20, "right", "bottom"),  # Shifted above incoming line
+    "Extraversion": (0.20, 0.10, "left", "bottom"),
+    "Openness": (0.42, 0.02, "left", "center"),
+    "Conscientiousness": (0, -0.28, "left", "top"),
+    "Agreeableness": (-0.15, -0.28, "right", "top"),
+    "Neuroticism": (0, 0.20, "right", "bottom"),
 }
 
 for t in order:
