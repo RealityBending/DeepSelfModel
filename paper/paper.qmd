@@ -2,12 +2,6 @@
 title: "Towards an Active Inference Personality Framework: The Deep-Self Predictive Cascade Model"
 shorttitle: "The Deep-Self Cascade Model of Personality"
 author:
-  - name: Dominique Makowski
-    orcid: 0000-0001-5375-9967
-    email: D.Makowski@sussex.ac.uk
-    url: https://realitybendinglab.com/
-    corresponding: true
-    # roles:
     #   - Project administration
     #   - Data curation
     #   - Formal Analysis
@@ -15,6 +9,12 @@ author:
     #   - Visualization
     #   - Writing – original draft
     #   - Writing – review & editing
+  - name: Dominique Makowski
+    orcid: 0000-0001-5375-9967
+    email: D.Makowski@sussex.ac.uk
+    url: https://realitybendinglab.com/
+    corresponding: true
+    # roles:
     affiliations:
       - id: "id1"
         name: "University of Sussex"
@@ -262,7 +262,7 @@ Our model might be extended to pro- and anti-social traits. For instance, affect
 
 Primal World Beliefs [@clifton2019primal] provide some of the most direct empirical anchors for the cascade's parameters. The *Safe* primal aligns with Tractability and high Noise Expectation (the world is bounded and legible) and the *Enticing* primal aligns with Reward Expectation, the prior over preferred states. The *Alive* primal is less straightforward: while its interpersonal warmth facet overlaps with the Dissolution pole, its core sense that the world is vibrant and dynamic plausibly reflects allostatic surplus projected outward. A high-Energy, high-Vitality agent perceives the environment as animated, whereas a depleted agent perceives it as inert or grey, independent of how bounded or unbounded their self-model feels. On this reading, Alive should correlate specifically with Energy Expectation and interoceptive-accuracy measures rather than with self-other boundary measures, constituting a discriminant prediction. Together, these three primals offer a potential validation strategy: Safe scores should decompose into a controllability component (Tractability) and an ambiguity-tolerance component (Noise Expectation), a direct test of the Epistemic Imperative's two-component structure.
 
-Finally, it is worth noting that concepts from psychodynamic have already reframed in active-inference terms [@carhart2010default; @solms2018consciousness], and Jung's elusive archetypes have been cast as phylogenetically conserved structural priors, "shared eigenmodes" of the species-typical deep-prior landscape [@mcgovern2025eigenmodes]. Note that the alternative framing  by @beckerneuberg2019archetypes as emergent outcomes of evolved motivational systems whose recurrence across cultures reflects shared adaptive pressures is not incompatible with our model: the former treats archetypes as the prior architecture's eigenvectors, the latter as the attractor basins that motivationally equivalent priors reliably generate.
+Finally, it is worth noting that concepts from psychodynamic have already reframed in active-inference terms [@carhart2010default; @solms2018consciousness], and Jung's elusive archetypes have been cast as phylogenetically conserved structural priors, "shared eigenmodes" of the species-typical deep-prior landscape [@mcgovern2025eigenmodes]. Note that the alternative framing  by @becker2019archetypes as emergent outcomes of evolved motivational systems whose recurrence across cultures reflects shared adaptive pressures is not incompatible with our model: the former treats archetypes as the prior architecture's eigenvectors, the latter as the attractor basins that motivationally equivalent priors reliably generate.
 
 # Simulation Proof-of-Concept
 
