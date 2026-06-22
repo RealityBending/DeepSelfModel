@@ -14,7 +14,8 @@ author:
     email: D.Makowski@sussex.ac.uk
     url: https://realitybendinglab.com/
     corresponding: true
-    # roles:
+    roles:
+      - writing
     affiliations:
       - id: "id1"
         name: "University of Sussex"
@@ -25,6 +26,9 @@ author:
       - ref: "id2"
         name: "University of Sussex"
         department:  "Sussex Centre for Consciousness Science"
+      - ref: "id3"  # Email to comply with the psykarix about the email on the title page
+        name: "*D.Makowski@sussex.ac.uk*"
+        department:  ~
 blank-lines-above-author-note: 2
 author-note:
   status-changes:
@@ -309,6 +313,10 @@ A framework that can accommodate every major taxonomy risks being unfalsifiable,
 Personality science has produced a reliable, cross-culturally replicable map of human variation without a principled account of why the map is structured as it is. The Deep-Self Predictive Cascade Model proposes that these patterns are consequences of the computational architecture a self-organizing agent must implement to persist under uncertainty. Under the Free Energy Principle, personality is recast not as a set of properties an individual possesses but as a geometry, the free energy landscape associated with that agent's deep priors and precision-allocation strategies, in which traits are attractor basins whose depth is set by precision and whose location reflects the configuration of Ultra-Priors governing the agent's relation to uncertainty, its own metabolic resources, and its goal-directed future. The cascade from those priors through core Affective States and Precision Biases to observable phenotypes is offered as a candidate generative account, not a relabeling: a hypothesis that one upstream configuration projects onto multiple downstream phenotypes, whose covariance follows from that shared origin.
 
 We have been explicit that this is, at present, a conceptual-level proposal implemented as a path model rather than a worked active-inference scheme. The proof-of-concept simulation is promissing but does not establish definitive proof. However, we lay out a clear path forward, involving developing and validating independent and reliable measures, testing the predictions, and gathering single-subject longitudinal evidence. If personality configurations are attractor basins maintained by precision-weighted priors, then the conditions for their change become specifiable, namely sustained, high-precision counter-evidence delivered in a context that amplifies prediction error at the relevant hierarchical level, recasting intervention protocols from an empirical art into a principled neuro-engineering problem. What the present paper offers is more modest than a finished theory: a common vocabulary in which trait psychology, affective neuroscience, computational psychiatry, and intervention science can be expressed, compared, and made the subject of a shared empirical program.
+
+# Acknowledgements
+
+I would like to thank Dr Marco Sperduti for entertaining my early-career elucubrations related to what has now become the concept of "deep-Self", and Dr Theodoros Karapanagiotidis for his contagious enthusiasm about the topic of attractors. As well as the Reality Bending Lab members, past and present, for their work which helped me to clarify and refine the ideas presented here.
 
 # References
 
