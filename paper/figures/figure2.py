@@ -490,9 +490,9 @@ extra_paths = [
     ),
     # Tractability -> Differentiation (-)
     ("-", 0.4, [(7.45, T1_bot), (7.45, 10.7), (3.65, 10.7), (3.65, T3_top + PAD)]),
-    # Vitality -> Valence (Lateral Inhibitory -)
+    # Vitality -> Valence (Lateral, activating: depletion blunts positive affect)
     (
-        "-",
+        "+",
         0.5,
         [
             (aff_x["vitality"] + AW / 2 + 0.05, T2),

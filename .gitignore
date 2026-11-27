@@ -47,3 +47,6 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Reference PDFs (kept locally, not published)
+literature/

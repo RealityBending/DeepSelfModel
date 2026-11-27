@@ -87,6 +87,7 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -207,8 +208,8 @@ the minimal, agentic, and narrative self-models, to the observable
 phenotypes catalogued by trait taxonomy. This parameter space provides a
 common vocabulary onto which major cybernetic, affective, and clinical
 frameworks can be mapped. We present a proof-of-concept simulation
-provides evidence that the cascade's topology is capable of reproducing
-the empirical covariance structure of the Big-5, as well as a set of
+showing that the cascade's topology is capable of approximating the
+empirical correlation structure of the Big-5, as well as a set of
 falsifiable predictions to test and refine our
 proposal.  \section{Impact Statement} \noindent Dominant personality
 models describe how people differ but not why those differences arise.
@@ -227,7 +228,7 @@ processing, cybernetics, computational psychiatry}
 \authornote{\par{\addORCIDlink{Dominique
 Makowski}{0000-0001-5375-9967}} 
 \par{ }
-\par{   The authors have no conflicts of interest to disclose.    Author
+\par{   The author has no conflicts of interest to disclose.    Author
 roles were classified using the Contributor Role Taxonomy (CRediT;
 \href{https://credit.niso.org}{credit.niso.org}) as follows:  Dominique
 Makowski:   writing}
@@ -367,6 +368,8 @@ Makowski, Email: \href{mailto:D.Makowski@sussex.ac.uk}{D.Makowski@sussex.ac.uk}}
 \ifdefined\Shaded\renewenvironment{Shaded}{\begin{snugshade}\begin{singlespace}}{\end{singlespace}\end{snugshade}}\fi
 
 
+\mbox{}\newpage\mbox{}\newpage
+
 \section{Introduction}\label{introduction}
 
 Personality psychology has produced robust, consensual descriptive
@@ -378,9 +381,10 @@ variance in behaviour, health, and life outcomes
 (\citeproc{ref-roberts2007power}{Roberts et al., 2007};
 \citeproc{ref-soto2017next}{Soto \& John, 2017}). Its hierarchical
 extension into the meta-traits of Plasticity and Stability
-(\citeproc{ref-deyoung2006higher}{DeYoung, 2006}), and the Hierarchical
-Taxonomy of Psychopathology (HiTOP, \citeproc{ref-kotov2017hitop}{Kotov
-et al., 2017}), which places maladaptive traits and symptoms on a
+(\citeproc{ref-deyoung2006higher}{DeYoung, 2006};
+\citeproc{ref-digman1997higher}{Digman, 1997}), and the Hierarchical
+Taxonomy of Psychopathology (HiTOP, \citeproc{ref-kotov2017hitop}{{Kotov
+et al.}, 2017}), which places maladaptive traits and symptoms on a
 dimensional continuum, show that this variance is not merely catalogued
 but structured. These frameworks describe what personality looks like
 with extraordinary reliability. By design, they do not explain why it
@@ -418,11 +422,12 @@ hierarchical Bayesian models to cognition, emotion, and psychopathology
 \citeproc{ref-friston2017activeprocess}{K. Friston et al., 2017};
 \citeproc{ref-hohwy2013predictive}{Hohwy, 2013};
 \citeproc{ref-smith2021recent}{Smith et al., 2021}), but largely in
-isolation from the taxonomic literature, leaving the empirical structure
-of the Big-5 and HiTOP unexplained rather than subsumed. Critically, the
-lack of a compelling mechanistic framework might have compounded issues
-related to the proliferation across frameworks of overlapping constructs
-that produced a jingle-jangle issue
+isolation from the taxonomic literature (but see
+\citeproc{ref-safron2021integrating}{Safron \& DeYoung, 2021}), leaving
+the empirical structure of the Big-5 and HiTOP unexplained rather than
+subsumed. Critically, the lack of a compelling mechanistic framework
+might have compounded issues related to the proliferation across
+frameworks of overlapping constructs that produced a jingle-jangle issue
 (\citeproc{ref-bainbridge2022evaluating}{Bainbridge et al., 2022};
 \citeproc{ref-kelley1927interpretation}{Kelley, 1927}), impairing
 replicability, predictive and interpretative value, and conceptual
@@ -461,12 +466,12 @@ configurations of belief and policy correspond to low expected free
 energy (coherent, predictable, preferred) and others to high expected
 free energy (uncertain, costly, threatening). Behaviour gravitates
 toward the low-energy regions: the agent's deep priors warp the free
-energy manifold much as celestial bodies warp spacetime, carving the
+energy manifold much as astronomical objects warp spacetime, carving the
 paths of least resistance the system tends to follow.
 
 The low-energy \emph{attractor basins} have a depth set by the precision
-of its governing priors, which translates in how much perturbation is
-needed to dislodge the system (i.e., how much energy is required to
+of their governing priors, which translates into how much perturbation
+is needed to dislodge the system (i.e., how much energy is required to
 ``push'' the agent out of its constrained trajectory in that basin).
 High-precision priors create deep, rigid attractors that resist
 revision, and low-precision priors create shallow ones that update
@@ -532,10 +537,13 @@ x_j = \frac{\sum_i \pi_{ij}\, w_{ij}\, x_i}{\sum_i \pi_{ij}}, \qquad \pi_{ij} = 
 \]
 
 with \(w_{ij}\in[-1,1]\) the signed connection strength (positive for
-activating, negative for inhibiting projections). This
-precision-weighting language should be read as a motivated
-interpretation of the coefficients rather than a claim that variational
-message passing has been executed
+activating, negative for inhibiting projections). This is the form
+implemented in the interactive application; the simulation reported
+below uses its simplest special case (equal precisions and no
+interaction terms), in which each node is a standardized weighted sum of
+its inputs plus Gaussian noise. The precision-weighting language should
+be read as a motivated interpretation of the coefficients rather than a
+claim that variational message passing has been executed
 (\citeproc{ref-friston2008hierarchical}{K. Friston, 2008}). The
 framework's contribution is therefore not new computational machinery
 but the theoretical motivation of a specific path structure: testing
@@ -544,28 +552,30 @@ Importantly, our model does not seek to compete with the Big-5 or HiTOP
 as descriptions but offers a candidate mechanistic interpretation of the
 patterns they document.
 
-Several commitments follow. The cascade does not derive the number of
-factors, nor claim that exactly six Ultra-Priors exist as discrete and
-specific substrates; each is likely better understood as a functional
-attractor in a larger system of nested priors, and the three-level
-structure is a minimum viable ontology, a parsimonious set of functional
-distinctions that generates the observed covariance with enough
-granularity to yield predictions. The number six reflects the orthogonal
-dimensions we judge sufficient to span the phenotypic space (see below),
-not a claim about the brain's parameterization, and we treat the set as
-a principled starting point rather than a closed inventory. Finally, the
-cascade's unidirectionality describes moment-to-moment information flow,
-not the impossibility of deep change: Ultra-Priors update slowly, but
-sustained therapeutic, pharmacological, or transformative experience
-that generates enough high-precision prediction error can revise them.
+Moreover, it is important to underline that our model does not derive
+the number of factors, nor claim that only and exactly six Ultra-Priors
+exist as discrete and specific substrates; each is likely better
+understood as a functional attractor in a larger system of nested
+priors, and the four-level structure is a minimum viable ontology, a
+parsimonious set of functional distinctions that generates the observed
+covariance with enough granularity to yield predictions. The number six
+reflects the orthogonal dimensions we judge sufficient to span the
+phenotypic space (see below), not a claim about the brain's
+parameterization, and we treat the set as a principled starting point
+rather than a closed inventory. Finally, the cascade's unidirectionality
+describes moment-to-moment information flow, not the impossibility of
+deep change: Ultra-Priors update slowly, but sustained therapeutic,
+pharmacological, or transformative experience that generates enough
+high-precision prediction error can revise them.
 
 We accompany the model with an open-source interactive toy
 implementation (Figure~\ref{fig-app}) in which adjusting any Ultra-Prior
 propagates through the cascade in real time, serving as a working
 proof-of-concept that the proposed connectivity generates coherent,
-recognizable personality profiles from a small set of deep parameters.
-It is available, alongside the simulation code, at
-https://github.com/RealityBending/DeepSelfModel.
+recognizable personality profiles from a small set of deep parameters
+(its wiring and weights are illustrative and differ in places from the
+simulated specification). It is available, alongside the simulation
+code, at https://github.com/RealityBending/DeepSelfModel.
 
 \begin{figure*}[!htbp]
 
@@ -671,7 +681,8 @@ deficit, suppressing action and exploration in favour of conservation.
 Sustained low Energy Expectation, in interaction with the other priors,
 is the substrate of depressive and burnout states, understood as stable
 attractors driven by an expectation of metabolic insufficiency rather
-than as acute mood disturbance.
+than as acute mood disturbance (see also
+\citeproc{ref-stephan2016allostatic}{Stephan et al., 2016}).
 
 \emph{Tractability Expectation} encodes the belief that the agent's
 actions can reliably reduce prediction error: the expected
@@ -733,9 +744,9 @@ maladaptive nihilistic withdrawal). At its high end, a deep Horizon
 extends the self across time, supporting an orientation towards
 biological or cultural legacy (desire for family lineage or symbolic
 achievements). One reason we find the Horizon prior compelling is that
-it is the a parameter whose high end forces the agent to confront its
-own non-existence - which we propose is a core feature of a higher-order
-time-bounded agent, rather than a Human-centric artifact.
+it is the parameter whose high end forces the agent to confront its own
+non-existence, which we propose is a core feature of a higher-order
+time-bounded agent, rather than a human-centric artifact.
 
 \subsection{Core Affective States}\label{core-affective-states}
 
@@ -793,14 +804,17 @@ withdrawal.
 
 \emph{Valence} is the correlate of hedonic tone and anticipatory
 positive affect, tracking the direction and rate of movement through the
-free energy landscape rather than static position. It receives direct
-input from Reward Expectation. An inverse modulatory signal from
-Vitality enables the possibility of approach-motivated low mood: high
-Reward with low Vitality, an agent drawn toward outcomes it lacks the
-metabolic capacity to pursue. This maps onto agitated depression and
-helps explain depressive heterogeneity, from anhedonic presentations
-(low Reward driving low Valence) to preserved goal-directedness with
-severe impairment (high Reward with depleted Vitality). What traditional
+free energy landscape rather than static position
+(\citeproc{ref-hesp2021deeply}{Hesp et al., 2021};
+\citeproc{ref-joffily2013emotional}{Joffily \& Coricelli, 2013}). It
+receives direct input from Reward Expectation. A modulatory signal from
+Vitality (energetic depletion blunts positive affect) enables the
+possibility of approach-motivated low mood: high Reward with low
+Vitality, an agent drawn toward outcomes it lacks the metabolic capacity
+to pursue. This maps onto agitated depression and helps explain
+depressive heterogeneity, from anhedonic presentations (low Reward
+driving low Valence) to preserved goal-directedness with severe
+impairment (high Reward with depleted Vitality). What the traditional
 circumplex's ``arousal'' axis partly captures under its
 incentive/appetitive pole (incentive arousal) is, within our model, not
 a separate node but the joint elevation of Valence and Vitality (hence
@@ -809,14 +823,14 @@ more accurate given its original definition as a state of being alert).
 
 \subsection{Precision Biases: The Self}\label{precision-biases-the-self}
 
-The third level describe priors governing the precision-allocation
+The third level describes priors governing the precision-allocation
 machinery: dispositional parameters governing how much weight the system
 places on different information sources, action strategies, and temporal
-frames. Stable \emph{biases} in precision weighting system, which is the
-mechanism by which beliefs become attention and action. Precision biases
-are thus where stable priors and transient context meet, predicting that
-the same individual shows systematic, prior-consistent shifts in
-precision across situations.
+frames. These are stable \emph{biases} in the precision-weighting
+system, the mechanism by which beliefs become attention and action.
+Precision biases are thus where stable priors and transient context
+meet, predicting that the same individual shows systematic,
+prior-consistent shifts in precision across situations.
 
 The biases map onto the three canonical layers of self-organization. The
 Minimal Self governs the sensory and somatic boundary with the world;
@@ -841,16 +855,17 @@ inference (\citeproc{ref-seth2021being}{A. Seth, 2021};
 \citeproc{ref-seth2013interoceptive}{A. K. Seth, 2013}), it is driven
 toward the interoceptive pole by chronic Epistemic Arousal: the agent
 uses its own aroused somatic state as primary evidence about the world's
-safety. High interoceptive bias also suppresses structural coupling with
-others, the implicit mechanism by which chronic anxiety produces social
-withdrawal. At the neurobiological level it is likely associated with
-insular and anterior cingulate function and the vagal tone continuum
-(\citeproc{ref-critchley2017interoception}{Critchley \& Garfinkel,
-2017}). This is also consistent with Northoff's spatiotemporal account
-of self-disturbances, in which disruptions to the brain's resting-state
-temporal structure in default-mode and interoceptive cortices predict
-the degree of self-boundary dissolution in both healthy and clinical
-populations (\citeproc{ref-northoff2018brain}{Northoff, 2018b}).
+safety. The same chronic Arousal also suppresses structural coupling
+with others, the implicit mechanism by which chronic anxiety produces
+social withdrawal. At the neurobiological level it is likely associated
+with insular and anterior cingulate function and the vagal tone
+continuum (\citeproc{ref-critchley2017interoception}{Critchley \&
+Garfinkel, 2017}). This is also consistent with Northoff's
+spatiotemporal account of self-disturbances, in which disruptions to the
+brain's resting-state temporal structure in default-mode and
+interoceptive cortices predict the degree of self-boundary dissolution
+in both healthy and clinical populations
+(\citeproc{ref-northoff2018brain}{Northoff, 2018b}).
 
 The \emph{Differentiation-Dissolution Bias} governs the structural
 coupling of the Markov blanket to other agents: Differentiation favours
@@ -874,9 +889,10 @@ engagement; perception-heavy parameterization yields reflection and
 accommodation. It is amplified by Tractability and Reward Expectation
 but stands in trade-off with the Exploration-Exploitation Bias, since
 the same resources cannot serve both active control and exploratory
-information-gathering, predicting that the small negative
-Conscientiousness-Openness correlation reflects a precision-allocation
-constraint rather than two independently varying dimensions.
+information-gathering, predicting that Conscientiousness and Openness,
+despite sharing upstream drivers, are among the most weakly related of
+the Big-5 dimensions (\citeproc{ref-vanderlinden2010general}{van der
+Linden et al., 2010}).
 
 The \emph{Exploration-Exploitation Bias} governs the weighting of
 epistemic (information-gain) versus pragmatic (preference-satisfaction)
@@ -957,9 +973,12 @@ traits. Foundational Ultra-Priors (top) propagate downward through the
 Core Affective States and the Precision Biases to generate observable
 phenotypes. Connections follow a control-systems idiom: each links a
 specific source to a specific target node with an activating or
-inhibiting (inverse) effect (note that this dominant generative
-direction is depicted for expository clarity; as the model actually
-supports a bidirectional prediction-error propagation mechanicsm). The
+inhibiting (inverse) effect (note that only this dominant generative
+direction is depicted, for expository clarity; the model also supports
+bidirectional prediction-error propagation). Only the dominant pathways
+are drawn; the full specification used in the simulation, which adds
+direct projections from the Affective States to the phenotypes and
+several weaker cross-links, is given in Supplementary Table S2. The
 warped grid alludes to the dynamical-systems framing in which phenotypes
 correspond to basins of attraction in a free-energy
 landscape.}{\label{fig-architecture}}}}
@@ -971,103 +990,78 @@ landscape.}{\label{fig-architecture}}}}
 \section{Relationship with Existing
 Frameworks}\label{relationship-with-existing-frameworks}
 
-From the complex interaction of the upstream parameters described above
-emerge macro-level behavioural and experiential patterns, which form the
-phenotypical constructs typically targeted by self-report
+From the interaction of the upstream parameters described above emerge
+the macro-level phenotypical constructs targeted by self-report
 questionnaires, clinical interviews, and behavioural assessment (hence
-the adjective of ``observable'', although we recognize that not all
-constructs described by various theoretical models are \emph{ovservable}
-in the measurable sense). The cascade's parameter space provides a
-common vocabulary onto which major frameworks in personality, affective
-neuroscience, and clinical science can be mapped. We propose that each
-captures a bounded subset of the structure the cascade describes, and
-that the regularities each documents are consistent with, and plausibly
-generated by, particular configurations. These are correspondences and
-causal hypotheses, not formal derivations; their value lies in the
-specific, testable predictions they yield, several of which the source
-frameworks do not generate.
+the adjective ``observable'', although we recognize that not all such
+constructs are \emph{observable} in the measurable sense). The cascade's
+parameter space provides a common vocabulary onto which major frameworks
+in personality, affective neuroscience, and clinical science can be
+mapped, each capturing a bounded subset of the structure the cascade
+describes. These are correspondences and causal hypotheses, not formal
+derivations; we focus here on the mappings that generate predictions the
+source frameworks do not, and list the full set in Supplementary Table
+S1.
 
 \subsection{Trait and Dimensional
 Taxonomies}\label{trait-and-dimensional-taxonomies}
 
-While our model does not perfectly predicts the Big-5 dimensions, we
+While our model does not perfectly predict the Big-5 dimensions, we
 believe it offers an account of the \emph{covariance} among these
 dispositions, driven by commonalities in their upstream configuration.
 \emph{Neuroticism} arises from high Volatility with low Noise
 Expectation, propagating into chronic Epistemic Arousal and the
 Interoception Bias, buffered by an inverse projection from narrative
-Rigidity; its facets (anxiety, depression-proneness, irritability,
-self-consciousness) are the downstream bifurcation of the Arousal
-signal. \emph{Extraversion} arises from Reward and Tractability
+Rigidity. \emph{Extraversion} arises from Reward and Tractability
 converging on Valence and Vitality and then on the Dissolution and
 Action poles, the convergence of a social-synchrony stream and an
 approach-drive stream that co-occur without being identical, predicting
 that high Reward with low Vitality yields a withdrawn-but-motivated
 profile that standard questionnaires misclassify. \emph{Openness} arises
 from high Noise Expectation with adequate Reward feeding
-Phenomenological Exploration and low Rigidity, with Intellect versus
-Openness-proper facets (\citeproc{ref-deyoung2007between}{DeYoung et
-al., 2007}) reflecting Phenomenological versus Somatic Exploration, the
-latter also locating Zuckerman's Sensation Seeking
-(\citeproc{ref-zuckerman1979sensation}{Zuckerman, 1979},
-\citeproc{ref-zuckerman1994behavioral}{1994},
-\citeproc{ref-zuckerman2006biosocial}{2006}) at the high-Reward/Somatic
-pole. \emph{Agreeableness} arises from Tractability and Vitality
-converging on Dissolution without the Action amplification of
-Extraversion (with the Future-Present Bias supporting stable,
-``shadow-of-the-future'' cooperation
-(\citeproc{ref-bo2005cooperation}{Bó, 2005})), predicting that
-allostatic depletion suppresses Agreeableness more readily than
-Extraversion. \emph{Conscientiousness} arises from Tractability with
-deep Horizon propagating into Future Bias, Rigidity, and effective
-action, inversely predicted by Epistemic Arousal, and decomposing into a
-Rigidity-driven orderliness component and a Tractability-by-Horizon
-industriousness component with dissociable sensitivity to acute versus
-chronic perturbation. We are less certain about \emph{Honesty-Humility}
-(\citeproc{ref-ashton2007empirical}{Ashton \& Lee, 2007}), the 6th
-dimension from HEXACO/Big-6 models, but think that it might correspond
-to high Dissolution coupling under high Tractability, where exploitation
-registers as a self-model violation, predicting shared variance with
-Agreeableness but divergence on Tractability.
+Phenomenological Exploration and low Rigidity. \emph{Agreeableness}
+arises from Tractability and Vitality converging on Dissolution without
+the Action amplification of Extraversion (with the Future-Present Bias
+supporting stable, ``shadow-of-the-future'' cooperation,
+\citeproc{ref-bo2005cooperation}{Bó, 2005}), predicting that allostatic
+depletion suppresses Agreeableness more readily than Extraversion.
+\emph{Conscientiousness} arises from Tractability with deep Horizon
+propagating into Future Bias, Rigidity, and effective action, inversely
+predicted by Epistemic Arousal.
 
 Psychopathological spectra are conceptualized in the HiTOP model as
 extreme or rigid configurations of personality traits, often defined by
 dysfunctional \emph{interactions} rather than single-parameter extremity
-(\citeproc{ref-kotov2017hitop}{Kotov et al., 2017}). Under our model,
+(\citeproc{ref-kotov2017hitop}{{Kotov et al.}, 2017}). Under our model,
 \emph{Internalizing} could be framed as chronic Epistemic Arousal with
 suppressed Vitality, the fear-versus-distress distinction tracking
 Vitality (adequate in phobia and GAD, low in depression) rather than
 Arousal, predicting that the fear-to-distress transition is driven
-specifically by Vitality change. \emph{Externalizing} to high Reward and
-Action Bias with reduced Rigidity and strong Dissolution, specifically
-shallow Horizon with high Reward, distinguishing it from the
-deep-Horizon approach configuration that yields deliberate goal pursuit.
-\emph{Thought Disorder} might correspond to high Epistemic Arousal with
-low narrative Rigidity, with delusions as the model's best-available
-narrative explanations for unintegrable prediction errors, predicting
-the schizotypy-Openness link (\citeproc{ref-mason2005short}{Mason et
-al., 2005}) without requiring a purely dopaminergic aberrant-salience
-account (\citeproc{ref-kapur2003psychosis}{Kapur, 2003}).
-\emph{Detachment} would correspond to low Reward with Differentiation,
-anhedonia driven by low Valence independent of Arousal, predicting
-selective response to dopaminergic intervention. The transdiagnostic
+specifically by Vitality change. \emph{Thought Disorder} might
+correspond to high Epistemic Arousal with low narrative Rigidity, with
+delusions as the model's best-available narrative explanations for
+unintegrable prediction errors, predicting the schizotypy-Openness link
+(\citeproc{ref-mason2005short}{Mason et al., 2005}) without requiring a
+purely dopaminergic aberrant-salience account
+(\citeproc{ref-kapur2003psychosis}{Kapur, 2003}). The transdiagnostic
 \emph{p}-factor (\citeproc{ref-caspi2014pfactor}{Caspi et al., 2014}) is
 the \emph{product} of low Tractability and high Volatility: each deficit
 removes the route by which the other could be mitigated (uncertainty is
 tolerable when action can reduce it; uncontrollability is tolerable when
 the world is stable enough to learn passively), motivating a
 multiplicative rather than additive specification and predicting
-super-additive transdiagnostic severity (see predictions below). Two
-conditions illustrate deviations from typical architecture:
-\emph{autism} maps onto very low Noise Expectation, a hyper-precise
-sensory model with no tolerance for residual ambiguity
+super-additive transdiagnostic severity (see predictions below).
+Finally, \emph{autism} maps onto very low Noise Expectation, a
+hyper-precise sensory model with no tolerance for residual ambiguity
 (\citeproc{ref-lawson2014aberrant}{Lawson et al., 2014};
-\citeproc{ref-vandecruys2014precise}{Van de Cruys et al., 2014}),
-predicting that social difficulty peaks under relational
-unpredictability; and \emph{schizophrenia}'s
-positive-to-negative-symptom course tracks a collapse in Tractability
-under sustained arousal load
-(\citeproc{ref-tandon2009schizophrenia}{Tandon et al., 2009}).
+\citeproc{ref-vandecruys2014precise}{Van de Cruys et al., 2014}). An
+agent that expects negligible irreducible noise must attribute residual
+prediction errors to change in the world
+(\citeproc{ref-piray2021model}{Piray \& Daw, 2021}), which is how low
+Noise Expectation would surface behaviourally as the overestimation of
+volatility reported in autistic adults
+(\citeproc{ref-lawson2017adaptive}{Lawson et al., 2017}), and why social
+difficulty should peak under relational unpredictability.
 
 \subsection{Cybernetic and Motivational
 Frameworks}\label{cybernetic-and-motivational-frameworks}
@@ -1075,47 +1069,38 @@ Frameworks}\label{cybernetic-and-motivational-frameworks}
 The cascade adopts Cybernetic Big-5 Theory's (CB5T,
 \citeproc{ref-deyoung2015cybernetic}{DeYoung, 2015}) central claim, that
 traits are parameters of goal-directed self-regulating systems, and
-extends it in three ways: it specifies the mathematical form of the
-control computations as precision-weighted propagation; it replaces a
-relatively flat trait structure with a generative hierarchy in which
-traits are derived from deeper configurations (locating Neuroticism's
-cause in the Volatility-Noise prior rather than treating chronic
-goal-failure as an explanatory terminus); and it introduces core
-Affective States as a principled intermediate level that CB5T
-acknowledges but does not model. The sharpest divergence concerns
-Tractability, which CB5T treats as a facet of Conscientiousness but our
-model treats as an Ultra-Prior upstream of Conscientiousness,
-Agreeableness, and inverse Neuroticism, predicting trans-Big-5 validity
-for computational Tractability measures that self-report cannot achieve.
+extends it in three ways: it proposes a candidate form for the control
+computations (precision-weighted propagation); it replaces a relatively
+flat trait structure with a generative hierarchy in which traits are
+derived from deeper configurations (locating Neuroticism's cause in the
+Volatility-Noise prior rather than treating chronic goal-failure as an
+explanatory terminus); and it introduces core Affective States as a
+principled intermediate level that CB5T acknowledges but does not model.
+Safron and DeYoung (\citeproc{ref-safron2021integrating}{2021}) have
+already argued that the FEP can supply CB5T with a formal modelling
+language; where that integration takes the traits as its units and
+re-describes them in active-inference terms, the cascade posits a
+smaller set of upstream priors from which the traits and their
+covariance derive. The sharpest divergence concerns Tractability, which
+CB5T treats as a facet of Conscientiousness but our model treats as an
+Ultra-Prior upstream of Conscientiousness, Agreeableness, and inverse
+Neuroticism, predicting trans-Big-5 validity for computational
+Tractability measures that self-report cannot achieve.
 
 Gray's Reinforcement Sensitivity Theory systems
 (\citeproc{ref-corr2008reinforcement}{Corr, 2008};
 \citeproc{ref-gray1981critique}{Gray, 1981};
-\citeproc{ref-graymcnaughton2000}{Gray \& McNaughton, 2000}) are
-behavioural signatures of upstream configurations rather than priors
-themselves: BIS is elevated Epistemic Arousal suppressing Action, BAS is
-high Reward amplifying Action and Exploration, and the
-Fight-Flight-Freeze System is acute, high-amplitude Arousal. Reading
-questionnaire BIS/BAS scores as conflations of upstream priors and
-downstream output may explain inconsistencies in the literature. The key
-extension is the dissociation of BAS from Tractability: high Reward with
-high Tractability yields canonical energetic approach, whereas high
-Reward with low Tractability yields the frustrated-approach
+\citeproc{ref-graymcnaughton2000}{Gray \& McNaughton, 2000}) are, on
+this view, behavioural signatures of upstream configurations rather than
+priors themselves (BIS as elevated Epistemic Arousal suppressing Action,
+BAS as high Reward amplifying Action and Exploration), so that
+questionnaire BIS/BAS scores conflate upstream priors with downstream
+output. The key extension is the dissociation of BAS from Tractability:
+high Reward with high Tractability yields canonical energetic approach,
+whereas high Reward with low Tractability yields the frustrated-approach
 configuration of approach-motivated depression
 (\citeproc{ref-trew2011exploring}{Trew, 2011}), a directly testable
 interaction.
-
-Cloninger's (\citeproc{ref-cloninger1987systematic}{Cloninger, 1987};
-\citeproc{ref-cloninger1993psychobiological}{Cloninger et al., 1993})
-temperament-character split aligns with the Ultra-Prior/Precision-Bias
-distinction: temperament dimensions map onto upstream priors (Novelty
-Seeking onto Reward with Somatic Exploration, Harm Avoidance onto
-Volatility with low Noise, Reward Dependence onto Dissolution,
-Persistence onto Horizon with Future Bias and Tractability) and
-character onto multi-parameter interactions, predicting that
-Cooperativeness (Vitality-sensitive Dissolution) declines before
-Self-Directedness (the more metabolically robust Tractability-Future
-Bias pathway) under allostatic depletion.
 
 \subsection{Affective and Interoceptive
 Frameworks}\label{affective-and-interoceptive-frameworks}
@@ -1124,140 +1109,124 @@ Barrett's (\citeproc{ref-barrett2016active}{Barrett et al., 2016};
 \citeproc{ref-barrett2017tce}{Barrett, 2017}) account of emotions as
 constructed allostatic predictions is in direct alignment with the
 cascade's treatment of core Affective States as continuously generated
-interoceptive predictions. The ``body budget'' corresponds to Energy
-Expectation and its downstream Vitality State, and is the primary
-motivation for locating the Allostatic Imperative at the Ultra-Prior
-level. The substantive departure concerns affective geometry: the
-cascade replaces the single arousal dimension of the inherited
-circumplex (\citeproc{ref-russell1980circumplex}{Russell, 1980}) with
-two generators: Epistemic Arousal, an explicit node driven by Volatility
-and Noise Expectation, and the joint elevation of Reward-driven Valence
-and Vitality, likely akin to incentive arousal, sharing peripheral
-sympathetic output but differing in upstream generators and autonomic
+interoceptive predictions, and her ``body budget'' is the primary
+motivation for locating the Allostatic Imperative (Energy Expectation
+and its downstream Vitality State) at the Ultra-Prior level. The
+substantive departure concerns affective geometry: the cascade replaces
+the single arousal dimension of the inherited circumplex
+(\citeproc{ref-russell1980circumplex}{Russell, 1980}) with two
+generators, Epistemic Arousal (driven by Volatility and Noise
+Expectation) and the joint elevation of Reward-driven Valence and
+Vitality (likely akin to incentive arousal), which share peripheral
+sympathetic output but differ in upstream generators and autonomic
 signatures. This predicts a double dissociation, testable with measures
 separating parasympathetic withdrawal from sympathetic activation, that
 a single arousal dimension cannot produce.
 
-Panksepp's Primary emotional systems
+Panksepp's primary emotional systems
 (\citeproc{ref-panksepp1998affective}{Panksepp, 1998};
-\citeproc{ref-panksepp2012archaeology}{Panksepp \& Biven, 2012}) are
-affective signatures of parameter configurations: SEEKING (Reward with
-Exploration under adequate Vitality), FEAR (acute Epistemic Arousal),
-CARE (Dissolution under adequate Vitality and positive Valence), and
-PANIC/GRIEF (involuntary Differentiation following bond loss). Two
-mappings generate non-obvious predictions: RAGE as the consequence of a
-high-efficacy agent whose bounded approach policies repeatedly fail to
-reduce prediction error (distinct from withdrawal-based depression);
-and, because Vitality multiplicatively gates Exploration and
-Dissolution, SEEKING and CARE should be suppressed by allostatic
-depletion faster than by reductions in their respective reward priors,
-framing parental burnout and compassion fatigue as Vitality failures
-rather than failures of social motivation.
+\citeproc{ref-panksepp2012archaeology}{Panksepp \& Biven, 2012}) can
+likewise be read as affective signatures of parameter configurations
+(Supplementary Table S1), two of which generate non-obvious predictions:
+RAGE as the consequence of a high-efficacy agent whose bounded approach
+policies repeatedly fail to reduce prediction error (distinct from
+withdrawal-based depression); and, because Vitality multiplicatively
+gates Exploration and Dissolution, SEEKING and CARE should be suppressed
+by allostatic depletion faster than by reductions in their respective
+reward priors, framing parental burnout and compassion fatigue as
+Vitality failures rather than failures of social motivation.
 
-\subsection{Interpersonal and Existential
-Frameworks}\label{interpersonal-and-existential-frameworks}
-
-Our model might be extended to pro- and anti-social traits. For
-instance, affective empathy might be related to a bias towards the
-Dissolution pole (the other's states enter the agent's interoceptive
-prediction system), whereas cognitive empathy requires low Rigidity plus
-adequate Exploration (temporary self-model updating to simulate
-another's perspective), and the two can dissociate. \emph{Psychopathy}
-might be tentatively framed as emerging from high Reward, high
-Tractability, and shallow Horizon combined with constitutively low
-Epistemic Arousal (\citeproc{ref-hare1991checklist}{Hare, 1991};
-consistent with attenuated fear-potentiated startle and skin-conductance
-responding, \citeproc{ref-lykken1957study}{Lykken, 1957}) and low
-Dissolution.
+\subsection{World Beliefs and Other
+Extensions}\label{world-beliefs-and-other-extensions}
 
 Primal World Beliefs (\citeproc{ref-clifton2019primal}{Clifton et al.,
 2019}) provide some of the most direct empirical anchors for the
 cascade's parameters. The \emph{Safe} primal aligns with Tractability
-and high Noise Expectation (the world is bounded and legible) and the
-\emph{Enticing} primal aligns with Reward Expectation, the prior over
-preferred states. The \emph{Alive} primal is less straightforward: while
-its interpersonal warmth facet overlaps with the Dissolution pole, its
-core sense that the world is vibrant and dynamic plausibly reflects
-allostatic surplus projected outward. A high-Energy, high-Vitality agent
-perceives the environment as animated, whereas a depleted agent
-perceives it as inert or grey, independent of how bounded or unbounded
-their self-model feels. On this reading, Alive should correlate
-specifically with Energy Expectation and interoceptive-accuracy measures
-rather than with self-other boundary measures, constituting a
-discriminant prediction. Together, these three primals offer a potential
-validation strategy: Safe scores should decompose into a controllability
-component (Tractability) and an ambiguity-tolerance component (Noise
-Expectation), a direct test of the Epistemic Imperative's two-component
-structure.
+and high Noise Expectation (the world is bounded and legible), and the
+\emph{Enticing} primal with Reward Expectation. The \emph{Alive} primal
+is less straightforward: while its interpersonal warmth facet overlaps
+with the Dissolution pole, its core sense that the world is vibrant and
+dynamic plausibly reflects allostatic surplus projected outward, so that
+Alive should correlate specifically with Energy Expectation and
+interoceptive-accuracy measures rather than with self-other boundary
+measures, a discriminant prediction. Together, the primals offer a
+potential validation strategy: Safe scores should decompose into a
+controllability component (Tractability) and an ambiguity-tolerance
+component (Noise Expectation), a direct test of the Epistemic
+Imperative's two-component structure.
 
-Finally, it is worth noting that concepts from psychodynamic have
-already reframed in active-inference terms
-(\citeproc{ref-carhart2010default}{R. L. Carhart-Harris \& Friston,
-2010}; \citeproc{ref-solms2018consciousness}{Solms \& Friston, 2018}),
-and Jung's elusive archetypes have been cast as phylogenetically
-conserved structural priors, ``shared eigenmodes'' of the
-species-typical deep-prior landscape
-(\citeproc{ref-mcgovern2025eigenmodes}{McGovern et al., 2025}). Note
-that the alternative framing by Becker and Neuberg
-(\citeproc{ref-becker2019archetypes}{2019}) as emergent outcomes of
-evolved motivational systems whose recurrence across cultures reflects
-shared adaptive pressures is not incompatible with our model: the former
-treats archetypes as the prior architecture's eigenvectors, the latter
-as the attractor basins that motivationally equivalent priors reliably
-generate.
+Further correspondences (e.g., Cloninger's temperament and character
+dimensions) and more tentative extensions to empathy, psychopathy,
+Honesty-Humility, and psychodynamic constructs such as Jung's archetypes
+(recast as shared structure of the species-typical deep-prior landscape,
+\citeproc{ref-mcgovern2025eigenmodes}{McGovern et al., 2025};
+\citeproc{ref-becker2019archetypes}{Becker \& Neuberg, 2019}), are also
+outlined in Supplementary Table S1.
 
 \section{Simulation Proof-of-Concept}\label{simulation-proof-of-concept}
 
 A minimal precondition for the framework is structural consistency: its
 fixed connectivity must be \emph{capable} of producing the empirical
 covariance structure it seeks to explain. We tested this in a
-proof-of-concept simulation implementation (\(N = 100{,}000\);
-open-source code at github.com/RealityBending/DeepSelfModel), in which
-each tier computes a precision-weighted combination of upstream inputs.
-Connection weights were set by hand to reflect the hypothesized
-directional, signed effects; crucially they were \emph{not} fitted,
-tuned, or optimized against the empirical target, so the simulation
-tests whether the specified structure \emph{can} reproduce the target,
-not whether it can be fit to it. Domain-specific noise bounds absorbed
-the trait variance attributable to context and item specificity, and
-shared variance among the Ultra-Priors (\(\lambda = .35\)) represented
-shared developmental ecology (e.g., a hostile environment simultaneously
+proof-of-concept simulation (open-source code at
+github.com/RealityBending/DeepSelfModel), in which each node is a
+standardized linear combination of its upstream inputs plus Gaussian
+noise, and the trait correlation matrix implied by the graph is computed
+analytically. Connection weights were set by hand to reflect the
+hypothesized directional, signed effects (listed in full in
+Supplementary Table S2); crucially they were \emph{not} fitted, tuned,
+or optimized against the empirical target, so the simulation tests
+whether the specified structure \emph{can} reproduce the target, not
+whether it can be fit to it. Residual noise at each tier absorbed the
+variance attributable to context and item specificity; the trait-level
+residual (SD = 1.80) is a scaling choice that primarily sets the overall
+magnitude of the trait correlations rather than their pattern. Shared
+variance among the Ultra-Priors (\(\lambda = .35\)) represented shared
+developmental ecology (e.g., a hostile environment simultaneously
 raising Volatility and lowering Energy and Tractability) and genetic
 pleiotropy.
 
 \begin{figure*}[!htbp]
 
 {\caption{{Simulation results for the Deep-Self Predictive Cascade
-Model. Panel A displays the split-diagonal covariance matrix comparing
-the empirical target structure (top-right, derived from Digman, 1997 and
-DeYoung et al., 2002) against the simulated cascade output (bottom-left,
-N = 100,000), yielding an RMSE of 0.043 with matching signs across
+Model. Panel A displays the split-diagonal correlation matrix comparing
+the empirical target (top-right; meta-analytic observed correlations
+from van der Linden et al., 2010) against the simulated cascade output
+(bottom-left), yielding an RMSE of 0.067 with matching signs across
 off-diagonal cells. Panel B shows a sensitivity analysis over varying
-shared variance among the ultra-priors: the simulated model RMSE (black
-circles) remains below the null model's 95\% CI (grey band) across the
-precision range, which indicates that the fit does not arise from
-arbitrary parameterization of the cascade.}{\label{fig-simulation}}}}
+shared variance among the Ultra-Priors: the cascade model's RMSE (black
+circles) remains below the 95\% interval of the edge-type-matched null
+model (green band) across the tested range and close to that of a
+general-factor model fitted to the target (dashed line), whereas a
+fitted two-factor model (dotted line) reproduces the target almost
+exactly.}{\label{fig-simulation}}}}
 
 \pandocbounded{\includegraphics[keepaspectratio]{figures/figure3.png}}
 
 \end{figure*}
 
-With these hand-set weights, the simulated correlation matrix reproduced
-the meta-analytic target (\citeproc{ref-deyoung2015cybernetic}{DeYoung,
-2015}; \citeproc{ref-digman1997higher}{Digman, 1997}) with matching
-off-diagonal signs and an RMSE of 0.043, accounting for roughly 30\% of
-trait variance from the deep-prior configuration alone
-(Figure~\ref{fig-simulation}). To evaluate whether this fit reflects the
+With these hand-set weights, the simulated correlation matrix
+approximated the meta-analytic target (observed correlations across 212
+samples and 144,117 participants,
+\citeproc{ref-vanderlinden2010general}{van der Linden et al., 2010})
+with matching off-diagonal signs and an RMSE of 0.067, accounting for
+roughly 30\% of trait variance from the deep-prior configuration alone
+(Figure~\ref{fig-simulation}). For reference, assuming uncorrelated
+traits yields an RMSE of 0.237, a single general factor \emph{fitted} to
+the target 0.060, and two fitted factors 0.006: without any fitted
+parameter, the cascade thus performs on par with a fitted general-factor
+account, but does not capture the two-factor (Stability/Plasticity)
+structure as closely. To evaluate whether this fit reflects the
 \emph{specific} connectivity the cascade proposes, rather than the
-generic flexibility of a 39-edge weighted DAG, we compared it against an
+generic flexibility of a 45-edge weighted DAG, we compared it against an
 Edge-Type-Matched Null (1,000 iterations): random DAGs preserving each
 node's per-tier in-degree, onto which the cascade's exact weights are
 assigned by edge type, randomizing only which specific nodes within a
 tier each connection links. This retains the model's full edge-type
 composition and weight magnitudes, varying only its node-to-node
-assignments. It produced a mean RMSE of 0.189 (95\% CI {[}0.123,
-0.248{]}), and the cascade model (RMSE = 0.043) outperformed it in all
-1,000 iterations (\emph{p} \textless{} .001), an advantage that was
+assignments. It produced a mean RMSE of 0.227 (95\% CI {[}0.155,
+0.282{]}), and the cascade model (RMSE = 0.067) outperformed it in all
+1,000 iterations (permutation \emph{p} = .001), an advantage that was
 stable across the tested range of shared-variance values among the
 Ultra-Priors (Figure~\ref{fig-simulation}, Panel B).
 
@@ -1266,42 +1235,52 @@ model's edge-type composition alone but depends specifically on which
 nodes those connections link (e.g., that Volatility Expectation projects
 to Epistemic Arousal rather than to Vitality). While these results are
 promising, they do not, however, establish that the theoretical topology
-is the only configuration capable of this fit: with 39 signed free
-parameters mapping onto a target with 10 unique off-diagonal
-correlations, alternative topologies whose weights were optimized to the
-target, rather than transplanted from the theoretical model, might
-achieve comparable RMSE. What the comparison rules out is the weaker
-possibility that the fit is a generic consequence of connecting these
-tiers with this many edges of these magnitudes in some directionally
-consistent but otherwise unconstrained arrangement. Comparing the
-theoretical topology against alternative topologies with independently
-fitted weights, under matched degrees of freedom, remains the decisive
-test, together with the predictive tests presented below.
+is the only configuration capable of this fit: with 45 signed path
+weights (plus the noise variances and the Ultra-Prior loadings) mapping
+onto a target with 10 unique off-diagonal correlations, alternative
+topologies whose weights were optimized to the target, rather than
+transplanted from the theoretical model, would likely achieve comparable
+or better RMSE, as the fitted factor models illustrate. What the
+comparison rules out is the weaker possibility that the fit is a generic
+consequence of connecting these tiers with this many edges of these
+magnitudes in some directionally consistent but otherwise unconstrained
+arrangement. Comparing the theoretical topology against alternative
+topologies with independently fitted weights, under matched degrees of
+freedom, remains the decisive test, together with the predictive tests
+presented below.
 
 \section{Empirical Validation}\label{empirical-validation}
 
-Several non-obvious cascade predictions are already supported. The HGF
-\(\omega\) parameter, a potential behavioural index of Volatility
-Expectation, correlates with trait anxiety and Neuroticism across
-independent samples (\citeproc{ref-lawson2017adaptive}{Lawson et al.,
-2017}; \citeproc{ref-powers2017pavlovian}{A. R. Powers et al., 2017}), a
-cross-method confirmation of the Volatility-to-Arousal-to-Neuroticism
-pathway. The psychometric orthogonality of positive and negative affect
-(\citeproc{ref-watson1988development}{Watson et al., 1988}) is exactly
-what the cascade's separation of Reward (driving Valence) from
-Volatility (driving Arousal) predicts, with the cascade additionally
-specifying the computational generators of the dissociation. Individual
-differences in prior weighting might be detectable through perceptual
-paradigms involving illusions (which have been quite successfuly framed
-under the FEP, \citeproc{ref-notredame2014visual}{Notredame et al.,
-2014}), with some evidence suggesting links to personality
+Several existing findings are consistent with the cascade, although they
+are postdictions rather than prospective tests. Trait anxiety and
+internalizing symptoms are associated with altered learning under
+volatility, notably a reduced adjustment of learning rate to changes in
+environmental volatility (\citeproc{ref-browning2015anxious}{Browning et
+al., 2015}; \citeproc{ref-gagne2020impaired}{Gagne et al., 2020}), which
+is consistent with (though not a direct test of) the
+Volatility-to-Arousal-to-Neuroticism pathway. Moreover, HGF-derived
+parameters, a potential behavioural index of Volatility Expectation, can
+be estimated from behaviour and differ between clinical groups
+(\citeproc{ref-lawson2017adaptive}{Lawson et al., 2017};
+\citeproc{ref-powers2017pavlovian}{A. R. Powers et al., 2017}). The
+relative independence of positive and negative affect
+(\citeproc{ref-watson1988development}{Watson et al., 1988}) is what the
+cascade's separation of their upstream generators, Reward (driving
+Valence) and Volatility (driving Arousal), would lead one to expect;
+because the two streams are not fully insulated from one another
+downstream, the model expects weak coupling between them rather than
+either strict orthogonality or bipolarity. Individual differences in
+prior weighting might be detectable through perceptual paradigms
+involving illusions (which have been quite successfully framed under the
+FEP, \citeproc{ref-notredame2014visual}{Notredame et al., 2014}), with
+some evidence suggesting links to personality
 (\citeproc{ref-makowski2023illusion}{Makowski et al., 2023}). The
 \emph{p}-factor's loading structure, maximal under combined anxiety and
 mood liability rather than any single spectrum, matches the
 Volatility-by-Tractability interaction. Finally, the REBUS model of
-psychedelics (\citeproc{ref-carhartharris2021trial}{R. Carhart-Harris et
-al., 2021}; Relaxed Beliefs Under Psychedelics,
-\citeproc{ref-carhart2019rebus}{R. Carhart-Harris \& Friston, 2019};
+psychedelics (Relaxed Beliefs Under Psychedelics,
+\citeproc{ref-carhart2019rebus}{Carhart-Harris \& Friston, 2019};
+\citeproc{ref-carhartharris2021trial}{Carhart-Harris et al., 2021};
 \citeproc{ref-davis2021effects}{Davis et al., 2021}) provides the most
 direct evidence for the architectural claim that personality is a
 precision-weighted hierarchy of priors: 5-HT2A agonism relaxes
@@ -1322,21 +1301,22 @@ computational pre-post paradigms.
 In order for the model to be useful and a valid development, it must be
 falsifiable and offer new testable sets of predictions. While making a
 one-way prediction (X is correlated with Y) might be consistent with
-both the cascade and simpler accounts, the predictions below are based
-on interactions, none derivable from the component frameworks, each
-requiring the cascade's specific architecture. If they fail under
-well-powered tests with independently measured parameters, the relevant
-portion of the architecture is specifically disconfirmed.
+both the cascade and simpler accounts, the predictions below mostly rest
+on interaction or mediation patterns that the component frameworks do
+not make on their own, and that depend on the cascade's specific
+architecture. If they fail under well-powered tests with independently
+measured parameters, the relevant portion of the architecture is
+specifically disconfirmed.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Volatility and Tractability predicts transdiagnostic severity. Their
-  product should predict \emph{p}-factor scores over and above the main
-  effects and any single spectrum measure.
+  Volatility and Tractability jointly predict transdiagnostic severity.
+  Their product should predict \emph{p}-factor scores over and above the
+  main effects and any single spectrum measure.
 \item
-  Reward and low Tractability predicts depression subtype. This
+  High Reward and low Tractability predict depression subtype. This
   combination should specifically produce the agitated,
   approach-motivated, anhedonia-absent profile
   (\citeproc{ref-trew2011exploring}{Trew, 2011}), whereas low Reward
@@ -1357,7 +1337,7 @@ portion of the architecture is specifically disconfirmed.
   rather than self-report alone. We note that this prediction connects
   to the ego-depletion literature, a concept that has proven difficult
   to replicate under pre-registered conditions
-  (\citeproc{ref-hagger2016multilab}{Hagger et al., 2016}), requiring
+  (\citeproc{ref-hagger2016multilab}{{Hagger et al.}, 2016}), requiring
   careful design and operationalization.
 \item
   Horizon moderates mortality-salience response type. Deep-Horizon
@@ -1410,17 +1390,16 @@ that individual's trait profile.
 \section{Limitations}\label{limitations}
 
 The most important limitation is formal. The framework is a conceptual
-(Marr computational-level) proposal whose implemented form is a
-fixed-weight path model, not a worked active-inference scheme: we do not
-specify a joint generative density, perform variational inference, or
-compute expected free energy, and the construct mappings are
-theoretically motivated correspondences with associated causal
-hypotheses, not derivations. Several apparent strengths, the breadth of
-coverage and the tidiness of the mappings, are partly properties of a
-flexible verbal-plus-linear scheme rather than evidence that the
-architecture is correct. Converting the conceptual model into an
-identifiable generative model with recoverable parameters is a
-precondition for the stronger claims.
+proposal whose proof-of-concept implementation is a fixed-weight path
+model, not a worked active-inference scheme: we do not specify a joint
+generative density, perform variational inference, or compute expected
+free energy, and the construct mappings are theoretically motivated
+correspondences with associated causal hypotheses, not derivations.
+Several apparent strengths, the breadth of coverage and the tidiness of
+the mappings, are partly properties of a flexible verbal-plus-linear
+scheme rather than evidence that the architecture is correct. Converting
+the conceptual model into an identifiable generative model with
+recoverable parameters is a precondition for the stronger claims.
 
 There are substantive phenomena the model does not explain. It does not
 derive a fixed number of personality factors, specify the developmental
@@ -1480,7 +1459,7 @@ covariance follows from that shared origin.
 
 We have been explicit that this is, at present, a conceptual-level
 proposal implemented as a path model rather than a worked
-active-inference scheme. The proof-of-concept simulation is promissing
+active-inference scheme. The proof-of-concept simulation is promising
 but does not establish definitive proof. However, we lay out a clear
 path forward, involving developing and validating independent and
 reliable measures, testing the predictions, and gathering single-subject
@@ -1506,19 +1485,13 @@ and refine the ideas presented here.
 
 \section{References}\label{references}
 
-\phantomsection\label{refs}
+\protect\phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
 \bibitem[\citeproctext]{ref-adams2013predictions}
 Adams, R. A., Shipp, S., \& Friston, K. J. (2013). Predictions not
 commands: Active inference in the motor system. \emph{Brain Structure
 and Function}, \emph{218}(3), 611--643.
 \url{https://doi.org/10.1007/s00429-012-0475-5}
-
-\bibitem[\citeproctext]{ref-ashton2007empirical}
-Ashton, M. C., \& Lee, K. (2007). Empirical, theoretical, and practical
-advantages of the {HEXACO} model of personality structure.
-\emph{Personality and Social Psychology Review}, \emph{11}(2), 150--166.
-\url{https://doi.org/10.1177/1088868306294907}
 
 \bibitem[\citeproctext]{ref-bainbridge2022evaluating}
 Bainbridge, T. F., Ludeke, S. G., \& Smillie, L. D. (2022). Evaluating
@@ -1559,10 +1532,11 @@ influences on human psychological differences. \emph{Journal of
 Neurobiology}, \emph{54}(1), 4--45.
 \url{https://doi.org/10.1002/neu.10160}
 
-\bibitem[\citeproctext]{ref-carhart2010default}
-Carhart-Harris, R. L., \& Friston, K. J. (2010). The default-mode,
-ego-functions and free-energy: A neurobiological account of {Freudian}
-ideas. \emph{Brain}, \emph{133}(4), 1265--1283.
+\bibitem[\citeproctext]{ref-browning2015anxious}
+Browning, M., Behrens, T. E., Jocham, G., O'Reilly, J. X., \& Bishop, S.
+J. (2015). Anxious individuals have difficulty learning the causal
+statistics of aversive environments. \emph{Nature Neuroscience},
+\emph{18}(4), 590--596.
 
 \bibitem[\citeproctext]{ref-carhart2019rebus}
 Carhart-Harris, R., \& Friston, K. J. (2019). {REBUS} and the anarchic
@@ -1608,12 +1582,6 @@ and classification of personality variants: A proposal. \emph{Archives
 of General Psychiatry}, \emph{44}(6), 573--588.
 \url{https://doi.org/10.1001/archpsyc.1987.01800180093014}
 
-\bibitem[\citeproctext]{ref-cloninger1993psychobiological}
-Cloninger, C. R., Svrakic, D. M., \& Przybeck, T. R. (1993). A
-psychobiological model of temperament and character. \emph{Archives of
-General Psychiatry}, \emph{50}(12), 975--990.
-\url{https://doi.org/10.1001/archpsyc.1993.01820240059008}
-
 \bibitem[\citeproctext]{ref-constant2019regimes}
 Constant, A., Ramstead, M. J. D., Veissière, S. P. L., \& Friston, K.
 (2019). Regimes of expectations: An active inference model of social
@@ -1654,12 +1622,6 @@ Psychology}, \emph{91}(6), 1138--1151.
 \bibitem[\citeproctext]{ref-deyoung2015cybernetic}
 DeYoung, C. G. (2015). Cybernetic big five theory. \emph{Journal of
 Research in Personality}, \emph{56}, 33--58.
-
-\bibitem[\citeproctext]{ref-deyoung2007between}
-DeYoung, C. G., Quilty, L. C., \& Peterson, J. B. (2007). Between facets
-and domains: 10 aspects of the {Big} {Five}. \emph{Journal of
-Personality and Social Psychology}, \emph{93}(5), 880--896.
-\url{https://doi.org/10.1037/0022-3514.93.5.880}
 
 \bibitem[\citeproctext]{ref-digman1997higher}
 Digman, J. M. (1997). Higher-order factors of the big five.
@@ -1714,6 +1676,11 @@ Pezzulo, G. (2015). Active inference and epistemic value.
 \emph{Cognitive Neuroscience}, \emph{6}(4), 187--214.
 \url{https://doi.org/10.1080/17588928.2015.1020053}
 
+\bibitem[\citeproctext]{ref-gagne2020impaired}
+Gagne, C., Zika, O., Dayan, P., \& Bishop, S. J. (2020). Impaired
+adaptation of learning to contingency volatility in internalizing
+psychopathology. \emph{eLife}, \emph{9}, e61387.
+
 \bibitem[\citeproctext]{ref-goldberg1990alternative}
 Goldberg, L. R. (1990). An alternative "description of personality": The
 big-five factor structure. \emph{Journal of Personality and Social
@@ -1730,15 +1697,11 @@ anxiety: An enquiry into the functions of the septo-hippocampal system}
 (2nd ed.). Oxford University Press.
 
 \bibitem[\citeproctext]{ref-hagger2016multilab}
-Hagger, M. S., Chatzisarantis, N. L., Alberts, H., Anggono, C. O.,
+{Hagger, M. S., Chatzisarantis, N. L., Alberts, H., Anggono, C. O.,
 Batailler, C., Birt, A. R., Brand, R., Brandt, M. J., Brewer, G.,
-Bruyneel, S., et al. (2016). A multilab preregistered replication of the
-ego-depletion effect. \emph{Perspectives on Psychological Science},
+Bruyneel, S., et al.} (2016). A multilab preregistered replication of
+the ego-depletion effect. \emph{Perspectives on Psychological Science},
 \emph{11}(4), 546--573.
-
-\bibitem[\citeproctext]{ref-hare1991checklist}
-Hare, R. D. (1991). \emph{The hare psychopathy checklist-revised}.
-Multi-Health Systems.
 
 \bibitem[\citeproctext]{ref-hershfield2011future}
 Hershfield, H. E. (2011). Future self-continuity: How conceptions of the
@@ -1746,8 +1709,18 @@ future self transform intertemporal choice. \emph{Annals of the New York
 Academy of Sciences}, \emph{1235}(1), 30--43.
 \url{https://doi.org/10.1111/j.1749-6632.2011.06201.x}
 
+\bibitem[\citeproctext]{ref-hesp2021deeply}
+Hesp, C., Smith, R., Parr, T., Allen, M., Friston, K. J., \& Ramstead,
+M. J. D. (2021). Deeply felt affect: The emergence of valence in deep
+active inference. \emph{Neural Computation}, \emph{33}(2), 398--446.
+
 \bibitem[\citeproctext]{ref-hohwy2013predictive}
 Hohwy, J. (2013). \emph{The predictive mind}. Oxford University Press.
+
+\bibitem[\citeproctext]{ref-joffily2013emotional}
+Joffily, M., \& Coricelli, G. (2013). Emotional valence and the
+free-energy principle. \emph{PLoS Computational Biology}, \emph{9}(6),
+e1003094.
 
 \bibitem[\citeproctext]{ref-kapur2003psychosis}
 Kapur, S. (2003). Psychosis as a state of aberrant salience: A framework
@@ -1765,11 +1738,11 @@ curiosity. \emph{Neuron}, \emph{88}(3), 449--460.
 \url{https://doi.org/10.1016/j.neuron.2015.09.010}
 
 \bibitem[\citeproctext]{ref-kotov2017hitop}
-Kotov, R., Krueger, R. F., Watson, D., Achenbach, T. M., Althoff, R. R.,
-Bagby, R. M., Brown, T. A., Carpenter, W. T., Caspi, A., Clark, L. A.,
-et al. (2017). The hierarchical taxonomy of psychopathology (HiTOP): A
-dimensional alternative to traditional nosologies. \emph{Journal of
-Abnormal Psychology}, \emph{126}(4), 454.
+{Kotov, R., Krueger, R. F., Watson, D., Achenbach, T. M., Althoff, R.
+R., Bagby, R. M., Brown, T. A., Carpenter, W. T., Caspi, A., Clark, L.
+A., et al.} (2017). The hierarchical taxonomy of psychopathology
+(HiTOP): A dimensional alternative to traditional nosologies.
+\emph{Journal of Abnormal Psychology}, \emph{126}(4), 454.
 
 \bibitem[\citeproctext]{ref-lawson2017adaptive}
 Lawson, R. P., Mathys, C., \& Rees, G. (2017). Adults with autism
@@ -1781,11 +1754,6 @@ Neuroscience}, \emph{20}(9), 1293--1299.
 Lawson, R. P., Rees, G., \& Friston, K. J. (2014). An aberrant precision
 account of autism. \emph{Frontiers in Human Neuroscience}, \emph{8},
 302. \url{https://doi.org/10.3389/fnhum.2014.00302}
-
-\bibitem[\citeproctext]{ref-lykken1957study}
-Lykken, D. T. (1957). A study of anxiety in the sociopathic personality.
-\emph{Journal of Abnormal and Social Psychology}, \emph{55}(1), 6--10.
-\url{https://doi.org/10.1037/h0047232}
 
 \bibitem[\citeproctext]{ref-makowski2023illusion}
 Makowski, D., Te, A. S., Kirk, S., Liang, N. Z., \& Chen, S. H. A.
@@ -1878,6 +1846,11 @@ value-based decision making. \emph{Neuron}, \emph{79}(1), 191--201.
 Piray, P., \& Daw, N. D. (2020). A simple model for learning in volatile
 environments. \emph{PLOS Computational Biology}, \emph{16}(7), e1007963.
 
+\bibitem[\citeproctext]{ref-piray2021model}
+Piray, P., \& Daw, N. D. (2021). A model for learning based on the joint
+estimation of stochasticity and volatility. \emph{Nature
+Communications}, \emph{12}, 6587.
+
 \bibitem[\citeproctext]{ref-posner2005circumplex}
 Posner, J., Russell, J. A., \& Peterson, B. S. (2005). The circumplex
 model of affect: An integrative approach to affective neuroscience,
@@ -1921,6 +1894,13 @@ Russell, J. A. (1980). A circumplex model of affect. \emph{Journal of
 Personality and Social Psychology}, \emph{39}(6), 1161--1178.
 \url{https://doi.org/10.1037/h0077714}
 
+\bibitem[\citeproctext]{ref-safron2021integrating}
+Safron, A., \& DeYoung, C. G. (2021). Integrating cybernetic big five
+theory with the free energy principle: A new strategy for modeling
+personalities as complex systems. In D. Wood, S. J. Read, P. D. Harms,
+\& A. Slaughter (Eds.), \emph{Measuring and modeling persons and
+situations} (pp. 617--649). Academic Press.
+
 \bibitem[\citeproctext]{ref-schultz1997neural}
 Schultz, W., Dayan, P., \& Montague, P. R. (1997). A neural substrate of
 prediction and reward. \emph{Science}, \emph{275}(5306), 1593--1599.
@@ -1952,11 +1932,6 @@ tutorial on active inference and its application to empirical data.
 \emph{Journal of Mathematical Psychology}, \emph{107}, 102632.
 \url{https://doi.org/10.1016/j.jmp.2021.102632}
 
-\bibitem[\citeproctext]{ref-solms2018consciousness}
-Solms, M., \& Friston, K. (2018). How and why consciousness arises: Some
-considerations from physics and physiology. \emph{Journal of
-Consciousness Studies}, \emph{25}(5-6), 202--238.
-
 \bibitem[\citeproctext]{ref-soto2017next}
 Soto, C. J., \& John, O. P. (2017). The next {Big} {Five} {Inventory}
 ({BFI-2}): Developing and assessing a hierarchical model with 15 facets
@@ -1964,18 +1939,19 @@ to enhance bandwidth, fidelity, and predictive power. \emph{Journal of
 Personality and Social Psychology}, \emph{113}(1), 117--143.
 \url{https://doi.org/10.1037/pspp0000096}
 
+\bibitem[\citeproctext]{ref-stephan2016allostatic}
+Stephan, K. E., Manjaly, Z. M., Mathys, C. D., Weber, L. A. E., Paliwal,
+S., Gard, T., Tittgemeyer, M., Fleming, S. M., Haker, H., Seth, A. K.,
+\& Petzschner, F. H. (2016). Allostatic self-efficacy: A metacognitive
+theory of dyshomeostasis-induced fatigue and depression. \emph{Frontiers
+in Human Neuroscience}, \emph{10}, 550.
+
 \bibitem[\citeproctext]{ref-strathman1994consideration}
 Strathman, A., Gleicher, F., Boninger, D. S., \& Edwards, C. S. (1994).
 The consideration of future consequences: Weighing immediate and distant
 outcomes of behavior. \emph{Journal of Personality and Social
 Psychology}, \emph{66}(4), 742--752.
 \url{https://doi.org/10.1037/0022-3514.66.4.742}
-
-\bibitem[\citeproctext]{ref-tandon2009schizophrenia}
-Tandon, R., Nasrallah, H. A., \& Keshavan, M. S. (2009). Schizophrenia,
-{``just the facts''} 4. Clinical features and conceptualization.
-\emph{Schizophrenia Research}, \emph{110}(1-3), 1--23.
-\url{https://doi.org/10.1016/j.schres.2009.03.005}
 
 \bibitem[\citeproctext]{ref-trew2011exploring}
 Trew, J. L. (2011). Exploring the roles of approach and avoidance in
@@ -1993,6 +1969,13 @@ Van de Cruys, S., Evers, K., Van der Hallen, R., Van Eylen, L., Boets,
 B., de-Wit, L., \& Wagemans, J. (2014). Precise minds in uncertain
 worlds: Predictive coding in autism. \emph{Psychological Review},
 \emph{121}(4), 649--675. \url{https://doi.org/10.1037/a0037665}
+
+\bibitem[\citeproctext]{ref-vanderlinden2010general}
+van der Linden, D., te Nijenhuis, J., \& Bakker, A. B. (2010). The
+general factor of personality: A meta-analysis of big five
+intercorrelations and a criterion-related validity study. \emph{Journal
+of Research in Personality}, \emph{44}(3), 315--327.
+\url{https://doi.org/10.1016/j.jrp.2010.03.003}
 
 \bibitem[\citeproctext]{ref-vukasovic2015heritability}
 Vukasović, T., \& Bratko, D. (2015). Heritability of personality: A
@@ -2021,18 +2004,6 @@ Press.
 Yu, A. J., \& Dayan, P. (2005). Uncertainty, neuromodulation, and
 attention. \emph{Neuron}, \emph{46}(4), 681--692.
 \url{https://doi.org/10.1016/j.neuron.2005.04.026}
-
-\bibitem[\citeproctext]{ref-zuckerman1979sensation}
-Zuckerman, M. (1979). \emph{Sensation seeking: Beyond the optimal level
-of arousal}. Lawrence Erlbaum Associates.
-
-\bibitem[\citeproctext]{ref-zuckerman1994behavioral}
-Zuckerman, M. (1994). \emph{Behavioral expressions and biosocial bases
-of sensation seeking}. Cambridge University Press.
-
-\bibitem[\citeproctext]{ref-zuckerman2006biosocial}
-Zuckerman, M. (2006). \emph{Sensation seeking and risky behavior}.
-American Psychological Association.
 
 \end{CSLReferences}
 

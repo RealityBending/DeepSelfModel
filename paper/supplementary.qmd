@@ -1,0 +1,54 @@
+---
+title: "Supplementary Materials: The Deep-Self Predictive Cascade Model"
+bibliography: bibliography.bib
+link-citations: true
+---
+
+# Table S1. Proposed correspondences between existing constructs and cascade configurations
+
+These are theoretically motivated correspondences and causal hypotheses, not formal derivations. Mappings discussed in the main text are included for completeness; the more tentative ones are marked with an asterisk.
+
+| Framework | Construct | Proposed cascade configuration | Prediction or note |
+|:---|:---|:------|:------|
+| Big-5 | Neuroticism facets (anxiety, depression-proneness, irritability, self-consciousness) | Downstream bifurcation of the Epistemic Arousal signal | |
+| Big-5 | Conscientiousness aspects | A Rigidity-driven orderliness component and a Tractability-by-Horizon industriousness component | Dissociable sensitivity to acute versus chronic perturbation |
+| Big-5 | Intellect versus Openness-proper aspects [@deyoung2007between] | Phenomenological versus Somatic Exploration | |
+| Sensation Seeking [@zuckerman1979sensation; @zuckerman1994behavioral; @zuckerman2006biosocial] | Sensation Seeking | High Reward with Somatic Exploration | |
+| HEXACO [@ashton2007empirical] | Honesty-Humility* | High Dissolution coupling under high Tractability, where exploitation registers as a self-model violation | Shared variance with Agreeableness but divergence on Tractability |
+| HiTOP [@kotov2017hitop] | Internalizing | Chronic Epistemic Arousal with suppressed Vitality; fear versus distress tracks Vitality (adequate in phobia and GAD, low in depression) | The fear-to-distress transition is driven specifically by Vitality change |
+| HiTOP | Externalizing | High Reward and Action Bias with reduced Rigidity and strong Dissolution; specifically shallow Horizon with high Reward | Distinct from the deep-Horizon approach configuration that yields deliberate goal pursuit |
+| HiTOP | Thought Disorder | High Epistemic Arousal with low narrative Rigidity; delusions as best-available narrative explanations for unintegrable prediction errors | Schizotypy-Openness link [@mason2005short] mediated by Noise rather than Reward |
+| HiTOP | Detachment | Low Reward with Differentiation; anhedonia driven by low Valence independent of Arousal | Selective response to dopaminergic intervention |
+| HiTOP | *p*-factor [@caspi2014pfactor] | Product of low Tractability and high Volatility | Super-additive transdiagnostic severity |
+| Clinical | Autism | Very low Noise Expectation [@lawson2014aberrant; @vandecruys2014precise], surfacing as overestimated volatility [@lawson2017adaptive] | Social difficulty peaks under relational unpredictability |
+| Clinical | Schizophrenia* | Positive-to-negative symptom course tracks a collapse in Tractability under sustained arousal load [@tandon2009schizophrenia] | |
+| Reinforcement Sensitivity Theory [@gray1981critique; @graymcnaughton2000; @corr2008reinforcement] | BIS | Elevated Epistemic Arousal suppressing Action | Questionnaire scores conflate upstream priors and downstream output |
+| Reinforcement Sensitivity Theory | BAS | High Reward amplifying Action and Exploration | Dissociates from Tractability: high Reward with low Tractability yields frustrated approach [@trew2011exploring] |
+| Reinforcement Sensitivity Theory | Fight-Flight-Freeze System | Acute, high-amplitude Epistemic Arousal | |
+| Cloninger [@cloninger1987systematic; @cloninger1993psychobiological] | Novelty Seeking | Reward with Somatic Exploration | |
+| Cloninger | Harm Avoidance | High Volatility with low Noise Expectation | |
+| Cloninger | Reward Dependence | Dissolution | |
+| Cloninger | Persistence | Horizon with Future Bias and Tractability | |
+| Cloninger | Character dimensions | Multi-parameter interactions: Cooperativeness as Vitality-sensitive Dissolution, Self-Directedness as the Tractability-Future Bias pathway | Cooperativeness declines before Self-Directedness under allostatic depletion |
+| Constructed emotion [@barrett2017tce] | Body budget | Energy Expectation and its downstream Vitality State | |
+| Affective neuroscience [@panksepp1998affective; @panksepp2012archaeology] | SEEKING | Reward with Exploration under adequate Vitality | Suppressed by allostatic depletion faster than by reductions in Reward |
+| Affective neuroscience | FEAR | Acute Epistemic Arousal | |
+| Affective neuroscience | CARE | Dissolution under adequate Vitality and positive Valence | Parental burnout and compassion fatigue as Vitality failures |
+| Affective neuroscience | PANIC/GRIEF | Involuntary shift toward Differentiation following bond loss | |
+| Affective neuroscience | RAGE | High-efficacy agent whose bounded approach policies repeatedly fail to reduce prediction error | Distinct from withdrawal-based depression |
+| Interpersonal | Affective empathy* | Bias towards the Dissolution pole (the other's states enter the agent's interoceptive prediction system) | Dissociable from cognitive empathy |
+| Interpersonal | Cognitive empathy* | Low Rigidity with adequate Exploration (temporary self-model updating to simulate another's perspective) | |
+| Interpersonal | Psychopathy* | High Reward, high Tractability, and shallow Horizon with constitutively low Epistemic Arousal and low Dissolution | Consistent with attenuated fear-potentiated startle and skin-conductance responding [@lykken1957study; @hare1991checklist] |
+| Primal World Beliefs [@clifton2019primal] | Safe | Tractability with high Noise Expectation | Decomposes into controllability and ambiguity-tolerance components |
+| Primal World Beliefs | Enticing | Reward Expectation | |
+| Primal World Beliefs | Alive | Energy Expectation and Vitality (allostatic surplus projected outward); its warmth facet overlaps with Dissolution | Correlates with Energy Expectation and interoceptive accuracy rather than self-other boundary measures |
+| Psychodynamic* | Psychodynamic constructs | Already reframed in active-inference terms [@carhart2010default; @solms2018consciousness] | |
+| Analytical psychology* | Archetypes | Phylogenetically conserved structural priors, "shared eigenmodes" of the species-typical deep-prior landscape [@mcgovern2025eigenmodes]; compatible with their framing as emergent outcomes of evolved motivational systems [@becker2019archetypes], i.e., the attractor basins that motivationally equivalent priors reliably generate | |
+
+# Table S2. Full specification of the simulated cascade
+
+Signed path weights of the 45 connections used in the proof-of-concept simulation. Figure 2 of the main text depicts the dominant pathways only. Weights into and out of the Differentiation-Dissolution Bias are expressed for its Differentiation pole. Residual standard deviations were 0.55 for the Affective States, 0.65 for the Precision Biases, and 1.80 for the phenotypes. The table is generated from the simulation code (`simulation/export_edge_table.py`).
+
+{{< include _table_s2.md >}}
+
+# References

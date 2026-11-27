@@ -4,8 +4,9 @@ Deep-Self Predictive Cascade Model – Simulation (Revised)
 
 CONTEXT & AIM:
   Tests whether the theoretical topology is structurally necessary to recover
-  the empirical Big-Five covariance matrix derived from Digman (1997) and
-  DeYoung et al. (2002) meta-analytic consensus, using three null distributions.
+  the empirical Big-Five correlation matrix (meta-analytic observed correlations
+  from van der Linden, te Nijenhuis & Bakker, 2010, Table 2; K = 212,
+  N = 144,117), using three null distributions and fitted factor-model baselines.
 
 NODE INDEX MAP:
   0–5   Ultra-Priors       (Tier 0)
@@ -18,7 +19,7 @@ EDGE-TYPE STRUCTURE OF THEORETICAL MODEL:
     T0→T1:  7 edges   (Ultra-Priors → Affective States)
     T0→T2: 10 edges   (Ultra-Priors → Precision Biases, skip-tier)
     T1→T1:  2 edges   (within Affective States)
-    T1→T2:  6 edges   (Affective States → Precision Biases)
+    T1→T2:  7 edges   (Affective States → Precision Biases)
     T1→T3:  7 edges   (Affective States → Phenotypes, skip-tier)
     T2→T3: 12 edges   (Precision Biases → Phenotypes)
 
@@ -43,21 +44,41 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 from matplotlib.colors import LinearSegmentedColormap
 from collections import defaultdict
+from scipy.optimize import minimize
 
 # ─── Setup & Target ──────────────────────────────────────────────────────────
 SHORT = ["N", "E", "C", "A", "O"]
 
+# Uncorrected meta-analytic correlations, van der Linden et al. (2010), Table 2.
+# Order: N, E, C, A, O.
 TARGET = np.array(
     [
-        [1.00, -0.26, -0.22, -0.23, -0.10],
-        [-0.26, 1.00, 0.15, 0.21, 0.24],
-        [-0.22, 0.15, 1.00, 0.24, 0.02],
-        [-0.23, 0.21, 0.24, 1.00, 0.15],
-        [-0.10, 0.24, 0.02, 0.15, 1.00],
+        [1.00, -0.26, -0.32, -0.26, -0.12],
+        [-0.26, 1.00, 0.21, 0.18, 0.31],
+        [-0.32, 0.21, 1.00, 0.31, 0.14],
+        [-0.26, 0.18, 0.31, 1.00, 0.14],
+        [-0.12, 0.31, 0.14, 0.14, 1.00],
     ]
 )
 mask = ~np.eye(5, dtype=bool)
 target_vals = TARGET[mask]
+
+
+# ─── Baselines: what simple models achieve on the same target ────────────────
+def factor_baseline(k, n_starts=30):
+    """RMSE of the best-fitting k-factor model of the target (5 * k free loadings)."""
+
+    def loss(loadings):
+        L = loadings.reshape(k, 5)
+        return np.sqrt(np.mean(((L.T @ L)[mask] - target_vals) ** 2))
+
+    rng = np.random.default_rng(0)
+    return min(minimize(loss, rng.normal(0, 0.4, 5 * k)).fun for _ in range(n_starts))
+
+
+def no_correlation_baseline():
+    """RMSE of predicting that the Big Five are uncorrelated."""
+    return float(np.sqrt(np.mean(target_vals**2)))
 
 # Tier membership
 TIER = {
@@ -146,6 +167,7 @@ def get_theoretical_architecture():
         (10, 6, -0.40),
         (11, 7, 0.30),
         (12, 7, 0.35),
+        (13, 6, -0.50),
         # T0 → T2  (Ultra-Priors → Precision Biases, skip-tier)
         (10, 3, 0.50),
         (11, 3, 0.65),
@@ -356,6 +378,11 @@ if __name__ == "__main__":
     s_vals = np.linspace(0.0, 0.8, 17)
     sens_rmses = sensitivity_analysis(W_theo, noise_vars, s_vals)
 
+    # 6. Baselines
+    base_none = no_correlation_baseline()
+    base_one = factor_baseline(1)
+    base_two = factor_baseline(2)
+
     # ── Report ────────────────────────────────────────────────────────────────
     print("\n" + "=" * 65)
     print(f"Theoretical Baseline:             RMSE = {theo_rmse:.4f}")
@@ -383,6 +410,9 @@ if __name__ == "__main__":
     print(
         f"  Theoretical beats Null 3 in {100 * np.mean(null3 > theo_rmse):.1f}% of iterations"
     )
+    print(f"Baseline, no correlations:        RMSE = {base_none:.4f}")
+    print(f"Baseline, one fitted factor:      RMSE = {base_one:.4f}")
+    print(f"Baseline, two fitted factors:     RMSE = {base_two:.4f}")
     print("=" * 65)
 
     # ── Figure ────────────────────────────────────────────────────────────────
@@ -500,6 +530,20 @@ if __name__ == "__main__":
         label=f"Cascade model  (RMSE = {theo_rmse:.3f})",
         zorder=5,
     )
+    ax2.axhline(
+        base_one,
+        color=COLOR_NULL1,
+        ls="--",
+        lw=1.8,
+        label=f"One fitted factor  (RMSE = {base_one:.3f})",
+    )
+    ax2.axhline(
+        base_two,
+        color=COLOR_NULL2,
+        ls=":",
+        lw=1.8,
+        label=f"Two fitted factors  (RMSE = {base_two:.3f})",
+    )
 
     ax2.set_xlabel(
         r"Shared variance between Ultra-priors ($\lambda$)",
@@ -510,12 +554,12 @@ if __name__ == "__main__":
     ax2.set_ylim(0, 0.40)
     ax2.legend(frameon=False, loc="upper right", fontsize=9.5)
     ax2.set_title(
-        "B. Sensitivity vs. Null Models", fontweight="bold", pad=40, fontsize=15
+        "B. Sensitivity vs. Null and Baseline Models", fontweight="bold", pad=40, fontsize=15
     )
     ax2.text(
         0.5,
         1.05,
-        "Cascade Model error vs. matched random topologies",
+        "Cascade Model error vs. matched random topologies and fitted factor models",
         transform=ax2.transAxes,
         ha="center",
         va="bottom",
