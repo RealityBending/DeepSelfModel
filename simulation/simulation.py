@@ -575,5 +575,6 @@ if __name__ == "__main__":
         y=1.05,
     )
     plt.savefig("results.png", dpi=300, bbox_inches="tight")
+    plt.savefig("results.pdf", bbox_inches="tight")  # vector version for journal submission
     plt.show()
     print("Figure saved to results.png")

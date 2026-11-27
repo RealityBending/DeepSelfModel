@@ -36,10 +36,10 @@ author-note:
     deceased: null
   disclosures:
     study-registration: null
-    data-sharing: null
+    data-sharing: The simulation code, the interactive application, and the supplementary materials are openly available at https://github.com/RealityBending/DeepSelfModel.
     related-report: null
     conflict-of-interest: The author has no conflicts of interest to disclose.
-    financial-support: null
+    financial-support: This research received no specific grant from any funding agency, commercial or not-for-profit sectors.
     gratitude: null
     authorship-agreements: null
 abstract: "Contemporary personality science rests on robust descriptive taxonomies, such as the Big-5, that catalogue how individuals differ but remain largely silent on why these differences arise and structure as they do. We introduce the Deep-Self Predictive Cascade Model, a conceptual framework that recasts personality in the language of active inference. Personality is modelled not as an inventory of traits but as the topography of an agent's expected free energy landscape: a set of attractor basins whose depth and location are set by deep prior beliefs and precision-allocation strategies. We describe a four-level hierarchy that cascades from six foundational Ultra-Priors, governing the agent's epistemic, allostatic, and teleological imperatives, through three Core Affective States and six Precision Biases that allocate resources across the minimal, agentic, and narrative self-models, to the observable phenotypes catalogued by trait taxonomy. This parameter space provides a common vocabulary onto which major cybernetic, affective, and clinical frameworks can be mapped. We present a proof-of-concept simulation showing that the cascade's topology is capable of approximating the empirical correlation structure of the Big-5, as well as a set of falsifiable predictions to test and refine our proposal."
@@ -153,6 +153,7 @@ We accompany the model with an open-source interactive toy implementation (@fig-
 #| message: false
 #| warning: false
 #| apa-twocolumn: true
+#| fig-alt: "Screenshot of a web application. Four columns of small distribution plots, labelled Ultra-Priors, Affective States, Precision Biases, and Observables, are linked by curved lines; the selected Arousal node and its connections are highlighted in blue. The Observables column shows a radar chart of the five Big-5 traits, and a side panel holds sliders for the selected node's location and precision next to a text description of the Epistemic Arousal State."
 #| label: fig-app
 
 knitr::include_graphics("figures/figure1.png", dpi = NA)
@@ -231,6 +232,7 @@ The *Future-Present Bias* governs the temporal discounting of predicted outcomes
 #| message: false
 #| warning: false
 #| apa-twocolumn: true
+#| fig-alt: "Diagram arranged in four horizontal bands. From top to bottom: six Ultra-Priors (Volatility, Noise, Energy, Tractability, Reward, Horizon) grouped into the epistemic, allostatic, and teleological imperatives; three Affective States (Arousal, Vitality, Valence); six Precision Biases (Interoception, Differentiation, Action, Exploration, Rigidity, Future) grouped into the minimal, agentic, and narrative selves; and a radar chart of the Big-5 traits drawn over a warped grid. Each node shows a bell-shaped distribution, and green (activating, plus sign) or red (inhibiting, minus sign) lines connect nodes across levels."
 #| label: fig-architecture
 #| out-height: "80%"
 
@@ -274,6 +276,7 @@ A minimal precondition for the framework is structural consistency: its fixed co
 #| message: false
 #| warning: false
 #| apa-twocolumn: true
+#| fig-alt: "Two-panel figure. Panel A is a five-by-five correlation matrix of Neuroticism, Extraversion, Conscientiousness, Agreeableness, and Openness, with empirical values above the diagonal and simulated values below it; mirrored cells have similar values and the same signs, with Neuroticism negatively correlated with the other four traits. Panel B plots the cascade model's error against the shared variance between Ultra-Priors (0 to 0.8): it stays between about 0.06 and 0.075, well below the shaded null-model band (about 0.16 to 0.28) and close to the one-factor line, while the two-factor line lies near zero."
 #| label: fig-simulation
 
 knitr::include_graphics("figures/figure3.png", dpi = NA)
@@ -316,6 +319,8 @@ We have been explicit that this is, at present, a conceptual-level proposal impl
 # Acknowledgements
 
 I would like to thank Dr Marco Sperduti for entertaining my early-career elucubrations related to what has now become the concept of "deep-Self", and Dr Theodoros Karapanagiotidis for his contagious enthusiasm about the topic of attractors. As well as the Reality Bending Lab members, past and present, for their work which helped me to clarify and refine the ideas presented here.
+
+AI (Claude, Anthropic) was used during the manuscript editing process, under specific human instructions. The author takes full responsibility for the content of the published article.
 
 # References
 

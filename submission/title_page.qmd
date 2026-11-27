@@ -1,0 +1,75 @@
+---
+title: "Towards an Active Inference Personality Framework: The Deep-Self Predictive Cascade Model"
+shorttitle: "The Deep-Self Cascade Model of Personality"
+author:
+    #   - Project administration
+    #   - Data curation
+    #   - Formal Analysis
+    #   - Investigation
+    #   - Visualization
+    #   - Writing – original draft
+    #   - Writing – review & editing
+  - name: Dominique Makowski
+    orcid: 0000-0001-5375-9967
+    email: D.Makowski@sussex.ac.uk
+    url: https://realitybendinglab.com/
+    corresponding: true
+    roles:
+      - writing
+    affiliations:
+      - id: "id1"
+        name: "University of Sussex"
+        department: "School of Psychology"
+        city: "Brighton"
+        country: "UK"
+        postal-code: "BN1 9RH"
+      - ref: "id2"
+        name: "University of Sussex"
+        department:  "Sussex Centre for Consciousness Science"
+author-note:
+  disclosures:
+    conflict-of-interest: null
+    financial-support: null
+abstract: "Contemporary personality science rests on robust descriptive taxonomies, such as the Big-5, that catalogue how individuals differ but remain largely silent on why these differences arise and structure as they do. We introduce the Deep-Self Predictive Cascade Model, a conceptual framework that recasts personality in the language of active inference. Personality is modelled not as an inventory of traits but as the topography of an agent's expected free energy landscape: a set of attractor basins whose depth and location are set by deep prior beliefs and precision-allocation strategies. We describe a four-level hierarchy that cascades from six foundational Ultra-Priors, governing the agent's epistemic, allostatic, and teleological imperatives, through three Core Affective States and six Precision Biases that allocate resources across the minimal, agentic, and narrative self-models, to the observable phenotypes catalogued by trait taxonomy. This parameter space provides a common vocabulary onto which major cybernetic, affective, and clinical frameworks can be mapped. We present a proof-of-concept simulation showing that the cascade's topology is capable of approximating the empirical correlation structure of the Big-5, as well as a set of falsifiable predictions to test and refine our proposal."
+keywords:
+  - active inference
+  - free energy principle
+  - personality
+  - individual differences
+  - computational psychiatry
+floatsintext: true
+numbered-lines: false
+suppress-title-page: false
+mask: false
+lang: en
+language:
+  citation-last-author-separator: "and"
+  citation-masked-author: "Masked Citation"
+  citation-masked-date: "n.d."
+  citation-masked-title: "Masked Title"
+  email: "Email"
+  title-block-author-note: "Author Note"
+  title-block-correspondence-note: "Correspondence concerning this article should be addressed to"
+  title-block-role-introduction: "Author roles were classified using the Contributor Role Taxonomy (CRediT; [credit.niso.org](https://credit.niso.org)) as follows:"
+  title-impact-statement: "Impact Statement"
+fontsize: 12pt
+format:
+  apaquarto-docx:
+    toc: false
+---
+
+# Acknowledgements
+
+I would like to thank Dr Marco Sperduti for entertaining my early-career elucubrations related to what has now become the concept of "deep-Self", and Dr Theodoros Karapanagiotidis for his contagious enthusiasm about the topic of attractors. As well as the Reality Bending Lab members, past and present, for their work which helped me to clarify and refine the ideas presented here.
+
+AI (Claude, Anthropic) was used during the manuscript editing process, under specific human instructions. The author takes full responsibility for the content of the published article.
+
+# Declarations
+
+**Funding Statement:** This research received no specific grant from any funding agency, commercial or not-for-profit sectors.
+
+**Conflicts of Interest:** None.
+
+**Data and Code Availability:** The simulation code and the interactive application are openly available at https://github.com/RealityBending/DeepSelfModel.
+
+**Supplementary Material:** Supplementary material accompanying this paper is available at https://github.com/RealityBending/DeepSelfModel.
